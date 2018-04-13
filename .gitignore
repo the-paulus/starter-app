@@ -1,6 +1,6 @@
 # Include only the specified 'hidden' directories and files.
 .*
-!.env.example
+!.env.*
 !.gitattributes
 !.gitignore
 !.gitkeep
