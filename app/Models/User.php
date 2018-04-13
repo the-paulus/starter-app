@@ -103,4 +103,9 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function groups() {
+
+        $this->hasMany(UserGroup::class);
+    }
 }
