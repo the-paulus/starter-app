@@ -11,5 +11,19 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+
+mix.setResourceRoot('/starter-app');
+
+mix.js('resources/assets/js/app.js', 'public/js').version()
+   .sass('resources/assets/sass/app.scss', 'public/css').version()
+    .then(() => {
+        var fs = require('fs');
+        var manifest_file = path.resolve(__dirname) + '/' + mix.config.publicPath + '/mix-manifest.json';
+        var entries = require(manifest_file);
+
+        for(var key in entries) {
+            entries[key] = mix.config.resourceRoot + entries[key];
+        }
+
+        fs.writeFile(manifest_file, JSON.stringify(entries));
+    });
