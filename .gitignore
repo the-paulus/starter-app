@@ -1,4 +1,4 @@
-# Include only the specified 'hidden' directory and files.
+# Include only the specified 'hidden' directories and files.
 .*
 !.env.example
 !.gitattributes
@@ -17,4 +17,5 @@ vendor
 *.log
 Homestead.json
 Homestead.yaml
+mix-manifest.json
 
