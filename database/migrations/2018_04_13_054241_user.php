@@ -15,10 +15,13 @@ class User extends Migration
     {
         Schema::table('users', function(Blueprint $table) {
             $table->dropColumn('name');
-            $table->string('first_name')->after('id');
-            $table->string('last_name')->after('first_name');
-            $table->string('auth_type')->after('password');
+            $table->string('first_name')->nullable(true)->after('id');
+            $table->string('last_name')->nullable(true)->after('first_name');
+            $table->string('auth_type')->nullable(true)->default('local')->after('password');
             $table->softDeletes();
+
+            $table->index('first_name');
+            $table->index('last_name');
         });
     }
 
@@ -29,12 +32,6 @@ class User extends Migration
      */
     public function down()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->dropColumn('first_name');
-            $table->dropColumn('last_name');
-            $table->dropColumn('auth_type');
-            $table->dropSoftDeletes();
-            $table->string('name')->after('id');
-        });
+
     }
 }
