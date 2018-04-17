@@ -64,7 +64,7 @@ class UserTest extends TestCase
             }
 
             $this->assertEquals(2, $random_user->groups()->count());
-            
+
         }
 
         $this->assertEquals(2, UserGroup::all()->get(0)->users()->count());
