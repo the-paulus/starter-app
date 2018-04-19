@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Permission;
-use App\Models\PermissionGroup;
+use App\Models\UserGroup;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -14,13 +14,13 @@ class PermissionTest extends TestCase
     use DatabaseMigrations, RefreshDatabase;
 
     const PERMISSION_COUNT = 10;
-    const PERMISSION_GROUP_COUNT = 3;
+    const USER_GROUP_COUNT = 3;
 
     public function setUp()
     {
         parent::setUp();
 
-        factory(PermissionGroup::class)->times(PermissionTest::PERMISSION_GROUP_COUNT)->create();
+        factory(UserGroup::class)->times(PermissionTest::USER_GROUP_COUNT)->create();
         factory(Permission::class)->times(PermissionTest::PERMISSION_COUNT)->create();
 
     }
@@ -28,7 +28,7 @@ class PermissionTest extends TestCase
     public function testCreation() {
 
         $this->assertEquals(PermissionTest::PERMISSION_COUNT, count(Permission::all()));
-        $this->assertEquals(PermissionTest::PERMISSION_GROUP_COUNT, count(PermissionGroup::all()));
+        $this->assertEquals(PermissionTest::USER_GROUP_COUNT, count(UserGroup::all()));
 
     }
 
@@ -38,7 +38,7 @@ class PermissionTest extends TestCase
 
         foreach($permissions as $permission) {
 
-            $random_group = PermissionGroup::all()->random(1)->first();
+            $random_group = UserGroup::all()->random(1)->first();
 
             $this->assertNotNull($random_group);
             $permission->groups()->save($random_group);
@@ -50,7 +50,7 @@ class PermissionTest extends TestCase
     public function testAddPermssionToMultipleGroups() {
 
         $random_permission = null;
-        $permission_groups = PermissionGroup::all();
+        $user_groups = UserGroup::all();
 
         for($i = 0; $i < 2; $i++) {
 
@@ -58,7 +58,7 @@ class PermissionTest extends TestCase
 
             for($j = 0; $j < 2; $j++) {
 
-                $random_permission->groups()->save($permission_groups->get($j));
+                $random_permission->groups()->save($user_groups->get($j));
 
             }
 
@@ -66,7 +66,7 @@ class PermissionTest extends TestCase
 
         }
 
-        $this->assertEquals(2, PermissionGroup::all()->get(0)->permissions()->count());
+        $this->assertEquals(2, UserGroup::all()->get(0)->permissions()->count());
 
     }
 }
