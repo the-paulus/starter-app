@@ -78,9 +78,25 @@ class UserGroup extends Model
         'description',
     ];
 
+    /**
+     * Returns all users in the group.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function users() {
 
         return $this->belongsToMany(User::class);
         
+    }
+
+    /**
+     * Returns all permissions in the group.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function permissions() {
+
+        return $this->belongsToMany(Permission::class);
+
     }
 }

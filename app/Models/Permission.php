@@ -78,9 +78,14 @@ class Permission extends Model
         'description',
     ];
 
+    /**
+     * Returns all groups that the permission belongs to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function groups() {
 
-        return $this->belongsToMany(PermissionGroup::class);
+        return $this->belongsToMany(UserGroup::class);
 
     }
 }
