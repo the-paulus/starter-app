@@ -104,8 +104,50 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    /**
+     * Returns all groups a user belongs to as a BelongsToMany object.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function groups() {
 
         return $this->belongsToMany(UserGroup::class);
+    }
+
+    /**
+     * Returns all permissions a user has as a HasManyThrough object.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function permissions() {
+
+        return $this->hasManyThrough(Permission::class, UserGroup::class);
+
+    }
+
+    /**
+     * Determine if user has provided permission.
+     *
+     * @param integer|string|Permission $permission Permission to look for.
+     * @return bool
+     */
+    public function hasPermission($permission) {
+
+        if(is_integer($permission)) {
+
+            $lookup_permission = $this->permissions()->find($permission);
+
+        } else if(get_class($permission) == Permission::class) {
+
+            $lookup_permission = $this->permissions()->find($permission->id);
+
+        } else {
+
+            $lookup_permission = $this->permissions()->where('name', '=', $permission)->first();
+
+        }
+
+        return !is_null($lookup_permission);
+
     }
 }
