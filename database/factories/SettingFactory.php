@@ -34,5 +34,6 @@ $factory->define(App\Models\Setting::class, function (Faker $faker) {
         'description' => $faker->sentence(12),
         'type' => $type,
         'value' => $value,
+        'weight' => $faker->randomNumber(1),
     ];
 });
