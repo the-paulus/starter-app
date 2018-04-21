@@ -87,9 +87,15 @@ class Setting extends Model
         'name',
         'description',
         'type',
-        'value'
+        'value',
+        'weight'
     ];
 
+    /**
+     * Returns the group the setting belongs to as a BelongsTo relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function group() {
 
         return $this->belongsTo(SettingGroup::class);
