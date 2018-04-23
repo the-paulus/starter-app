@@ -98,7 +98,7 @@ class Setting extends Model
      */
     public function group() {
 
-        return $this->belongsTo(SettingGroup::class);
+        return $this->belongsTo(SettingGroup::class, 'setting_group_id','id');
 
     }
 }

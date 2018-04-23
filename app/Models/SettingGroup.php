@@ -80,7 +80,7 @@ class SettingGroup extends Model
 
     public function settings() {
 
-        return $this->belongsToMany(Setting::class);
+        return $this->hasMany(Setting::class);
 
     }
 }
