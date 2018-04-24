@@ -138,7 +138,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Determine if user has provided permission.
+     * Determine if user has provided $permission.
      *
      * @param integer|string|Permission $permission Permission to look for.
      * @return bool
@@ -147,19 +147,45 @@ class User extends Authenticatable
 
         if(is_integer($permission)) {
 
-            $lookup_permission = $this->permissions()->find($permission);
+            $lookup_permission = $this->permissions()->firstWhere('id', '=', $permission);
 
-        } else if(get_class($permission) == Permission::class) {
+        } else if(is_object($permission) && get_class($permission) == Permission::class) {
 
-            $lookup_permission = $this->permissions()->find($permission->id);
+            $lookup_permission = $this->permissions()->firstWhere('id', '=', $permission->id);
 
         } else {
 
-            $lookup_permission = $this->permissions()->where('name', '=', $permission)->first();
+            $lookup_permission = $this->permissions()->firstWhere('name', '=', $permission);
 
         }
 
         return !is_null($lookup_permission);
+
+    }
+
+    /**
+     * Determine if the user is a member of the specified $group.
+     *
+     * @param integer|string|UserGroup $group   Group to look for.
+     * @return bool
+     */
+    public function memberOf($group) {
+
+        if(is_integer($group)) {
+
+            $lookup_group = $this->groups()->get()->firstWhere('id', '=', $group);
+
+        } else if(is_object($group) && get_class($group) == UserGroup::class) {
+
+            $lookup_group = $this->groups()->get()->firstWhere('id', '=', $group->id);
+
+        } else {
+
+            $lookup_group = $this->groups()->get()->firstWhere('name', '=', $group);
+
+        }
+
+        return !is_null($lookup_group);
 
     }
 }
