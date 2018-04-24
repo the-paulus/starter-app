@@ -24,7 +24,7 @@ class Setting extends Model
     public static $rules = [
         'name' => 'required|min:1|max:12|unique:user_groups,name',
         'type' => 'required|in:integer,ip,ip4,ip6,email,date,string',
-        'weight' => 'integer'
+        'weight' => 'integer|min:-10|max:10',
     ];
 
     /**
