@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection;
 
 class User extends Authenticatable
 {
@@ -115,13 +116,24 @@ class User extends Authenticatable
     }
 
     /**
-     * Returns all permissions a user has as a HasManyThrough object.
+     * Returns all permissions a user has as a Collection.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * @return Collection
      */
     public function permissions() {
 
-        return $this->hasManyThrough(Permission::class, UserGroup::class);
+        $permissions = new Collection();
+
+        foreach($this->groups()->get()->all() as $group) {
+
+            foreach($group->permissions()->get()->all() as $permission) {
+
+                $permissions->put($permission->id, $permission);
+
+            }
+        }
+
+        return $permissions;
 
     }
 
