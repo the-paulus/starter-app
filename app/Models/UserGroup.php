@@ -99,4 +99,33 @@ class UserGroup extends Model
         return $this->belongsToMany(Permission::class);
 
     }
+
+    /**
+     * Determine whether or not the group has a member of the specified $user.
+     *
+     * @param integer|string|UserGroup $user   User to look for.
+     * @return bool
+     */
+    public function hasMember($user) {
+
+        $lookup_user = null;
+
+        if(is_integer($user)) {
+
+            $lookup_user = $this->users()->get()->firstWhere('id', '=', $user);
+
+        } else if(is_object($user) && get_class($user) == User::class) {
+
+            $lookup_user = $this->users()->get()->firstWhere('id', '=', $user->id);
+
+        } else {
+
+            // TODO: Use search functionality.
+            //$lookup_group = $this->groups()->firstWhere('name', '=', $user);
+
+        }
+
+        return !is_null($lookup_user);
+
+    }
 }
