@@ -47,4 +47,18 @@ class SettingTest extends TestCase
         }
     }
 
+    public function testSettingWeight() {
+
+        $settings = Setting::all();
+        $setting_group = SettingGroup::all()->first();
+
+        foreach($settings as $setting) {
+
+            $setting->group()->associate($setting_group)->save();
+
+        }
+
+        $this->assertEquals(SettingTest::SETTING_COUNT, $setting_group->settings()->get()->count());
+    }
+
 }
