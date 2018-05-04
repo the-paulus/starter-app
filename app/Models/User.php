@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class User extends Authenticatable
 {
-    use Notifiable, SoftDeletes;
+    use Notifiable, SoftDeletes, ModelTrait;
 
     /**
      * @var bool Creates two timestamp fields created_at and updated_at. The default is TRUE
@@ -41,9 +43,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
+     * @var array The attributes that can be assigned en masse.
      */
     protected $fillable = [
         'first_name',
@@ -54,9 +54,18 @@ class User extends Authenticatable
     ];
 
     /**
-     * How the data within the model should be.
-     *
-     * @var array
+     * @var array Additional attributes assigned to the model.
+     */
+    protected $appends = ['user_group_ids'];
+
+    /**
+     * @var array Relations that are eager-loaded when the model is retrieved from the database.
+     */
+    protected $with = ['groups'];
+
+    /**
+     * @var array How the data within the model should be. When a rule fails, the message with the same key as the rule will be
+     * returned.
      */
     public static $rules = [
         'first_name' => 'required|string|max:255',
@@ -64,13 +73,12 @@ class User extends Authenticatable
         'email' => 'required|unique:users,email|email',
         // TODO: Enable this to be dynamic so other methods can be added on the fly.
         'auth_type' => 'required|in:shibboleth,local',
-        // TODO: This should be conditional depending on the type of authentication used.
-        'password' => 'required_if:auth_type,local'
+        'password' => 'required_if:auth_type,local',
+        'user_group_ids' => 'present'
     ];
 
     /**
-     * Messages to use when a rules fails.
-     * @var array
+     * @var array Messages to use when a rule fails.
      */
     public static $messages = [
         'first_name' => 'First name is required.',
@@ -81,9 +89,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be visible for array.
-     *
-     * @var array
+     * @var array The attributes that should be visible for array.
      */
     protected $visible = [
         'id',
@@ -96,9 +102,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
+     * @var array The attributes that should be hidden.
      */
     protected $hidden = [
         'password',
@@ -113,6 +117,7 @@ class User extends Authenticatable
     public function groups() {
 
         return $this->belongsToMany(UserGroup::class);
+
     }
 
     /**
@@ -186,6 +191,17 @@ class User extends Authenticatable
         }
 
         return !is_null($lookup_group);
+
+    }
+
+    /**
+     * Accessor for user_group_ids attribute that returns the IDs of the groups the user belongs to.
+     *
+     * @return Collection
+     */
+    public function getUserGroupIdsAttribute() {
+
+        return $this->groups()->get('id');
 
     }
 }
