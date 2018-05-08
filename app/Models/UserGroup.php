@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserGroup extends Model
 {
+    use ModelTrait;
+
     /**
      * The name of the create column name in the database.
      */
