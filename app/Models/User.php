@@ -4,14 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class User extends Authenticatable
+class User extends BaseAuthenticatable
 {
-    use Notifiable, SoftDeletes, ModelTrait;
+    use Notifiable, SoftDeletes;
 
     /**
      * @var bool Creates two timestamp fields created_at and updated_at. The default is TRUE
