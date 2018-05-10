@@ -1,5 +1,10 @@
 <?php
 
+use App\Models\User;
+use App\Models\UserGroup;
+use App\Models\Permission;
+use App\Models\Setting;
+use App\Models\SettingGroup;
 
 use Illuminate\Database\Seeder;
 
@@ -15,8 +20,8 @@ class DatabaseSeeder extends Seeder
     ];
 
     private $pivot_tables = [
-        'user_user_groups',
-        'permission_user_groups',
+        'user_user_group',
+        'permission_user_group',
     ];
 
     private $seeders = [
