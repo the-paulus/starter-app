@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class SettingGroup extends Model
+class SettingGroup extends BaseModel
 {
     /**
      * The name of the create column name in the database.
