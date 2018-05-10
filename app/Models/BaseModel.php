@@ -53,7 +53,7 @@ class BaseModel extends Model
      */
     public static function baseModelClassName() {
 
-        return strtolower(substr(strrchr(get_class(self::class), '\\'), 1));
+        return substr(strrchr(get_called_class(), '\\'), 1);
 
     }
 
@@ -62,17 +62,17 @@ class BaseModel extends Model
      *
      * @return array All permissions associated with the model.
      */
-    public static function modelPermissions() {
+    public static function getModelPermissions() {
 
         $all_permissions = array();
 
         for($i = 0; $i < count(self::$model_permissions); $i++) {
 
-            $all_permissions[] = self::$model_permissions[$i] . ' ' . self::baseModelClass();
+            $all_permissions[] = self::getModelPermission(self::$model_permissions[$i]);
 
         }
 
-        $all_permissions = array_merge(self::$permissions, self::$model_permissions);
+        //$all_permissions = array_merge(self::$permissions, self::$model_permissions);
 
         return $all_permissions;
 
@@ -88,7 +88,7 @@ class BaseModel extends Model
      */
     public static function getModelPermission($permission) {
 
-        return self::$model_permissions[array_search($permission, self::$model_permissions)] . ' ' . self::baseModelClass();
+        return self::$model_permissions[array_search($permission, self::$model_permissions)] . ' ' . strtolower(self::baseModelClassName()) . 's';
 
     }
 
@@ -135,6 +135,7 @@ class BaseModel extends Model
     private function validateModel($data = []) {
 
         static::validate(array_merge($this->attributesToArray(), $data));
+
         return $this;
     }
 
@@ -150,6 +151,7 @@ class BaseModel extends Model
     public static function validateAndCreate($data) {
 
         static::validate($data);
+
         return static::create($data);
 
     }
@@ -164,6 +166,8 @@ class BaseModel extends Model
      * @throws ValidationException
      */
     public function validateAndUpdate(array $data) {
+
+        $data = array_merge(self::attributesToArray(), $data);
 
         return $this->validateModel($data)->update($data);
 
