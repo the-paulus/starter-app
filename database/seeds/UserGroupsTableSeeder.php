@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Arr;
 use App\Models\UserGroup;
+use Illuminate\Validation\ValidationException;
 
 class UserGroupsTableSeeder extends DatabaseSeeder
 {
@@ -30,19 +32,20 @@ class UserGroupsTableSeeder extends DatabaseSeeder
 
         UserGroup::unguard(true);
 
-        foreach($this->groups as $group) {
+        foreach(self::$groups as $group) {
 
             try {
 
                 UserGroup::validateAndCreate($group);
 
-            } catch(\Dotenv\Exception\ValidationException $validationException) {
+                $this->command->info($group['name'] . ' created successfully.');
+
+            } catch(ValidationException $validationException) {
 
                 $this->command->error('Unable to create ' . $group['name']);
+                $this->command->error(implode("\n", Arr::flatten($validationException->errors())));
 
             }
-
-            $this->command->info($group['name'] . ' created successfully.');
 
         }
 
