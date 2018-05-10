@@ -12,11 +12,11 @@ class DatabaseSeeder extends Seeder
 {
 
     private $model_tables = [
-        User::class,
         UserGroup::class,
+        User::class,
         Permission::class,
-        Setting::class,
         SettingGroup::class,
+        Setting::class,
     ];
 
     private $pivot_tables = [
@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
     private $seeders = [
         UserGroupsTableSeeder::class,
         UsersTableSeeder::class,
+        SettingsGroupsTableSeeder::class,
     ];
 
     public function startClean() {
