@@ -23,7 +23,7 @@ class UserGroup extends BaseModel
      * @var array
      */
     public static $rules = [
-        'name' => 'required|min:1|max:12|unique:user_groups,name',
+        'name' => 'required|unique:user_groups,name',
     ];
 
     /**
