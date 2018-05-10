@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Permission extends Model
+class Permission extends BaseModel
 {
     /**
      * The name of the create column name in the database.
