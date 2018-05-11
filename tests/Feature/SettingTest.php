@@ -11,7 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SettingTest extends TestCase
 {
-    use DatabaseMigrations, RefreshDatabase;
+    use RefreshDatabase, DatabaseMigrations;
 
     const SETTING_COUNT = 10;
     const SETTING_GROUP_COUNT = 3;
