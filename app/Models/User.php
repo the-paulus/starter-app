@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class User extends BaseAuthenticatable
 {
@@ -70,10 +68,8 @@ class User extends BaseAuthenticatable
         'first_name' => 'required|string|max:255',
         'last_name' => 'required|string|max:255',
         'email' => 'required|unique:users,email|email',
-        // TODO: Enable this to be dynamic so other methods can be added on the fly.
-        'auth_type' => 'required|in:shibboleth,local',
-        'password' => 'required_if:auth_type,local',
-        'user_group_ids' => 'present'
+        'auth_type' => 'required|exists:auth_types,name',
+        'password' => 'required_password:auth_type,local',
     ];
 
     /**
@@ -85,6 +81,14 @@ class User extends BaseAuthenticatable
         'email' => 'A valid email address is required.',
         'auth_type' => 'Select the type of authentication.',
         'password' => 'A password is required.'
+    ];
+
+    public static $relationshipRules = [
+        'user_group_ids' => 'required_or_empty_array|array|exists:user_groups,id',
+    ];
+
+    public static $relationshipMessages = [
+        'user_group_ids' => 'List of groups is required.'
     ];
 
     /**
