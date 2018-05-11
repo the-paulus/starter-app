@@ -13,12 +13,20 @@ class CreateSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('settings', function (Blueprint $table) {
+        Schema::create('setting_types', function(Blueprint $table){
+
             $table->increments('id');
-            $table->integer('setting_group_id')->unsigned()->nullable();
+            $table->string('type');
+
+        });
+
+        Schema::create('settings', function (Blueprint $table) {
+
+            $table->increments('id');
+            $table->integer('setting_group_id')->unsigned()->default(1);
             $table->string('name')->unique()->index();
             $table->string('description');
-            $table->enum('type', ['integer','ip','ip4','ip6','email','date','string']);
+            $table->integer('setting_type')->unsigned();
             $table->text('value');
             $table->integer('weight')->default(0);
             $table->timestamps();
@@ -26,6 +34,9 @@ class CreateSettingsTable extends Migration
 
             $table->foreign('setting_group_id', 'setting_group_fk')->references('id')
                 ->on('setting_groups')->onDelete('cascade');
+
+            $table->foreign('setting_type', 'setting_type_fk')->references('id')->on('setting_types');
+
         });
     }
 
@@ -37,5 +48,6 @@ class CreateSettingsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('settings');
+        Schema::dropIfExists('setting_types');
     }
 }
