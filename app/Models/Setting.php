@@ -22,7 +22,7 @@ class Setting extends BaseModel
     public static $rules = [
         'name' => 'required|min:1|max:12|unique:user_groups,name',
         'type' => 'required|in:integer,ip,ip4,ip6,email,date,string',
-        'weight' => 'integer|min:-10|max:10',
+        'weight' => 'integer',
     ];
 
     /**
