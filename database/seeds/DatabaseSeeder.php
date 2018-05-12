@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
         UserGroupsTableSeeder::class,
         UsersTableSeeder::class,
         SettingGroupsTableSeeder::class,
+        SettingsTableSeeder::class,
     ];
 
     public function startClean() {
