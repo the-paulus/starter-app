@@ -19,13 +19,10 @@ class UserTest extends TestCase
     {
         parent::setUp();
 
-
         DB::table('auth_types')->insert([
             ['id' => 1, 'name' => 'local'],
             ['id' => 2, 'name' => 'oauth'],
         ]);
-
-        $this->assertDatabaseHas('auth_types', ['name'=>'local']);
 
         factory(UserGroup::class)->times(UserTest::USER_GROUP_COUNT)->create();
         factory(Permission::class)->times(UserTest::PERMISSION_COUNT)->create();
@@ -40,10 +37,7 @@ class UserTest extends TestCase
      */
     public function testAuthTypes() {
 
-        $this->assertDatabaseHas('auth_types', [
-            ['id' => 1, 'name' => 'local'],
-            ['id' => 2, 'name' => 'oauth'],
-        ]);
+        $this->assertDatabaseHas('auth_types', ['name' => ['local', 'oauth']]);
 
     }
 
