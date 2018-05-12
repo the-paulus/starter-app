@@ -92,7 +92,6 @@ class BaseModel extends Model
 
     }
 
-
     /**
      * Validates the $data based on the rules in the referenced class.
      *
