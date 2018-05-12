@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
     private $seeders = [
         UserGroupsTableSeeder::class,
         UsersTableSeeder::class,
-        SettingsGroupsTableSeeder::class,
+        SettingGroupsTableSeeder::class,
     ];
 
     public function startClean() {
@@ -48,6 +48,7 @@ class DatabaseSeeder extends Seeder
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
+
     /**
      * Run the database seeds.
      *

@@ -8,7 +8,7 @@ use Illuminate\Validation\ValidationException;
 // composer require laracasts/testdummy
 use Laracasts\TestDummy\Factory as TestDummy;
 
-class SettingsGroupsTableSeeder extends DatabaseSeeder
+class SettingGroupsTableSeeder extends DatabaseSeeder
 {
     public static $settings_groups = [
         [
