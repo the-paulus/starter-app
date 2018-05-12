@@ -1,10 +1,12 @@
 <?php
 
+use App\Models\SettingGroup;
 use Faker\Generator as Faker;
 
 $factory->define(App\Models\Setting::class, function (Faker $faker) {
 
-    $type = $faker->randomElement(['integer','ip','ip4','ip6','email','date','string']);
+    $types = SettingsTableSeeder::$setting_types;
+    $type = $faker->randomElement($types);
     $value = null;
 
     switch($type) {
@@ -24,16 +26,23 @@ $factory->define(App\Models\Setting::class, function (Faker $faker) {
         case 'date':
             $value = $faker->dateTimeBetween();
             break;
+        case 'html':
+            $value = $faker->randomHtml();
+            break;
+        case 'text':
         case 'string':
             $value = $faker->text();
             break;
     }
 
+    $type = array_search($type, $types) + 1;
+
     return [
         'name' => substr($faker->unique()->word, 0, 12),
         'description' => $faker->sentence(12),
-        'type' => $type,
+        'setting_type' => $type,
         'value' => $value,
         'weight' => $faker->randomNumber(1),
+        'setting_group_id' => SettingGroup::all()->random()->first()->id
     ];
 });
