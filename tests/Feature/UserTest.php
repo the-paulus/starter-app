@@ -60,6 +60,10 @@ class UserTest extends TestCase
 
     }
 
+    /**
+     * @group users
+     * @group usergroups
+     */
     public function testUserInGroup() {
 
         $users = User::all();
@@ -75,6 +79,10 @@ class UserTest extends TestCase
         }
     }
 
+    /**
+     * @group permissions
+     * @group permissiongroups
+     */
     public function testPermissionInGroup() {
 
         $permissions = Permission::all();
@@ -90,6 +98,10 @@ class UserTest extends TestCase
         }
     }
 
+    /**
+     * @group users
+     * @group usergroups
+     */
     public function testAddUserToMultipleGroups() {
 
         $user = User::all()->first();
@@ -119,6 +131,11 @@ class UserTest extends TestCase
 
     }
 
+    /**
+     * @group users
+     * @group usergroups
+     * @group permissions
+     */
     public function testUserPermissions() {
 
         $permissions = Permission::all()->take(3);
