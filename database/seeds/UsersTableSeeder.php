@@ -57,7 +57,8 @@ class UsersTableSeeder extends DatabaseSeeder
 
             } catch(ValidationException $validationException) {
 
-                $this->command->info(print_r(implode("\n",Arr::flatten($validationException->errors())), TRUE));
+                $this->command->error(print_r(implode("\n",Arr::flatten($validationException->errors())), TRUE));
+                $this->command->info('Data: ' . print_r($value, TRUE));
 
             }
         }
