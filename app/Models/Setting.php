@@ -20,8 +20,8 @@ class Setting extends BaseModel
      * @var array
      */
     public static $rules = [
-        'name' => 'required|min:1|max:12|unique:user_groups,name',
-        'type' => 'required|in:integer,ip,ip4,ip6,email,date,string',
+        'name' => 'required|unique:settings,name',
+        'setting_type' => 'required|exists:setting_types,id',
         'weight' => 'integer',
     ];
 
@@ -32,7 +32,7 @@ class Setting extends BaseModel
      */
     public static $messages = [
         'name' => 'Group name is required and must be unique.',
-        'type' => 'Setting type is required.',
+        'setting_type' => 'Setting type is required.',
         'weight' => 'Weight must be an integer.',
     ];
 
@@ -64,7 +64,7 @@ class Setting extends BaseModel
     protected $fillable = [
         'name',
         'description',
-        'type',
+        'setting_type',
         'value',
         'weight'
     ];
@@ -84,7 +84,7 @@ class Setting extends BaseModel
     protected $visible = [
         'name',
         'description',
-        'type',
+        'setting_type',
         'value',
         'weight'
     ];
