@@ -15,21 +15,21 @@ class UsersTableSeeder extends DatabaseSeeder
             'last_name' => 'Admin',
             'email' => 'admin@starter-app.local',
             'password' => 'adminpasssecret',
-            'auth_type' => 'local',
+            'auth_type' => 1,
         ],
         [
             'first_name' => 'Admin',
             'last_name' => 'User',
             'email' => 'admin-user@starter-app.local',
             'password' => 'adminsecretagentuser',
-            'auth_type' => 'local',
+            'auth_type' => 1,
         ],
         [
             'first_name' => 'Standard',
             'last_name' => 'User',
             'email' => 'user@starter-app.local',
             'password' => 'justastandardpassword',
-            'auth_type' => 'local',
+            'auth_type' => 1,
         ]
     ];
 
@@ -40,6 +40,7 @@ class UsersTableSeeder extends DatabaseSeeder
      */
     public function run()
     {
+        \DB::table('auth_types')->insert(['name'=>'local']);
 
         foreach(self::$users as $key => $value) {
 
