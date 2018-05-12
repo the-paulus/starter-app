@@ -68,8 +68,8 @@ class User extends BaseAuthenticatable
         'first_name' => 'required|string|max:255',
         'last_name' => 'required|string|max:255',
         'email' => 'required|unique:users,email|email',
-        'auth_type' => 'required|exists:auth_types,name',
-        'password' => 'required_password:auth_type,local',
+        'auth_type' => 'required|integer|exists:auth_types,id',
+        'password' => 'required_password:auth_type,1',
     ];
 
     /**
