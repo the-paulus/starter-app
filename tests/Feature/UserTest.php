@@ -2,18 +2,14 @@
 
 namespace Tests\Feature;
 
+use DB;
 use App\Models\Permission;
 use App\Models\User;
 use App\Models\UserGroup;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
 {
-
-    use DatabaseMigrations, RefreshDatabase;
 
     const USER_COUNT = 10;
     const USER_GROUP_COUNT = 3;
@@ -23,13 +19,40 @@ class UserTest extends TestCase
     {
         parent::setUp();
 
+
+        DB::table('auth_types')->insert([
+            ['id' => 1, 'name' => 'local'],
+            ['id' => 2, 'name' => 'oauth'],
+        ]);
+
+        $this->assertDatabaseHas('auth_types', ['name'=>'local']);
+
         factory(UserGroup::class)->times(UserTest::USER_GROUP_COUNT)->create();
         factory(Permission::class)->times(UserTest::PERMISSION_COUNT)->create();
         factory(User::class)->times(UserTest::USER_COUNT)->create();
 
     }
 
-    public function testCreation() {
+    /**
+     * @group users
+     * @group database
+     * @group authentication
+     */
+    public function testAuthTypes() {
+
+        $this->assertDatabaseHas('auth_types', [
+            ['id' => 1, 'name' => 'local'],
+            ['id' => 2, 'name' => 'oauth'],
+        ]);
+
+    }
+
+    /**
+     * @group users
+     * @group usergroups
+     * @group permissions
+     */
+    public function testUserUserGroupCreation() {
 
         $this->assertEquals(UserTest::USER_COUNT, count(User::all()));
         $this->assertEquals(UserTest::USER_GROUP_COUNT, count(UserGroup::all()));
