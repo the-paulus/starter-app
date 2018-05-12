@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use DB;
+use SettingsTableSeeder;
 use App\Models\Setting;
 use App\Models\SettingGroup;
 use Tests\TestCase;
@@ -11,8 +13,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SettingTest extends TestCase
 {
-    use RefreshDatabase, DatabaseMigrations;
-
     const SETTING_COUNT = 10;
     const SETTING_GROUP_COUNT = 3;
 
@@ -20,12 +20,18 @@ class SettingTest extends TestCase
     {
         parent::setUp();
 
+        foreach(SettingsTableSeeder::$setting_types as $id => $type) {
+
+            DB::table('setting_types')->insert(['id' => ($id+1), 'name' => $type]);
+
+        }
+
         factory(SettingGroup::class)->times(SettingTest::SETTING_GROUP_COUNT)->create();
         factory(Setting::class)->times(SettingTest::SETTING_COUNT)->create();
 
     }
 
-    public function testCreation() {
+    public function testSettingAndSettingGroupCreation() {
 
         $this->assertEquals(SettingTest::SETTING_COUNT, count(Setting::all()));
         $this->assertEquals(SettingTest::SETTING_GROUP_COUNT, count(SettingGroup::all()));
