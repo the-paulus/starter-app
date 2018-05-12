@@ -4,6 +4,8 @@ namespace App\Models;
 
 class SettingGroup extends BaseModel
 {
+    protected $table = 'setting_groups';
+
     /**
      * The name of the create column name in the database.
      */
