@@ -2,19 +2,15 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Support\Arr;
+use DB;
 use App\Models\User;
-use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BaseModelTest extends TestCase
 {
+
     /**
-     * A basic test example.
-     *
-     * @return void
+     * @group model
      */
     public function testBaseModel()
     {
@@ -35,14 +31,22 @@ class BaseModelTest extends TestCase
         }
     }
 
+    /**
+     * @group model
+     */
     public function testBaseModelValidateModel() {
+
+        DB::table('auth_types')->insert([
+            ['id' => 1, 'name' => 'local'],
+            ['id' => 2, 'name' => 'oauth'],
+        ]);
 
         $attributes = [
             'first_name' => 'test',
             'last_name' => 'test',
             'email' => 'test@test.com',
             'password' => 'adminpasssecret',
-            'auth_type' => 'local',
+            'auth_type' => 1,
         ];
 
         User::validate($attributes);
@@ -51,14 +55,26 @@ class BaseModelTest extends TestCase
 
         $attributes['email'] = 'ponies@home.com';
 
-        try {
-            $user->validateAndUpdate($attributes);
-        } catch(ValidationException $validationException) {
+        $user->validateAndUpdate($attributes);
 
-            print_r(implode("\n", Arr::flatten($validationException->errors())));
+    }
 
-        }
-        //$user->validateAndUpdate(['first_name' => 'test']);
+    /**
+     * @group model
+     * 
+     * @expectedException Illuminate\Validation\ValidationException
+     */
+    public function testBaseModelValidateException() {
+
+        $attributes = [
+            'first_name' => 'test',
+            'last_name' => 'test',
+            'email' => 'test@test.com',
+            'password' => 'adminpasssecret',
+            'auth_type' => 1,
+        ];
+
+        User::validate($attributes);
 
     }
 }
