@@ -28,7 +28,6 @@ class UserGroupsTableSeeder extends DatabaseSeeder
      */
     public function run()
     {
-        self::startClean();
 
         UserGroup::unguard(true);
 
