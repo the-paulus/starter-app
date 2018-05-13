@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
         UsersTableSeeder::class,
         SettingGroupsTableSeeder::class,
         SettingsTableSeeder::class,
+        PermissionsTableSeeder::class,
     ];
 
     public function startClean() {
@@ -57,6 +58,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+
+        $this->startClean();
+
         foreach($this->seeders as $seeder) {
 
             $this->call($seeder);
