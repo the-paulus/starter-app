@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 
-class User extends BaseAuthenticatable
+class User extends BaseModel implements Authenticatable
 {
     use Notifiable, SoftDeletes;
 
@@ -83,13 +84,13 @@ class User extends BaseAuthenticatable
         'password' => 'A password is required.'
     ];
 
-    public static $relationshipRules = [
+/*    public static $relationshipRules = [
         'user_group_ids' => 'required_or_empty_array|array|exists:user_groups,id',
     ];
 
     public static $relationshipMessages = [
         'user_group_ids' => 'List of groups is required.'
-    ];
+    ];*/
 
     /**
      * @var array The attributes that should be visible for array.
@@ -108,6 +109,7 @@ class User extends BaseAuthenticatable
      * @var array The attributes that should be hidden.
      */
     protected $hidden = [
+        'auth_type',
         'password',
         'remember_token',
     ];
@@ -207,4 +209,66 @@ class User extends BaseAuthenticatable
         return $this->groups()->get('id');
 
     }
+
+    /**
+     * Get the unique identifier for the user.
+     *
+     * @return mixed
+     */
+    public function getAuthIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Get the name of the unique identifier for the user.
+     *
+     * @return string
+     */
+    public function getAuthIdentifierName()
+    {
+        return $this->getKeyName();
+    }
+
+    /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Get the token value for the "remember me" session.
+     *
+     * @return string
+     */
+    public function getRememberToken()
+    {
+        return $this->remember_token;
+    }
+
+    /**
+     * Set the token value for the "remember me" session.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setRememberToken($value)
+    {
+        $this->remember_token = $value;
+    }
+
+    /**
+     * Get the column name for the "remember me" token.
+     *
+     * @return string
+     */
+    public function getRememberTokenName()
+    {
+        return 'remember_token';
+    }
+
 }
