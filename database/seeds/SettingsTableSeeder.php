@@ -58,7 +58,6 @@ class SettingsTableSeeder extends DatabaseSeeder
         foreach(self::$settings as $group_name => $setting_group) {
 
             $new_group = SettingGroup::all()->firstWhere('name', '=', $group_name);
-            print_r($new_group);
 
             foreach($setting_group as $setting) {
 
