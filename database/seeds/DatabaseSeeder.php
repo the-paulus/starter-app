@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
     private $pivot_tables = [
         'user_user_group',
         'permission_user_group',
+        'auth_types',
+        'setting_types',
     ];
 
     private $seeders = [
