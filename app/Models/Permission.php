@@ -20,7 +20,7 @@ class Permission extends BaseModel
      * @var array
      */
     public static $rules = [
-        'name' => 'required|min:1|max:12|unique:user_groups,name',
+        'name' => 'required|min:6|unique:permissions,name',
     ];
 
     /**
@@ -29,7 +29,7 @@ class Permission extends BaseModel
      * @var array
      */
     public static $messages = [
-        'name' => 'Group name is required and must be unique.',
+        'name' => 'Permission name is required, must be unique, and have a minimum of 6 characters.',
     ];
 
     /**
