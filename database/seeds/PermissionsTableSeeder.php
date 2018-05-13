@@ -142,6 +142,25 @@ class PermissionsTableSeeder extends DatabaseSeeder
         ],
     ];
 
+    // TODO: Is this really needed?
+    public static $specific_permissions = [
+        [
+            'name' => 'modify :usergroup user group',
+            'description' => '',
+            'groups' => [],
+        ],
+        [
+            'name' => 'access :usergroup user group',
+            'description' => '',
+            'groups' => [],
+        ],
+        [
+            'name' => 'modify :usergroup user group',
+            'description' => '',
+            'groups' => [],
+        ],
+    ];
+
     public function run()
     {
 
@@ -155,17 +174,11 @@ class PermissionsTableSeeder extends DatabaseSeeder
                     $groups = $permission['groups'];
                     unset($permission['groups']);
 
-                    print_r($permission);
                     $permission = Permission::validateAndCreate($permission);
 
                     $this->command->info('Created ' . $permission['name']);
 
-                    print_r(var_dump(UserGroup::all()));
-
                     foreach($groups as $group) {
-
-
-                        print_r(var_dump(UserGroup::where('name', '=', $group)->first()));
 
                         $permission->groups()->attach(UserGroup::where('name', '=', $group)->first());
 
