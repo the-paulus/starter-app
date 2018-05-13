@@ -13,11 +13,11 @@ use Illuminate\Validation\ValidationException;
 class UserController extends Controller
 {
 
-    protected $model = User::class;
+    protected static $model = User::class;
 
     public function index() {
 
-        return response()->json(User::all(), self::METHOD_SUCCESS_CODE[__FUNCTION__]);
+        return response()->json(['data' => User::all()], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
 
     }
 
@@ -29,7 +29,7 @@ class UserController extends Controller
 
             $user = User::findOrFail($id);
 
-            return response()->json($user, self::METHOD_SUCCESS_CODE[__FUNCTION__]);
+            return response()->json(['data' => [$user]], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
 
         } catch(ModelNotFoundException $e) {
 
