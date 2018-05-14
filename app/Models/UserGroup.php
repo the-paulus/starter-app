@@ -73,8 +73,12 @@ class UserGroup extends BaseModel
      * @var array
      */
     protected $visible = [
+        'id',
         'name',
         'description',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
