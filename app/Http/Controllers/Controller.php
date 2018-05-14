@@ -21,7 +21,7 @@ class Controller extends BaseController
         'show'      => Response::HTTP_OK,
         'store'     => Response::HTTP_CREATED,
         'update'    => Response::HTTP_SEE_OTHER,
-        'destroy'   => Response::HTTP_GONE
+        'destroy'   => Response::HTTP_GONE,
     ];
 
     /**
@@ -32,8 +32,10 @@ class Controller extends BaseController
         'show'      => Response::HTTP_NOT_FOUND,
         'store'     => Response::HTTP_NOT_ACCEPTABLE,
         'update'    => Response::HTTP_NOT_MODIFIED,
-        'destroy'   => Response::HTTP_I_AM_A_TEAPOT
+        'destroy'   => Response::HTTP_NOT_FOUND,
     ];
+
+    protected static $model;
 
     /**
      * @var bool Indicates whether or not the controller should create the standard API routes.
