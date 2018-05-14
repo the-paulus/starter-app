@@ -33,7 +33,7 @@ class UserController extends Controller
 
         } catch(ModelNotFoundException $e) {
 
-            return response()->json([], self::METHOD_FAILURE_CODE[__FUNCTION__]);
+            return response()->json(['data' => [], 'errors' => 'User ID ' . $id . ' was not found.'], self::METHOD_FAILURE_CODE[__FUNCTION__]);
 
         }
 
