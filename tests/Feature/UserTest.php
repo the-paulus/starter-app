@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\UserController;
 use DB;
 use App\Models\Permission;
@@ -183,13 +184,16 @@ class UserTest extends TestCase
         $user->setRememberToken('forgetme');
 
         $this->assertEquals('forgetme', $user->getRememberToken());
-        
+
     }
 
     /**
-     *
+     * @group users
+     * @group api
+     * @group controller
+     * @group authentication
      */
-    public function testUserControllerAPI() {
+    public function testUserControllerShowAllAPI() {
 
         $this->json('GET','api/user')->assertStatus(Response::HTTP_UNAUTHORIZED);
 
@@ -200,15 +204,43 @@ class UserTest extends TestCase
         $response->assertStatus(UserController::METHOD_SUCCESS_CODE['index']);
         $response->assertJsonCount(UserTest::USER_COUNT, 'data');
 
+        // TODO: Test 'access users' permission.
+
+    }
+
+    /**
+     * @group users
+     * @group api
+     * @group controller
+     * @group authentication
+     */
+    public function testUserControllerShowUserAPI() {
+
+        $user = User::firstOrFail();
+
         $response = $this->actingAs($user, 'api')->json('GET', 'api/user/' . User::all()->random()->id);
 
         $response->assertStatus(UserController::METHOD_SUCCESS_CODE['show']);
         $response->assertJsonCount(1);
 
+        // Test for requesting a non-existent user.
         $response = $this->actingAs($user, 'api')->json('GET', 'api/user/1000');
 
         $response->assertStatus(UserController::METHOD_FAILURE_CODE['show']);
         $response->assertJsonCount(0);
+
+        // TODO: Test 'access users' permission.
+    }
+
+    /**
+     * @group users
+     * @group api
+     * @group controller
+     * @group authentication
+     */
+    public function testUserControllerCreateUserAPI() {
+
+        $user = User::firstOrFail();
 
         $last_id = User::all()->last()->id+1;
         $response = $this->actingAs($user, 'api')->post('api/user', factory(User::class)->raw());
@@ -238,29 +270,42 @@ class UserTest extends TestCase
 
         $response->assertStatus(UserController::METHOD_FAILURE_CODE['store']);
 
+    }
+
+    /**
+     * @group users
+     * @group api
+     * @group controller
+     * @group authentication
+     */
+    public function testUserControllerUpdateUserAPI() {
+
+        $user = User::firstOrFail();
+
         $user->first_name = 'test';
         $user->last_name = 'test';
 
-        $response = $this->actingAs($user, 'api')->put('api/user/' . $user->id, $user->getAttributes());
+        $response = $this->actingAs($user, 'api')->put('api/user/' . $user->id, ['first_name' => 'test', 'last_name' => 'test']);
         $response->assertStatus(UserController::METHOD_SUCCESS_CODE['update']);
 
-        $updated_user = User::findOrFail($user->id)->first()->getAttributes();
+        $updated_user = User::findOrFail($user->id)->first()->getFillable();
 
         foreach($updated_user as $key => $val) {
 
-            if( $key == 'updated_at' ) {
-
-                $this->assertNotEquals($user->getAttribute($key), $val, 'User was not updated.');
-
-            } else {
-
-                $this->assertEquals($user->getAttribute($key), $val, $key . ' attribute was not updated.');
-
-            }
-
+            $this->assertEquals($user->getAttribute($key), $val, $key . ' attribute was not updated.');
 
         }
 
+        // Try updating a non-existent user.
+        $response = $this->actingAs($user, 'api')->put('api/user/' . User::all()->last()->id+1, $user->getAttributes());
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+
+        // Update user with invalid attribute values
+        $user->email = 'me';
+        $response = $this->actingAs($user, 'api')->put('api/user/' . $user->id, $user->getAttributes());
+        $response->assertStatus(UserController::METHOD_FAILURE_CODE['update']);
+
     }
+    
 
 }
