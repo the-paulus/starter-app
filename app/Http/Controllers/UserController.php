@@ -88,9 +88,6 @@ class UserController extends Controller
 
             return response()->json(['data' => [], 'errors' => $validationException->errors()], self::METHOD_FAILURE_CODE[__FUNCTION__]);
 
-        } catch(\Exception $exception) {
-
-            return response()->json(['data' => [], 'errors' => $exception->getMessage()], Response::HTTP_METHOD_NOT_ALLOWED);
         }
 
     }
