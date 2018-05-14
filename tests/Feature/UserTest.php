@@ -309,10 +309,11 @@ class UserTest extends TestCase
         $user = User::firstOrFail();
         $id = User::all()->last()->id;
 
-        $this->performApiActionAs($user, 'delete', 'api/user/' . $id)->assertStatus(UserController::METHOD_SUCCESS_CODE['destroy']);
+        $this->performApiActionAs($user, 'delete', 'api/user/' . $id, array(), UserController::METHOD_SUCCESS_CODE['destroy']);
 
         $this->assertNull(User::find($id));
 
+        $this->performApiActionAs($user, 'delete', 'api/user/' . User::all()->last()->id+1, array(), UserController::METHOD_FAILURE_CODE['destroy']);
 
         // TODO: Test 'delete users' permission.
     }
