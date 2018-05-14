@@ -2,7 +2,9 @@
 
 namespace Tests\Unit;
 
+use App\Models\User;
 use Illuminate\Http\Testing\File;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -70,6 +72,21 @@ class ValidationTest extends TestCase
 
         $validator = Validator::make(['test_field' => $fake_file], ['test_field' => 'required_or_empty_array']);
         $this->assertTrue($validator->fails());
+
+    }
+
+    public function testUniqueValidation() {
+
+        \DB::table('auth_types')->insert(['id' => 1, 'name' => 'local']);
+        factory(User::class)->create();
+
+        $user = User::firstOrFail();
+
+        Auth::login($user);
+
+        $validator = Validator::make($user->getAttributes(), ['email' => 'required|dynamic_unique:users,email,{id}']);
+        $this->assertTrue($validator->passes(), $validator->errors());
+
 
     }
 
