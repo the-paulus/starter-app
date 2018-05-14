@@ -166,6 +166,25 @@ class UserTest extends TestCase
     }
 
     /**
+     * @group users
+     * @group authentication
+     */
+    public function testUserAuthenticatables() {
+
+        $user = User::firstOrFail();
+
+        $this->assertEquals('id', $user->getAuthIdentifierName());
+        $this->assertEquals($user->password, $user->getAuthPassword());
+        $this->assertEquals($user->remember_token, $user->getRememberToken());
+        $this->assertEquals('remember_token', $user->getRememberTokenName());
+
+        $user->setRememberToken('forgetme');
+
+        $this->assertEquals('forgetme', $user->getRememberToken());
+        
+    }
+
+    /**
      *
      */
     public function testUserControllerAPI() {
