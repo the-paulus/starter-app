@@ -109,6 +109,7 @@ class BaseModel extends Model
             if( $model_validator->fails() ) {
 
                 throw new ValidationException($model_validator);
+                
             }
 
             if( $relationship_validator->fails() ) {
