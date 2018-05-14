@@ -54,11 +54,11 @@ class UserController extends Controller
 
             }
 
-            return response()->json($user->freshRelationships(), self::METHOD_SUCCESS_CODE[__FUNCTION__]);
+            return response()->json(['data' => [$user->freshRelationships()]], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
 
         } catch(ValidationException $validationException) {
 
-            return response()->json($validationException->errors(), self::METHOD_FAILURE_CODE[__FUNCTION__]);
+            return response()->json(['data' => [], 'errors' => $validationException->errors()], self::METHOD_FAILURE_CODE[__FUNCTION__]);
 
         }
 
@@ -70,7 +70,7 @@ class UserController extends Controller
 
         try {
 
-            $user = User::findOrFail($id)->validateAndUpdate($request->all());
+            $user = User::find($id)->validateAndUpdate($request->all());
 
             if ($request->has('user_group_ids')) {
 
@@ -78,16 +78,19 @@ class UserController extends Controller
 
             }
 
-            return response()->json($user->freshRelationships(), self::METHOD_SUCCESS_CODE[__FUNCTION__]);
+            return response()->json(['data' => [$user->freshRelationships()]], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
 
         } catch(ModelNotFoundException $modelNotFoundException) {
 
-            return response()->json(User::baseModelClassName() . ' not found.', Response::HTTP_NOT_FOUND);
+            return response()->json(['data' => [], 'errors' => [User::baseModelClassName() . ' not found.']], Response::HTTP_NOT_FOUND);
 
         } catch(ValidationException $validationException) {
 
-            return response()->json($validationException->errors(), self::METHOD_FAILURE_CODE[__FUNCTION__]);
+            return response()->json(['data' => [], 'errors' => $validationException->errors()], self::METHOD_FAILURE_CODE[__FUNCTION__]);
 
+        } catch(\Exception $exception) {
+
+            return response()->json(['data' => [], 'errors' => $exception->getMessage()], Response::HTTP_METHOD_NOT_ALLOWED);
         }
 
     }
@@ -100,11 +103,11 @@ class UserController extends Controller
 
             User::findOrFail($id)->delete();
 
-            return response()->json([], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
+            return response()->json(['data' => []], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
 
         } catch( ModelNotFoundException $modelNotFoundException) {
 
-            return response()->json(User::baseModelClassName() . ' not found.', Response::HTTP_NOT_FOUND);
+            return response()->json(['data' => [], 'errors' => [User::baseModelClassName() . ' not found.']], Response::HTTP_NOT_FOUND);
 
         }
 
