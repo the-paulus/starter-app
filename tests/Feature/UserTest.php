@@ -257,7 +257,8 @@ class UserTest extends TestCase
 
         }
 
-        $this->performApiActionAs($user, 'post', 'api/user', [], UserController::METHOD_FAILURE_CODE['store']);
+        // Testing validation
+        $this->performApiActionAs($user, 'post', 'api/user', [], Controller::METHOD_FAILURE_CODE['store']);
 
 
         // TODO: Test 'create users' permission.
@@ -279,7 +280,7 @@ class UserTest extends TestCase
 
         $onlyAttributes = $user->getFillable();;
 
-        $this->performApiActionAs($user, 'put', 'api/user/' . $user->id, $user->only($onlyAttributes), UserController::METHOD_SUCCESS_CODE['update']);
+        $this->performApiActionAs($user, 'put', 'api/user/' . $user->id, $user->only($onlyAttributes), Controller::METHOD_SUCCESS_CODE['update']);
 
         $updated_user = User::findOrFail($user->id)->first()->only($onlyAttributes);
 
@@ -294,7 +295,7 @@ class UserTest extends TestCase
 
         // Update user with invalid attribute values
         $user->email = 'me';
-        $this->performApiActionAs($user, 'put', 'api/user/' . $user->id, $user->getAttributes(), UserController::METHOD_FAILURE_CODE['update']);
+        $this->performApiActionAs($user, 'put', 'api/user/' . $user->id, $user->getAttributes(), Controller::METHOD_FAILURE_CODE['update']);
 
         // TODO: Test 'modify users' permission.
     }
@@ -310,11 +311,11 @@ class UserTest extends TestCase
         $user = User::firstOrFail();
         $id = User::all()->last()->id;
 
-        $this->performApiActionAs($user, 'delete', 'api/user/' . $id, array(), UserController::METHOD_SUCCESS_CODE['destroy']);
+        $this->performApiActionAs($user, 'delete', 'api/user/' . $id, array(), Controller::METHOD_SUCCESS_CODE['destroy']);
 
         $this->assertNull(User::find($id));
 
-        $this->performApiActionAs($user, 'delete', 'api/user/' . User::all()->last()->id+1, array(), UserController::METHOD_FAILURE_CODE['destroy']);
+        $this->performApiActionAs($user, 'delete', 'api/user/' . User::all()->last()->id+1, array(), Controller::METHOD_FAILURE_CODE['destroy']);
 
         // TODO: Test 'delete users' permission.
     }
