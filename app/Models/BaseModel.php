@@ -169,7 +169,13 @@ class BaseModel extends Model
 
         $data = array_merge(self::attributesToArray(), $data);
 
-        return $this->validateModel($data)->update($data);
+        if( $this->validateModel($data)->update($data) ) {
+
+            return $this;
+
+        }
+
+        return FALSE;
 
     }
 
