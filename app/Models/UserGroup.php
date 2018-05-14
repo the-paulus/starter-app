@@ -60,6 +60,8 @@ class UserGroup extends BaseModel
      */
     protected $fillable = ['name', 'description'];
 
+    protected $appends = ['user_ids'];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -129,6 +131,17 @@ class UserGroup extends BaseModel
         }
 
         return !is_null($lookup_user);
+
+    }
+
+    /**
+     * Accessor for user_ids attribute that returns a Collection of user IDs that are in the group.
+     *
+     * @return Collection
+     */
+    public function getUserIdsAttribute() {
+
+        return $this->users()->get('id');
 
     }
 }
