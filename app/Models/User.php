@@ -68,7 +68,7 @@ class User extends BaseModel implements Authenticatable
     public static $rules = [
         'first_name' => 'required|string|max:255',
         'last_name' => 'required|string|max:255',
-        'email' => 'required|unique:users,email|email',
+        'email' => 'required|dynamic_unique:users,email,{id}|email',
         'auth_type' => 'required|integer|exists:auth_types,id',
         'password' => 'required_password:auth_type,1',
     ];
