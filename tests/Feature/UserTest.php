@@ -199,10 +199,8 @@ class UserTest extends TestCase
 
         $user = User::firstOrFail();
 
-        $response = $this->actingAs($user, 'api')->json('GET', 'api/user');
-
-        $response->assertStatus(UserController::METHOD_SUCCESS_CODE['index']);
-        $response->assertJsonCount(UserTest::USER_COUNT, 'data');
+        $this->performApiActionAs($user, 'get', 'api/user', array(), UserController::METHOD_SUCCESS_CODE['index'])
+            ->assertJsonCount(UserTest::USER_COUNT, 'data');
 
         // TODO: Test 'access users' permission.
 
@@ -218,16 +216,11 @@ class UserTest extends TestCase
 
         $user = User::firstOrFail();
 
-        $response = $this->actingAs($user, 'api')->json('GET', 'api/user/' . User::all()->random()->id);
-
-        $response->assertStatus(UserController::METHOD_SUCCESS_CODE['show']);
-        $response->assertJsonCount(1);
+        $this->performApiActionAs($user, 'get', 'api/user/' . User::all()->random()->id, array(), UserController::METHOD_SUCCESS_CODE['show'])
+            ->assertJsonCount(1);
 
         // Test for requesting a non-existent user.
-        $response = $this->actingAs($user, 'api')->json('GET', 'api/user/1000');
-
-        $response->assertStatus(UserController::METHOD_FAILURE_CODE['show']);
-        $response->assertJsonCount(0);
+        $this->performApiActionAs($user, 'get', 'api/user/' . User::all()->last()->id + 1, array(), UserController::METHOD_FAILURE_CODE['show']);
 
         // TODO: Test 'access users' permission.
     }
@@ -243,20 +236,17 @@ class UserTest extends TestCase
         $user = User::firstOrFail();
 
         $last_id = User::all()->last()->id+1;
-        $response = $this->actingAs($user, 'api')->post('api/user', factory(User::class)->raw());
-        $new_user_id = $response->json()['data'][0]['id'];
-
-        $response->assertStatus(UserController::METHOD_SUCCESS_CODE['store']);
-        $response->assertJsonCount(1,'data');
+        $new_user_id = $this->performApiActionAs($user, 'post', 'api/user', factory(User::class)->raw(), UserController::METHOD_SUCCESS_CODE['store'])
+            ->assertJsonCount(1, 'data')->json()['data'][0]['id'];
         $this->assertEquals($last_id, $new_user_id);
 
         $new_user_arr = factory(User::class)->raw();
         $new_user_arr['user_group_ids'][] = UserGroup::all()->random()->id;
         $new_user_arr['user_group_ids'][] = UserGroup::all()->random()->id;
-        $response = $this->actingAs($user, 'api')->post('api/user', $new_user_arr);
-        $new_user_id = $response->json()['data'][0]['id'];
 
-        $response->assertStatus(UserController::METHOD_SUCCESS_CODE['store']);
+        $new_user_id = $this->performApiActionAs($user, 'post', 'api/user', $new_user_arr, UserController::METHOD_SUCCESS_CODE['store'])
+            ->assertJsonCount(1, 'data')
+            ->json()['data'][0]['id'];
 
         $new_user = User::findOrFail($new_user_id);
 
@@ -266,9 +256,10 @@ class UserTest extends TestCase
 
         }
 
-        $response = $this->actingAs($user, 'api')->post('api/user', []);
+        $this->performApiActionAs($user, 'post', 'api/user', [], UserController::METHOD_FAILURE_CODE['store']);
 
-        $response->assertStatus(UserController::METHOD_FAILURE_CODE['store']);
+
+        // TODO: Test 'create users' permission.
 
     }
 
@@ -285,10 +276,11 @@ class UserTest extends TestCase
         $user->first_name = 'test';
         $user->last_name = 'test';
 
-        $response = $this->actingAs($user, 'api')->put('api/user/' . $user->id, ['first_name' => 'test', 'last_name' => 'test']);
-        $response->assertStatus(UserController::METHOD_SUCCESS_CODE['update']);
+        $onlyAttributes = $user->getFillable();;
 
-        $updated_user = User::findOrFail($user->id)->first()->getFillable();
+        $this->performApiActionAs($user, 'put', 'api/user/' . $user->id, $user->only($onlyAttributes), UserController::METHOD_SUCCESS_CODE['update']);
+
+        $updated_user = User::findOrFail($user->id)->first()->only($onlyAttributes);
 
         foreach($updated_user as $key => $val) {
 
@@ -297,15 +289,32 @@ class UserTest extends TestCase
         }
 
         // Try updating a non-existent user.
-        $response = $this->actingAs($user, 'api')->put('api/user/' . User::all()->last()->id+1, $user->getAttributes());
-        $response->assertStatus(Response::HTTP_NOT_FOUND);
+        $this->performApiActionAs($user, 'put', 'api/user/' . User::all()->last()->id+1, $user->getAttributes(), Response::HTTP_NOT_FOUND);
 
         // Update user with invalid attribute values
         $user->email = 'me';
-        $response = $this->actingAs($user, 'api')->put('api/user/' . $user->id, $user->getAttributes());
-        $response->assertStatus(UserController::METHOD_FAILURE_CODE['update']);
+        $this->performApiActionAs($user, 'put', 'api/user/' . $user->id, $user->getAttributes(), UserController::METHOD_FAILURE_CODE['update']);
 
+        // TODO: Test 'modify users' permission.
     }
-    
+
+    /**
+     * @group users
+     * @group api
+     * @group controller
+     * @group authentication
+     */
+    public function testUserControllerDeleteUserAPI() {
+
+        $user = User::firstOrFail();
+        $id = User::all()->last()->id;
+
+        $this->performApiActionAs($user, 'delete', 'api/user/' . $id)->assertStatus(UserController::METHOD_SUCCESS_CODE['destroy']);
+
+        $this->assertNull(User::find($id));
+
+
+        // TODO: Test 'delete users' permission.
+    }
 
 }
