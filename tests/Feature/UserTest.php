@@ -2,7 +2,8 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\UserController;
 use DB;
 use App\Models\Permission;
