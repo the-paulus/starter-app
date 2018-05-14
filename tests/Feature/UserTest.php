@@ -167,6 +167,8 @@ class UserTest extends TestCase
 
     /**
      * @group users
+     * @group api
+     * @group controller
      * @group authentication
      */
     public function testUserAuthenticatables() {
