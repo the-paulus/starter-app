@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\UserController;
 use DB;
 use App\Models\Permission;
 use App\Models\User;
 use App\Models\UserGroup;
+use Illuminate\Http\Response;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -160,6 +162,68 @@ class UserTest extends TestCase
             $this->assertTrue($user->memberOf($user_group->name), 'User is not a member of specified group name.');
 
         }
+
+    }
+
+    /**
+     *
+     */
+    public function testUserControllerAPI() {
+
+        $this->json('GET','api/user')->assertStatus(Response::HTTP_UNAUTHORIZED);
+
+        $user = User::firstOrFail();
+
+        $response = $this->actingAs($user, 'api')->json('GET', 'api/user');
+
+        $response->assertStatus(UserController::METHOD_SUCCESS_CODE['index']);
+        $response->assertJsonCount(UserTest::USER_COUNT, 'data');
+
+        $response = $this->actingAs($user, 'api')->json('GET', 'api/user/' . User::all()->random()->id);
+
+        $response->assertStatus(UserController::METHOD_SUCCESS_CODE['show']);
+        $response->assertJsonCount(1);
+
+        $response = $this->actingAs($user, 'api')->json('GET', 'api/user/1000');
+
+        $response->assertStatus(UserController::METHOD_FAILURE_CODE['show']);
+        $response->assertJsonCount(0);
+
+        $last_id = User::all()->last()->id+1;
+        $response = $this->actingAs($user, 'api')->post('api/user', factory(User::class)->raw());
+        $new_user_id = $response->json()['data'][0]['id'];
+
+        $response->assertStatus(UserController::METHOD_SUCCESS_CODE['store']);
+        $response->assertJsonCount(1,'data');
+        $this->assertEquals($last_id, $new_user_id);
+
+        $new_user_arr = factory(User::class)->raw();
+        $new_user_arr['user_group_ids'][] = UserGroup::all()->random()->id;
+        $new_user_arr['user_group_ids'][] = UserGroup::all()->random()->id;
+        $response = $this->actingAs($user, 'api')->post('api/user', $new_user_arr);
+        $new_user_id = $response->json()['data'][0]['id'];
+
+        $response->assertStatus(UserController::METHOD_SUCCESS_CODE['store']);
+
+        $new_user = User::findOrFail($new_user_id);
+
+        foreach($new_user_arr['user_group_ids'] as $gid) {
+
+            $this->assertTrue($new_user->memberOf(UserGroup::findOrFail($gid)));
+
+        }
+
+        $response = $this->actingAs($user, 'api')->post('api/user', []);
+
+        $response->assertStatus(UserController::METHOD_FAILURE_CODE['store']);
+
+        $user->first_name = 'test';
+        $user->last_name = 'test';
+
+        $response = $this->actingAs($user, 'api')->put('api/user/' . $user->id, $user->getAttributes());
+        $response->assertStatus(UserController::METHOD_SUCCESS_CODE['update']);
+
+
 
     }
 
