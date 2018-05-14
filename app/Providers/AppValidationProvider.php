@@ -91,16 +91,29 @@ class AppValidationProvider extends ServiceProvider
                 throw new InvalidParameterException('Rule requires two parameters; attribute and value.');
             }
 
+            // We do not tolerate exceptions!
+            try {
+
             $data = $validator->getData();
 
             list($dependency, $requirement) = $parameters;
 
             return $data[$dependency] == $requirement && !empty($value);
 
+            } catch(\Exception $exception) {
+
+                return false;
+
+            }
+
         }, ":attribute is required.");
 
     }
 
+    /**
+     * TODO: Remove or convert to exists_enum to verify that the value in question is enumerated in the specified tabled
+     * or column.
+     */
     private function validateExistsIn() {
 
         Validator::extend('exists_in', function($attribute, $value, $parameters, $validator) {
