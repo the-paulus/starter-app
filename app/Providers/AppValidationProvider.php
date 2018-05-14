@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\File\File;
 use DB;
 use Validator;
@@ -94,11 +95,11 @@ class AppValidationProvider extends ServiceProvider
             // We do not tolerate exceptions!
             try {
 
-            $data = $validator->getData();
+                $data = $validator->getData();
 
-            list($dependency, $requirement) = $parameters;
+                list($dependency, $requirement) = $parameters;
 
-            return $data[$dependency] == $requirement && !empty($value);
+                return $data[$dependency] == $requirement && !empty($value);
 
             } catch(\Exception $exception) {
 
@@ -125,6 +126,27 @@ class AppValidationProvider extends ServiceProvider
 
         }, ':value is not valid for :attribute');
 
+    }
+
+    /**
+     * The dynamic_unique works exactly like the unique rule but allows the developer to pass a place holder for the
+     * ID that gets replaced by the value returned from Auth::id(). This rule is intended for use with attributes such as
+     * email addresses, so users can update their own account without validation failing because their email address isn't
+     * unique.
+     */
+    private function validateDynamicUnique() {
+
+        validator::extend('dynamic_unique', function($attribute, $value, $parameters, $validator) {
+
+            if (isset($parameters[2]) ){
+
+                $parameters[2] = str_replace('{id}', Auth::id(), $parameters[2]);
+
+            }
+
+            return $validator->validateUnique($attribute, $value, $parameters);;
+
+        }, ':attribute must be unique.');
     }
 
 }
