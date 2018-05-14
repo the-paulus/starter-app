@@ -16,5 +16,6 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->group(function() {
 
     Route::apiResource('/user', 'UserController');
+    Route::apiResource('/usergroup', 'UserGroupController');
 
 });

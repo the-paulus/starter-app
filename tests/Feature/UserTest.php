@@ -320,4 +320,116 @@ class UserTest extends TestCase
         // TODO: Test 'delete users' permission.
     }
 
+    /**
+     * @group users
+     * @group usergroups
+     * @group api
+     * @group controller
+     * @group authentication
+     */
+    public function testUserGroupControllerShowAllAPI() {
+
+        $this->json('GET','api/usergroup')->assertStatus(Response::HTTP_UNAUTHORIZED);
+
+        $user = User::firstOrFail();
+
+        $this->performApiActionAs($user, 'get', 'api/usergroup', array(), UserGroupController::METHOD_SUCCESS_CODE['index'])
+            ->assertJsonCount(UserTest::USER_GROUP_COUNT, 'data');
+
+        // TODO: Test 'access user groups' permission.
+
+    }
+
+    public function testUserGroupControllerShowUserGroupAPI() {
+
+        $user = User::firstOrFail();
+
+        $this->performApiActionAs($user, 'get', 'api/usergroup/' . UserGroup::all()->random()->id, array(), Controller::METHOD_SUCCESS_CODE['show'])
+            ->assertJsonCount(1);
+
+        // Test for requesting a non-existent user.
+        $this->performApiActionAs($user, 'get', 'api/usergroup/' . UserGroup::all()->last()->id + 1, array(), Controller::METHOD_FAILURE_CODE['show']);
+
+        // TODO: Test 'access user groups' permission.
+
+    }
+
+    public function testUserGroupControllerCreateAPI() {
+
+        $user = User::firstOrFail();
+
+        $last_id = UserGroup::all()->last()->id+1;
+        $new_id = $this->performApiActionAs($user, 'post', 'api/usergroup', factory(UserGroup::class)->raw(), Controller::METHOD_SUCCESS_CODE['store'])
+            ->assertJsonCount(1, 'data')->json()['data'][0]['id'];
+        $this->assertEquals($last_id, $new_id);
+
+        $new_group_arr = factory(UserGroup::class)->raw();
+        $new_group_arr['user_ids'][] = User::all()->random()->id;
+        $new_group_arr['user_ids'][] = User::all()->random()->id;
+
+        $new_id = $this->performApiActionAs($user, 'post', 'api/usergroup', $new_group_arr, Controller::METHOD_SUCCESS_CODE['store'])
+            ->assertJsonCount(1, 'data')
+            ->json()['data'][0]['id'];
+
+        $new_group = UserGroup::find($new_id);
+
+        foreach($new_group_arr['user_ids'] as $uid) {
+
+            $this->assertTrue($new_group->hasMember($uid));
+
+        }
+
+        // Testing validation
+        $this->performApiActionAs($user, 'post', 'api/usergroup', [], Controller::METHOD_FAILURE_CODE['store']);
+
+
+        // TODO: Test 'create user groups' permission.
+
+    }
+
+    public function testUserGroupControllerUpdateAPI() {
+
+        $user = User::firstOrFail();
+        $group = UserGroup::firstOrFail();
+
+        $group->name = 'test';
+        $group->description = 'test';
+
+        //$onlyAttributes = $user->getFillable();;
+
+        $this->performApiActionAs($user, 'put', 'api/usergroup/' . $group->id, $group->getAttributes(), Controller::METHOD_SUCCESS_CODE['update']);
+
+        $updated_group = User::findOrFail($user->id)->first()->getAttributes();
+
+        foreach($updated_group as $key => $val) {
+
+            $this->assertEquals($group->getAttribute($key), $val, $key . ' attribute was not updated.');
+
+        }
+
+        // Try updating a non-existent user.
+        $this->performApiActionAs($user, 'put', 'api/usergroup/' . UserGroup::all()->last()->id+1, $group->getAttributes(), Response::HTTP_NOT_FOUND)->content();
+
+        // Update user with invalid attribute values
+        $group->name = '';
+        $this->performApiActionAs($user, 'put', 'api/usergroup/' . $group->id, $group->getAttributes(), Controller::METHOD_FAILURE_CODE['update']);
+
+        // TODO: Test 'modify user groups' permission.
+
+    }
+
+    public function testUserGroupControllerDeleteAPI() {
+
+        $user = User::firstOrFail();
+        $id = UserGroup::all()->last()->id;
+
+        $this->performApiActionAs($user, 'delete', 'api/usergroup/' . $id, array(), Controller::METHOD_SUCCESS_CODE['destroy']);
+
+        $this->assertNull(UserGroup::find($id));
+
+        $this->performApiActionAs($user, 'delete', 'api/usergroup/' . User::all()->last()->id+1, array(), Controller::METHOD_FAILURE_CODE['destroy']);
+
+        // TODO: Test 'delete users' permission.
+
+    }
 }
