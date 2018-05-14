@@ -242,7 +242,22 @@ class UserTest extends TestCase
         $response = $this->actingAs($user, 'api')->put('api/user/' . $user->id, $user->getAttributes());
         $response->assertStatus(UserController::METHOD_SUCCESS_CODE['update']);
 
+        $updated_user = User::findOrFail($user->id)->first()->getAttributes();
 
+        foreach($updated_user as $key => $val) {
+
+            if( $key == 'updated_at' ) {
+
+                $this->assertNotEquals($user->getAttribute($key), $val, 'User was not updated.');
+
+            } else {
+
+                $this->assertEquals($user->getAttribute($key), $val, $key . ' attribute was not updated.');
+
+            }
+
+
+        }
 
     }
 
