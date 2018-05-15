@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\UserGroup;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Class UserGroupController
@@ -62,6 +63,7 @@ class UserGroupController extends Controller
                 $model->users()->sync($request->get('user_ids'));
 
             }
+
             return response()->json(['data' => [$model->freshRelationships()]], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
 
         } catch(ValidationException $validationException) {
