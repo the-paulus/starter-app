@@ -380,7 +380,7 @@ class UserTest extends TestCase
         }
 
         // Testing validation
-        $this->performApiActionAs($user, 'post', 'api/usergroup', [], Controller::METHOD_FAILURE_CODE['store']);
+        $this->performApiActionAs($user, 'post', 'api/usergroup', ['description' => 'fail']);
 
 
         // TODO: Test 'create user groups' permission.
@@ -395,11 +395,9 @@ class UserTest extends TestCase
         $group->name = 'test';
         $group->description = 'test';
 
-        //$onlyAttributes = $user->getFillable();;
-
         $this->performApiActionAs($user, 'put', 'api/usergroup/' . $group->id, $group->getAttributes(), Controller::METHOD_SUCCESS_CODE['update']);
 
-        $updated_group = User::findOrFail($user->id)->first()->getAttributes();
+        $updated_group = UserGroup::findOrFail($group->id)->first()->only(['name', 'description']);
 
         foreach($updated_group as $key => $val) {
 
