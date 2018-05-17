@@ -211,6 +211,17 @@ class User extends BaseModel implements Authenticatable
     }
 
     /**
+     * Mutate the model's groups attribute.
+     *
+     * @param $ids  array   Array of group IDs that the user belongs to.
+     */
+    public function setUserGroupIdsAttribute($ids) {
+
+        $this->groups()->sync($ids);
+
+    }
+
+    /**
      * Get the unique identifier for the user.
      *
      * @return mixed
