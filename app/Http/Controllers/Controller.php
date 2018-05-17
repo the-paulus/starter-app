@@ -134,4 +134,130 @@ class Controller extends BaseController
         static::customWebRoutes();
 
     }
+
+    /**
+     * @param array $errors
+     * @return array
+     */
+    protected function flattenJSONValidationErrors(array $errors) {
+
+        return Arr::flatten($errors);
+
+    }
+
+    /**
+     * Callback function used in array_walk to call model mutators.
+     *
+     * @param $item     Array   Element being analyzed.
+     * @param $key      Array   Element's key.
+     * @param $model    Model   Model to perform mutations on.
+     */
+    protected function callMutator(&$item, $key, $model) {
+
+        $mutations = $model->getMutatedAttributes();
+
+        if( in_array($key, $mutations) ) {
+
+            $func = 'set' . ucfirst(camel_case($key).'Attribute');
+
+            $model->$func($item);
+
+        }
+    }
+
+    /**
+     * Returns all models.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index() {
+
+        return response()->json(['data' => static::$model::all()], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
+
+    }
+
+    /**
+     * Returns a specific model.
+     *
+     * @param $id   int     ID of the model to return.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id) {
+
+        $model = static::$model::findOrFail($id);
+
+        return response()->json(['data' => [$model]], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
+
+    }
+
+    /**
+     * Creates a new model based on the submitted data stored within the Request object.
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(Request $request) {
+
+        try {
+
+            // TODO: Ensure that relationship rules are validated.
+            $model = static::$model::validateAndCreate($request->all());
+            $data = $request->all();
+
+            array_walk($data, array(self::class, 'callMutator'), $model);
+
+            return response()->json(['data' => [$model->freshRelationships()]], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
+
+        } catch(ValidationException $validationException) {
+
+            return response()->json(['data' => [], 'errors' => $validationException->errors()], self::METHOD_FAILURE_CODE[__FUNCTION__]);
+
+        }
+
+    }
+
+    /**
+     * Updates the model with $id with the provided information stored within the Request object.
+     *
+     * @param Request   $request    User request containing information that the model should be updated with.
+     * @param integer   $id         ID of the model to be updated.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, $id) {
+
+        try {
+
+            $model = static::$model::find($id)->validateAndUpdate($request->all());
+            $data = $request->all();
+
+            array_walk($data, array(self::class, 'callMutator'), $model);
+
+            return response()->json(['data' => [$model->freshRelationships()]], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
+
+        } catch(ValidationException $validationException) {
+
+            return response()->json(['data' => [], 'errors' => $validationException->errors()], self::METHOD_FAILURE_CODE[__FUNCTION__]);
+
+        }
+
+    }
+
+    /**
+     * Deletes a specific model.
+     *
+     * @param integer $id   ID of the model to delete from the database.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($id) {
+
+        static::$model::findOrFail($id)->delete();
+
+        return response()->json(['data' => []], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
+
+    }
+
 }
