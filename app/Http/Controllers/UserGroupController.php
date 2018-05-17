@@ -20,6 +20,26 @@ class UserGroupController extends Controller
     protected static $model = UserGroup::class;
 
     /**
+     * Callback function used in array_walk to call model mutators.
+     *
+     * @param $item     Array   Element being analyzed.
+     * @param $key      Array   Element's key.
+     * @param $model    Model   Model to perform mutations on.
+     */
+    private function callMutator(&$item, $key, $model) {
+
+        $mutations = $model->getMutatedAttributes();
+
+        if( in_array($key, $mutations) ) {
+
+            $func = ucfirst('set'.camel_case($key).'Attribute');
+
+            $model->$func($item);
+
+        }
+    }
+
+    /**
      *
      *
      * @return \Illuminate\Http\JsonResponse
@@ -57,12 +77,9 @@ class UserGroupController extends Controller
         try {
 
             $model = self::$model::validateAndCreate($request->all());
+            $data = $request->all();
 
-            if( $request->has('user_ids') ) {
-
-                $model->users()->sync($request->get('user_ids'));
-
-            }
+            array_walk($data, array(self::class, 'callMutator'), $model);
 
             return response()->json(['data' => [$model->freshRelationships()]], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
 
@@ -87,6 +104,10 @@ class UserGroupController extends Controller
         try {
 
             $model = self::$model::find($id)->validateAndUpdate($request->all());
+
+            $data = $request->all();
+
+            array_walk($data, array(self::class, 'callMutator'), $model);
 
             return response()->json(['data' => [$model->freshRelationships()]], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
 
