@@ -144,4 +144,15 @@ class UserGroup extends BaseModel
         return $this->users()->get('id');
 
     }
+
+    /**
+     * Mutate the model's users attribute.
+     *
+     * @param $ids  array   Array of users IDs that are in the group.
+     */
+    public function setUserIdsAttribute($ids) {
+
+        $this->users()->sync($ids);
+
+    }
 }
