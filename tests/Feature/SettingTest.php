@@ -7,9 +7,6 @@ use SettingsTableSeeder;
 use App\Models\Setting;
 use App\Models\SettingGroup;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SettingTest extends TestCase
 {
