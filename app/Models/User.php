@@ -6,8 +6,11 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use DB;
 
-class User extends BaseModel implements Authenticatable
+class User extends BaseModel implements Authenticatable, JWTSubject
 {
     use Notifiable, SoftDeletes;
 
@@ -314,6 +317,20 @@ class User extends BaseModel implements Authenticatable
     public function getRememberTokenName()
     {
         return 'remember_token';
+    }
+
+    public function getJWTCustomClaims()
+    {
+
+        return ['auth_type' => $this->getAuthTypeAttribute()];
+
+    }
+
+    public function getJWTIdentifier()
+    {
+
+        return $this->getKey();
+
     }
 
 }
