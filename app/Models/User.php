@@ -200,6 +200,17 @@ class User extends BaseModel implements Authenticatable
     }
 
     /**
+     * Mutates the password attribute by encrypting the value.
+     *
+     * @param $password string Plain text password to encrypt.
+     */
+    public function setPasswordAttribute($password) {
+
+        $this->attributes['password'] = Hash::make($password);
+
+    }
+
+    /**
      * Accessor for user_group_ids attribute that returns the IDs of the groups the user belongs to.
      *
      * @return Collection
