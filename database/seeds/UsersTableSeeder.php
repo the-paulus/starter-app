@@ -40,13 +40,14 @@ class UsersTableSeeder extends DatabaseSeeder
      */
     public function run()
     {
-        \DB::table('auth_types')->insert(['name'=>'local']);
+        DB::table('auth_types')->insert([
+            [ 'name' => 'local' ],
+            [ 'name' => 'ldap' ]
+        ]);
 
         foreach(self::$users as $key => $value) {
 
             try {
-
-                $value['password'] = bcrypt($value['password']);
 
                 $user = User::validateAndCreate($value);
                 $user_group = UserGroup::all()->where('name', '=', UserGroupsTableSeeder::$groups[$key]['name'])->first();
