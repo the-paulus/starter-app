@@ -17,5 +17,8 @@ Route::middleware('auth:api')->group(function() {
 
     Route::apiResource('/user', 'UserController');
     Route::apiResource('/usergroup', 'UserGroupController');
+    Route::apiResource('/permission', 'PermissionController');
+    Route::apiResource('/setting', 'SettingController');
+    Route::apiResource('/settinggroup', 'SettingGroupController');
 
 });
