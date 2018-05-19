@@ -60,7 +60,10 @@ class UserGroup extends BaseModel
      */
     protected $fillable = ['name', 'description'];
 
-    protected $appends = ['user_ids'];
+    protected $appends = [
+        'user_ids',
+        'permission_ids'
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -153,6 +156,28 @@ class UserGroup extends BaseModel
     public function setUserIdsAttribute($ids) {
 
         $this->users()->sync($ids);
+
+    }
+
+    /**
+     * Accessor for permission_ids attribute that returns a Collection of permission IDs that are assigned to the group.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getPermissionIdsAttribute() {
+
+        return $this->permissions()->get('id');
+
+    }
+
+    /**
+     * Mutate the model's permissions attribute.
+     *
+     * @param $ids  array   Array of permission IDs that are assigned to the group.
+     */
+    public function setPermissionIdsAttribute($ids) {
+
+        $this->permissions()->sync($ids);
 
     }
 }
