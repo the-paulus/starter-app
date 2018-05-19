@@ -69,8 +69,8 @@ class User extends BaseModel implements Authenticatable
         'first_name' => 'required|string|max:255',
         'last_name' => 'required|string|max:255',
         'email' => 'required|dynamic_unique:users,email,{id}|email',
-        'auth_type' => 'required|integer|exists:auth_types,id',
-        'password' => 'required_password:auth_type,1',
+        'auth_type' => 'required|exists:auth_types,name',
+        'password' => 'required_password:auth_type,local',
     ];
 
     /**
@@ -196,6 +196,29 @@ class User extends BaseModel implements Authenticatable
         }
 
         return !is_null($lookup_group);
+
+    }
+
+    /**
+     * Authorization type mutator. Converts the name into an integer that is stored in the database.
+     *
+     * @param string    $auth_name  Name of the authorization method.
+     */
+    public function setAuthTypeAttribute($auth_name) {
+
+        $this->attributes['auth_type'] = DB::table('auth_types')->where('name', '=', $auth_name)->value('id');
+
+    }
+
+    /**
+     * Authorization type accessor. Returns the name of the authorization method based on the integer found in the
+     * auth_type column.
+     *
+     * @return string|null  Name of the authorization method.
+     */
+    public function getAuthTypeAttribute() {
+
+        return DB::table('auth_types')->where('id', '=', $this->attributes['auth_type'])->value('name');
 
     }
 
