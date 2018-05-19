@@ -15,21 +15,21 @@ class UsersTableSeeder extends DatabaseSeeder
             'last_name' => 'Admin',
             'email' => 'admin@starter-app.local',
             'password' => 'adminpasssecret',
-            'auth_type' => 1,
+            'auth_type' => 'local',
         ],
         [
             'first_name' => 'Admin',
             'last_name' => 'User',
             'email' => 'admin-user@starter-app.local',
             'password' => 'adminsecretagentuser',
-            'auth_type' => 1,
+            'auth_type' => 'local',
         ],
         [
             'first_name' => 'Standard',
             'last_name' => 'User',
             'email' => 'user@starter-app.local',
             'password' => 'justastandardpassword',
-            'auth_type' => 1,
+            'auth_type' => 'local',
         ]
     ];
 
