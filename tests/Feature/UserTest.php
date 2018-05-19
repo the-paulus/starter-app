@@ -12,6 +12,11 @@ use App\Models\UserGroup;
 use Illuminate\Http\Response;
 use Tests\TestCase;
 
+/**
+ * Class UserTest contains synthetic unit tests.
+ *
+ * @package Tests\Feature
+ */
 class UserTest extends TestCase
 {
 
@@ -340,6 +345,13 @@ class UserTest extends TestCase
 
     }
 
+    /**
+     * @group users
+     * @group usergroups
+     * @group api
+     * @group controller
+     * @group authentication
+     */
     public function testUserGroupControllerShowUserGroupAPI() {
 
         $user = User::firstOrFail();
@@ -354,6 +366,13 @@ class UserTest extends TestCase
 
     }
 
+    /**
+     * @group users
+     * @group usergroups
+     * @group api
+     * @group controller
+     * @group authentication
+     */
     public function testUserGroupControllerCreateAPI() {
 
         $user = User::firstOrFail();
@@ -387,6 +406,13 @@ class UserTest extends TestCase
 
     }
 
+    /**
+     * @group users
+     * @group usergroups
+     * @group api
+     * @group controller
+     * @group authentication
+     */
     public function testUserGroupControllerUpdateAPI() {
 
         $user = User::firstOrFail();
@@ -416,6 +442,13 @@ class UserTest extends TestCase
 
     }
 
+    /**
+     * @group users
+     * @group usergroups
+     * @group api
+     * @group controller
+     * @group authentication
+     */
     public function testUserGroupControllerDeleteAPI() {
 
         $user = User::firstOrFail();
