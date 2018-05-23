@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 Route::post('login', 'ApiLoginController@login');
 
-Route::middleware(['auth:api','jwt.auth'])->group(function() {
+Route::middleware('jwt.auth')->group(function() {
 
     Route::apiResource('/user', 'UserController');
     Route::apiResource('/usergroup', 'UserGroupController');
