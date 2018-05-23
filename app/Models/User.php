@@ -103,9 +103,10 @@ class User extends BaseModel implements Authenticatable, JWTSubject
         'first_name',
         'last_name',
         'email',
+        'user_group_ids',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
     ];
 
     /**
@@ -243,7 +244,7 @@ class User extends BaseModel implements Authenticatable, JWTSubject
      */
     public function getUserGroupIdsAttribute() {
 
-        return $this->groups()->get('id');
+        return $this->groups()->get(['id']);
 
     }
 
