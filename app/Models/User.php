@@ -244,7 +244,7 @@ class User extends BaseModel implements Authenticatable, JWTSubject
      */
     public function getUserGroupIdsAttribute() {
 
-        return $this->groups()->get(['id']);
+        return $this->groups()->allRelatedIds();
 
     }
 
