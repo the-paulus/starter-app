@@ -37,3 +37,13 @@ if( !function_exists('filter_exception_message') ) {
 
     }
 }
+
+if( !function_exists('camel_case_conversion') ) {
+
+    function camel_case_conversion(string $classname) {
+
+       return str_plural(strtolower(implode(' ', preg_split('/([A-Z][^A-Z]*)/', $classname, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY))));
+
+    }
+
+}
