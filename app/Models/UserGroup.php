@@ -146,7 +146,7 @@ class UserGroup extends BaseModel
      */
     public function getUserIdsAttribute() {
 
-        return $this->users()->get(['id']);
+        return $this->users()->allRelatedIds();
 
     }
 
@@ -168,7 +168,7 @@ class UserGroup extends BaseModel
      */
     public function getPermissionIdsAttribute() {
 
-        return $this->permissions()->get(['id']);
+        return $this->permissions()->allRelatedIds();
 
     }
 
