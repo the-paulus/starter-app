@@ -44,8 +44,6 @@ class BaseModelTest extends TestCase
 
     /**
      * @group model
-     *
-     * @expectedException Illuminate\Validation\ValidationException
      */
     public function testBaseModelValidateModel() {
 
@@ -77,7 +75,6 @@ class BaseModelTest extends TestCase
         $attributes = [
             'first_name' => 'test',
             'last_name' => 'test',
-            'email' => 'test@test.com',
             'password' => '',
             'auth_type' => 'local',
         ];
