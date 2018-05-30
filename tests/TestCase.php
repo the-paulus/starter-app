@@ -102,13 +102,13 @@ abstract class TestCase extends BaseTestCase
      * @param Authenticatable     $user                 User to perform the action as.
      * @param string              $method               HTTP verb: GET, HEAD, PATCH, POST, PUT, or DELETE.
      * @param string              $endpoint             URI to perform the action on. (e.g., api/user)
-     * @param integer|null        $expectedStatus       Expected status code to assert.
      * @param array               $data                 Array that will be passed as the $data parameter of the $method function.
+     * @param integer|null        $expectedStatus       Expected status code to assert.
      * @param array               $additional_headers   Array of headers to pass to the $method function.
      *
      * @return \Illuminate\Foundation\Testing\TestResponse|null
      */
-    public function performJWTActionAs(Authenticatable $user, string $method, string $endpoint, $expectedStatus = null, array $data = array(), $additional_headers = array()) {
+    public function performJWTActionAs(Authenticatable $user, string $method, string $endpoint, array $data = array(), $expectedStatus = null, $additional_headers = array()) {
 
         $token = JWTAuth::fromUser($user);
         $headers = ['HTTP_Authorization' => 'Bearer ' . $token];
