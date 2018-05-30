@@ -34,9 +34,19 @@ class DatabaseSeeder extends Seeder
         PermissionsTableSeeder::class,
     ];
 
+    private $db_foreign_key_checks_on = [
+        'mysql' => 'SET FOREIGN_KEY_CHECKS=1;',
+        'sqlite' => 'PRAGMA foreign_keys = ON',
+    ];
+
+    private $db_foreign_key_checks_off = [
+        'mysql' => 'SET FOREIGN_KEY_CHECKS=0;',
+        'sqlite' => 'PRAGMA foreign_keys = OFF',
+    ];
+
     public function startClean() {
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::statement($this->db_foreign_key_checks_off[env('DB_CONNECTION')]);
 
         foreach($this->pivot_tables as $pt) {
 
@@ -50,7 +60,7 @@ class DatabaseSeeder extends Seeder
 
         }
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        DB::statement($this->db_foreign_key_checks_on[env('DB_CONNECTION')]);
     }
 
     /**
