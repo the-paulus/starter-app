@@ -175,8 +175,6 @@ class BaseModel extends Model
 
         }
 
-        return FALSE;
-
     }
 
     /**
