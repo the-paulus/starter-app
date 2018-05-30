@@ -3,13 +3,27 @@
 namespace Tests;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use App\Models\User;
+use UsersTableSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 abstract class TestCase extends BaseTestCase
 {
     use RefreshDatabase, CreatesApplication;
 
+    /**
+     * Helper function used to test private or protected methods.
+     *
+     * @param stdClass  $object     Object to call private or protected method on.
+     * @param string    $method     Name of the private or protected method to call.
+     * @param array     $parameters Array of parameters that would be passed to the specified method.
+     *
+     * @return mixed    Whatever the method returns.
+     *
+     * @throws \ReflectionException
+     */
     public function invokePrivateMethod(&$object, string $method, array $parameters = array()) {
 
         $reflection = new \ReflectionClass(get_class($object));
