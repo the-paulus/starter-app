@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Arr;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Route;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class Controller extends BaseController
 {
@@ -172,6 +176,8 @@ class Controller extends BaseController
      */
     public function index() {
 
+        $this->authorize('view', static::$model::all()->first());
+
         return response()->json(['data' => static::$model::all()], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
 
     }
@@ -187,6 +193,8 @@ class Controller extends BaseController
 
         $model = static::$model::findOrFail($id);
 
+        $this->authorize('view', $model);
+
         return response()->json(['data' => [$model]], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
 
     }
@@ -200,9 +208,12 @@ class Controller extends BaseController
      */
     public function store(Request $request) {
 
+        $model_class = static::$model;
+
+        $this->authorize('create', $model_class);
+
         try {
 
-            // TODO: Ensure that relationship rules are validated.
             $model = static::$model::validateAndCreate($request->all());
             $data = $request->all();
 
@@ -230,7 +241,11 @@ class Controller extends BaseController
 
         try {
 
-            $model = static::$model::find($id)->validateAndUpdate($request->all());
+            $model = static::$model::find($id);
+
+            $this->authorize('update', $model);
+            $model->validateAndUpdate($request->all());
+
             $data = $request->all();
 
             array_walk($data, array(self::class, 'callMutator'), $model);
@@ -253,6 +268,10 @@ class Controller extends BaseController
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id) {
+
+        $model_class = static::$model;
+
+        $this->authorize('delete', $model_class);
 
         static::$model::findOrFail($id)->delete();
 
