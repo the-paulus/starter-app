@@ -36,6 +36,19 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * Helper function that returns an Authenticatable object.
+     *
+     * @param int $id   ID of the user.
+     *
+     * @return User
+     */
+    public function getSeededUser(int $id) {
+
+        return User::all()->firstWhere('email', '=', UsersTableSeeder::$users[$id]['email']);
+
+    }
+
+    /**
      * Performs the $method as $user to $endpoint URI.
      *
      * Returns a TestResponse if the value passed in as $method is valid, otherwise null is returned.
