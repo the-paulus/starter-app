@@ -15,8 +15,6 @@ use Tests\TestCase;
 class DatabaseTest extends TestCase
 {
 
-    use DatabaseMigrations;
-
     /**
      * @group database
      * @group seeder
