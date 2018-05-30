@@ -35,7 +35,7 @@ abstract class TestCase extends BaseTestCase
      *
      * @return \Illuminate\Foundation\Testing\TestResponse|null
      */
-    public function performApiActionAs(Authenticatable $user, string $method, string $endpoint, array $data = array(), $expectedStatus = null, $headers = array()) {
+    public function performActionAs(Authenticatable $user, string $method, string $endpoint, array $data = array(), $expectedStatus = null, $headers = array()) {
 
         $method = strtolower($method);
         $response = null;
