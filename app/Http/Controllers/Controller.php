@@ -164,9 +164,14 @@ class Controller extends BaseController
 
             $func = 'set' . ucfirst(camel_case($key).'Attribute');
 
+            if(method_exists($model, $func)) {
+
             $model->$func($item);
 
         }
+
+        }
+        
     }
 
     /**
