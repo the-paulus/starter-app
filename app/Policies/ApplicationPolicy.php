@@ -10,7 +10,7 @@ class ApplicationPolicy
 {
     use HandlesAuthorization;
 
-    //protected static $model = Model::class;
+    protected static $model = Model::class;
 
     /**
      * Determine whether the user can view the model.
