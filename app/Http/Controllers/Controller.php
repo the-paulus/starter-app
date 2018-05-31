@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Arr;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Response;
@@ -166,12 +167,12 @@ class Controller extends BaseController
 
             if(method_exists($model, $func)) {
 
-            $model->$func($item);
+                $model->$func($item);
+
+            }
 
         }
 
-        }
-        
     }
 
     /**
@@ -282,7 +283,7 @@ class Controller extends BaseController
 
             $model->delete();
 
-        return response()->json(['data' => []], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
+            return response()->json(['data' => []], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
 
         } catch( ModelNotFoundException $modelNotFoundException ) {
 
