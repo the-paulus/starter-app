@@ -77,29 +77,6 @@ class UserFeatureTest extends TestCase
     }
 
 
-    public function testCreateUserGroup() {
-
-        for($i = 0; $i < 2; $i++) {
-
-            $user = $this->getSeededUser($i);
-
-            $new_group = factory(UserGroup::class)->raw();
-
-            $this->performJWTActionAs($user, 'post', 'api/usergroup', $new_group)
-                ->assertStatus(Controller::METHOD_SUCCESS_CODE['store']);
-
-            //$this->performActionAs($user, 'put', 'api/setting/1', factory(Setting::class)->raw())->assertStatus(Controller::METHOD_SUCCESS_CODE['update']);
-
-        }
-
-        $user = $this->getSeededUser(self::USER);
-        $new_group = factory(UserGroup::class)->raw();
-        $this->performJWTActionAs($user, 'post', 'api/usergroup', $new_group)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-
-    }
-
-
     /**
      * Try to create a user as an unauthenticated user then create one as an application admin, admin, and normal user.
      *
@@ -164,11 +141,11 @@ class UserFeatureTest extends TestCase
     public function testShowUser() {
 
         $user = $this->getSeededUser(self::ADMIN_USER);
-        $data = $this->performJWTActionAs($user, 'get', 'api/user/1')
-            ->assertStatus(Controller::METHOD_SUCCESS_CODE['show'])
-            ->json()['data'];
 
-        print_r($data);
+        $this->performJWTActionAs($user, 'get', 'api/user/1')
+            ->assertStatus(Controller::METHOD_SUCCESS_CODE['show'])
+            ->assertJsonCount(1, 'data');
+
     }
 
     /**
@@ -190,4 +167,49 @@ class UserFeatureTest extends TestCase
 
     }
 
+    public function testDestroyUser() {
+
+        $this->call('DELETE', 'api/user/2')->assertStatus(Response::HTTP_UNAUTHORIZED);
+
+        // Tests deleting a user.
+        $user = $this->getSeededUser(self::ADMIN_USER);
+        $del_user_id = $this->getSeededUser(self::USER)->id;
+
+        $this->performJWTActionAs($user, 'delete', 'api/user/' . $del_user_id)
+            ->assertStatus(Controller::METHOD_SUCCESS_CODE['destroy']);
+
+        $this->performJWTActionAs($user, 'get', 'api/user/' . $del_user_id, array(), Controller::METHOD_FAILURE_CODE['show']);
+
+        $id = User::all()->last()->id;
+        $id++;
+
+        $this->performJWTActionAs($user, 'delete', 'api/user/' . $id, array(), Controller::METHOD_FAILURE_CODE['destroy']);
+    }
+
+    /**
+     * Tests to ensure that users cannot delete other users.
+     */
+    public function testUserDestroyUser() {
+
+        $user = $this->getSeededUser(self::USER);
+        $del_user = $this->getSeededUser(self::ADMIN_USER);
+
+        $this->performJWTActionAs($user, 'delete', 'api/user/' . $del_user->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    public function testCannotDestroySelf() {
+
+        // Tests a user is unable to delete them self.
+        $user = $this->getSeededUser(self::ADMIN_USER);
+        $del_user = $this->getSeededUser(self::ADMIN_USER);
+
+        $this->performJWTActionAs($user, 'delete', 'api/user/' . $del_user->id)
+            ->assertStatus(Response::HTTP_BAD_REQUEST);
+
+        $this->performJWTActionAs($user, 'get', 'api/user/' . $del_user->id)
+            ->assertStatus(Controller::METHOD_SUCCESS_CODE['show'])
+            ->assertJsonCount(1, 'data');
+
+    }
 }
