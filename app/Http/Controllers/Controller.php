@@ -274,13 +274,21 @@ class Controller extends BaseController
      */
     public function destroy($id) {
 
-        $model_class = static::$model;
+        try {
 
-        $this->authorize('delete', $model_class);
+            $model = static::$model::findOrFail($id);
 
-        static::$model::findOrFail($id)->delete();
+            $this->authorize('delete', $model);
+
+            $model->delete();
 
         return response()->json(['data' => []], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
+
+        } catch( ModelNotFoundException $modelNotFoundException ) {
+
+            return response()->json(['data' => [], 'errors' => ['Model with ' . $id . ' was not found.']], self::METHOD_FAILURE_CODE[__FUNCTION__]);
+
+        }
 
     }
 
