@@ -18,4 +18,4 @@ vendor
 Homestead.json
 Homestead.yaml
 mix-manifest.json
-
+storage/*.index
