@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Route;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class Controller extends BaseController
@@ -41,114 +42,6 @@ class Controller extends BaseController
     ];
 
     protected static $model;
-
-    /**
-     * @var bool Indicates whether or not the controller should create the standard API routes.
-     */
-    protected static $createApiRoutes = TRUE;
-
-    /**
-     * @var bool Indicates whether or not the controller should create the standard web routes.
-     */
-    protected static $createWebRoutes = TRUE;
-
-    /**
-     * Calls Route::apiResource() to create the standard API endpoints for the controller.
-     *
-     * When creating the routes, the base class name of the model attached to the controller will be used.
-     *
-     * Example, If the controller has the $model set to User::class, and the Controller's class name is UserController,
-     * then this function is identical to calling:
-     *
-     * Route::apiResource('user', 'User');
-     */
-    private function standardAPIRoutes() {
-
-        Route::apiResource(strtolower(self::$model::baseModelClassName()), __CLASS__);
-
-    }
-
-    /**
-     * This is intended to be overridden in the inherited class to allow the developer to add specialized routes.
-     *
-     * If the application requires any changes to the standard routes created with
-     * Route::apiResource('path', 'Callback'), then the $createApiRoutes should be set to false and all routes manually
-     * created in the overridden method.
-     */
-    public static function customAPIRoutes() {
-
-        // Add code here.
-
-    }
-
-    /**
-     * Calls Route::resource() to create the standard URLs for the controller.
-     *
-     * When creating the routes, the base class name of the model attached to the controller will be used.
-     *
-     * Example, If the controller has the $model set to User::class, and the Controller's class name is UserController,
-     * then this function is identical to calling:
-     *
-     * Route::resource('user', 'User');
-     */
-    private function standardWebRoutes() {
-
-        Route::resource(strtolower(self::$model::baseModelClassName()), __CLASS__);
-
-    }
-
-    /**
-     * This is intended to be overridden in the inherited class to allow the developer to add specialized routes.
-     *
-     * If the application requires any changes to the standard routes created with
-     * Route::resource('path', 'Callback'), then the $createWebRoutes should be set to false and all routes manually
-     * created in the overridden method.
-     */
-    public static function customWebRoutes() {
-
-        // Add code here.
-
-    }
-
-    /**
-     * Calls any methods to create api routes for the controller.
-     */
-    public static function createApiRoutes() {
-
-        if( self::$createApiRoutes ) {
-
-            self::standardAPIRoutes();
-
-        }
-
-        static::customAPIRoutes();
-
-    }
-
-    /**
-     * Calls any methods to create web routes for the controller.
-     */
-    public static function createWebRoutes() {
-
-        if( self::$createWebRoutes ) {
-
-            self::standardWebRoutes();
-
-        }
-
-        static::customWebRoutes();
-
-    }
-
-    /**
-     * @param array $errors
-     * @return array
-     */
-    protected function flattenJSONValidationErrors(array $errors) {
-
-        return Arr::flatten($errors);
-
-    }
 
     /**
      * Callback function used in array_walk to call model mutators.
