@@ -138,7 +138,17 @@ class UserFeatureTest extends TestCase
 
     }
 
+    /**
+     * Tests to ensure that users can access information about other users.
+     *
+     * @group application
+     * @group user
+     * @group authentication
+     * @group localauth
+     */
     public function testShowUser() {
+
+        $this->call('get','api/user/1')->assertStatus(Response::HTTP_UNAUTHORIZED);
 
         $user = $this->getSeededUser(self::ADMIN_USER);
 
@@ -149,7 +159,12 @@ class UserFeatureTest extends TestCase
     }
 
     /**
+     * Tests to ensure that users can access user listing.
      *
+     * @group application
+     * @group user
+     * @group authentication
+     * @group localauth
      */
     public function testGetAll() {
 
@@ -167,6 +182,14 @@ class UserFeatureTest extends TestCase
 
     }
 
+    /**
+     * Tests to ensure only users with the 'delete user' permission can delete users.
+     *
+     * @group application
+     * @group user
+     * @group authentication
+     * @group localauth
+     */
     public function testDestroyUser() {
 
         $this->call('DELETE', 'api/user/2')->assertStatus(Response::HTTP_UNAUTHORIZED);
@@ -188,6 +211,11 @@ class UserFeatureTest extends TestCase
 
     /**
      * Tests to ensure that users cannot delete other users.
+     *
+     * @group application
+     * @group user
+     * @group authentication
+     * @group localauth
      */
     public function testUserDestroyUser() {
 
@@ -198,6 +226,14 @@ class UserFeatureTest extends TestCase
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
+    /**
+     * Tests to ensure that the correct users can delete users.
+     *
+     * @group application
+     * @group user
+     * @group authentication
+     * @group localauth
+     */
     public function testCannotDestroySelf() {
 
         // Tests a user is unable to delete them self.
