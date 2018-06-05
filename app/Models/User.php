@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Scout\Searchable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use DB;
 
 class User extends BaseModel implements Authenticatable, JWTSubject
 {
-    use Notifiable, SoftDeletes;
+    use Notifiable, SoftDeletes, Searchable;
 
     /**
      * @var bool Creates two timestamp fields created_at and updated_at. The default is TRUE
@@ -33,6 +34,11 @@ class User extends BaseModel implements Authenticatable, JWTSubject
      * @var string The format of the timestamp when it is stored and retrieved.
      */
     protected $dateFormat = 'Y-m-d H:i:s';
+
+    /**
+     * @var bool Instructs Scout that searches should be performed as the user types.
+     */
+    public $asYouType = true;
 
     /**
      * @var array Columns that have dates.
@@ -332,6 +338,32 @@ class User extends BaseModel implements Authenticatable, JWTSubject
 
         return $this->getKey();
 
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $array = $this->toArray();
+
+        unset($array['user_group_ids']);
+        unset($array['auth_type']);
+        unset($array['password']);
+
+        return $array;
+    }
+
+    /**
+     * Sets whether or not a particular module should be added to the index and searchable.
+     *
+     * @return bool Indicates whether or not model should be searchable.
+     */
+    public function shouldBeSearchable()
+    {
+        return true;
     }
 
 }
