@@ -66,8 +66,12 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
+            'driver' => 'shibboleth',
             'model' => App\Models\User::class,
+        ],
+        'groups' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\UserGroup::class,
         ],
 
         // 'users' => [

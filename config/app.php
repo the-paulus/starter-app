@@ -170,6 +170,7 @@ return [
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
         Laravel\Scout\ScoutServiceProvider::class,
+        ThePaulus\Shibboleth\Providers\ShibbolethServiceProvider::class,
 
         /*
          * Application Service Providers...
