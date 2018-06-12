@@ -119,12 +119,56 @@ abstract class TestCase extends BaseTestCase
 
         if( !is_null($expectedStatus) && $expectedStatus ) {
 
-            $this->assertEquals($expectedStatus, $response->getStatusCode(), $response->json());
+            $this->assertEquals($expectedStatus, $response->getStatusCode(), $response->content());
+
         }
 
 
         return $response;
 
     }
+
+    public function generateAssertionMessage(string $message, array $variables) {
+
+        foreach($variables as $name => $value) {
+
+            $message .= "\n";
+            $message .= "$name:\n" . print_r($value, TRUE);
+
+        }
+
+        return $message;
+    }
+
+    public function assertWithMessage(string $assertion, array $assertion_parameters, array $message_components) {
+
+        if( method_exists($this, $assertion) ) {
+
+            $reflection = new \ReflectionClass(get_class($this));
+            $method = $reflection->getMethod($assertion);
+            $parameters = $method->getParameters();
+            $has_message_param = FALSE;
+            $assertion_message = '';
+
+            foreach($parameters as $parameter) {
+
+                if( $parameter->getName() == 'message' ) {
+
+                    $has_message_param = TRUE;
+                    break;
+                }
+            }
+
+            if( $has_message_param ) {
+
+                $assertion_message = 'Assertion Failed: ';
+
+            }
+
+        }
+
+    }
+
+
 
 }
