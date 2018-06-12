@@ -58,5 +58,6 @@ class Kernel extends HttpKernel
         'jwt.auth' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
         'jwt.refresh' => \Tymon\JWTAuth\Http\Middleware\RefreshToken::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'shibboleth' => \ThePaulus\Shibboleth\Providers\ShibbolethUserProvider::class,
     ];
 }
