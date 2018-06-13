@@ -30,7 +30,7 @@ class SettingsTableSeeder extends DatabaseSeeder
             [
                 'name' => 'email_from_name',
                 'description' => 'Name to use in the from field of emails sent out by the application.',
-                'setting_type' => 'html',
+                'setting_type' => 'string',
                 'value' => 'Starter App',
                 'weight' => 2,
             ],
