@@ -21,7 +21,7 @@ class Setting extends BaseModel
      */
     public static $rules = [
         'name' => 'required|unique:settings,name',
-        'setting_type' => 'required|exists:setting_types,id',
+        'setting_type' => 'required|exists:setting_types,name',
         'weight' => 'integer',
     ];
 
@@ -105,7 +105,7 @@ class Setting extends BaseModel
      *
      * @param string $setting_type Human readable setting type.
      */
-    public function setSettingTypeAttribtue($setting_type) {
+    public function setSettingTypeAttribute($setting_type) {
 
         $this->attributes['setting_type'] = DB::table('setting_types')->where('name', '=', $setting_type)->value('id');
 
