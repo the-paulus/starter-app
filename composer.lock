@@ -2692,11 +2692,11 @@
         },
         {
             "name": "the-paulus/laravel-shibboleth",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/the-paulus/laravel-shibboleth.git",
-                "reference": "2bb4623f9f98e2f1fa3cb9a5a57af3ba58f2ec10"
+                "reference": "c15733446805d8670a65773012db726178e1b0a9"
             },
             "require": {
                 "illuminate/support": "5.*",
@@ -2746,7 +2746,7 @@
                 }
             ],
             "description": "Enable basic Shibboleth support for Laravel 5.5+. (Forked from StudentAffairsUWM/Laravel-Shibboleth-Service-Provider)",
-            "time": "2018-06-13T02:17:27+00:00"
+            "time": "2018-06-13T02:39:48+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
