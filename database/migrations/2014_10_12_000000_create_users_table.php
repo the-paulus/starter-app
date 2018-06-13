@@ -21,14 +21,6 @@ class CreateUsersTable extends Migration
                 $table->string('name');
                 $table->softDeletes();
 
-                DB::table('user_groups')->insert(array(
-                    'name' => 'local',
-                ));
-
-                DB::table('user_groups')->insert(array(
-                    'name' => 'shibboleth',
-                ));
-
             });
 
         }
