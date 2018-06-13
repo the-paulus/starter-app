@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bbf60c7ecfc7bd22f097ae7602397871",
+    "content-hash": "cd6a2c6a04f67f76e78148e358803da5",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -717,7 +717,7 @@
                 {
                     "name": "Luís Otávio Cobucci Oblonczyk",
                     "email": "lcobucci@gmail.com",
-                    "role": "developer"
+                    "role": "Developer"
                 }
             ],
             "description": "A simple library to work with JSON Web Token and JSON Web Signature",
@@ -2692,11 +2692,11 @@
         },
         {
             "name": "the-paulus/laravel-shibboleth",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/the-paulus/laravel-shibboleth.git",
-                "reference": "e5cbe8d28ac0db5891d8ff8171f6e075b39dabbc"
+                "reference": "2bb4623f9f98e2f1fa3cb9a5a57af3ba58f2ec10"
             },
             "require": {
                 "illuminate/support": "5.*",
@@ -2746,7 +2746,7 @@
                 }
             ],
             "description": "Enable basic Shibboleth support for Laravel 5.5+. (Forked from StudentAffairsUWM/Laravel-Shibboleth-Service-Provider)",
-            "time": "2018-06-11T21:47:24+00:00"
+            "time": "2018-06-13T02:17:27+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
