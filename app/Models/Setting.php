@@ -99,4 +99,26 @@ class Setting extends BaseModel
         return $this->belongsTo(SettingGroup::class, 'setting_group_id','id');
 
     }
+
+    /**
+     * Mutates the setting type attribute.
+     *
+     * @param string $setting_type Human readable setting type.
+     */
+    public function setSettingTypeAttribtue($setting_type) {
+
+        $this->attributes['setting_type'] = DB::table('setting_types')->where('name', '=', $setting_type)->value('id');
+
+    }
+
+    /**
+     * Setting type accessor.
+     *
+     * @return string Human readable setting type.
+     */
+    public function getSettingTypeAttribute() {
+
+        return DB::table('setting_types')->where('id', '=', $this->attributes['setting_types'])->value('name');
+
+    }
 }

@@ -16,28 +16,28 @@ class SettingsTableSeeder extends DatabaseSeeder
             [
                 'name' => 'notification_email',
                 'description' => 'Email address to send application notifications to.',
-                'setting_type' => 5,
+                'setting_type' => 'email',
                 'value' => 'admin@starterapp.local',
                 'weight' => 0,
             ],
             [
                 'name' => 'email_from',
                 'description' => 'Email address to send from.',
-                'setting_type' => 5,
+                'setting_type' => 'email',
                 'value' => 'admin@starterapp.local',
                 'weight' => 1,
             ],
             [
                 'name' => 'email_from_name',
                 'description' => 'Name to use in the from field of emails sent out by the application.',
-                'setting_type' => 7,
+                'setting_type' => 'html',
                 'value' => 'Starter App',
                 'weight' => 2,
             ],
             [
                 'name' => 'email_body',
                 'description' => 'Notification email body.',
-                'setting_type' => 8,
+                'setting_type' => 'text',
                 'value' => '',
                 'weight' => 3,
             ],
@@ -49,9 +49,9 @@ class SettingsTableSeeder extends DatabaseSeeder
     public function run()
     {
 
-        foreach(self::$setting_types as $setting_type) {
+        foreach(self::$setting_types as $id => $setting_type) {
 
-            \DB::table('setting_types')->insert(['name' => $setting_type]);
+            \DB::table('setting_types')->insert(['id' => $id+1, 'name' => $setting_type]);
 
         }
 
