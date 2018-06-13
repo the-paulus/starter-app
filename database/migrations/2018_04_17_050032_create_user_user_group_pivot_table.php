@@ -12,13 +12,19 @@ class CreateUserUserGroupPivotTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_user_group', function (Blueprint $table) {
-            $table->integer('user_group_id')->unsigned()->index();
-            $table->foreign('user_group_id')->references('id')->on('user_groups')->onDelete('cascade');
-            $table->integer('user_id')->unsigned()->index();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->primary(['user_group_id', 'user_id']);
-        });
+        if(!Schema::hasTable('user_user_group')) {
+
+            Schema::create('user_user_group', function (Blueprint $table) {
+
+                $table->integer('user_group_id')->unsigned()->index();
+                $table->foreign('user_group_id')->references('id')->on('user_groups')->onDelete('cascade');
+                $table->integer('user_id')->unsigned()->index();
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                $table->primary(['user_group_id', 'user_id']);
+
+            });
+
+        }
     }
 
     /**

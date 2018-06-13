@@ -13,12 +13,14 @@ class CreateUserGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_groups', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name')->unique();
-            $table->text('description');
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('user_groups')) {
+            Schema::create('user_groups', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('name')->unique();
+                $table->text('description');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
