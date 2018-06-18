@@ -32,7 +32,7 @@ class CreateUsersTable extends Migration
                 $table->string('first_name');
                 $table->string('last_name');
                 $table->string('email')->unique();
-                $table->unsignedInteger('auth_type');
+                $table->unsignedInteger('auth_type')->default('shibboleth');
                 $table->string('password');
                 $table->rememberToken();
                 $table->timestamps();

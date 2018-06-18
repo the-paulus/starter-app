@@ -63,7 +63,8 @@ class SettingsTableSeeder extends DatabaseSeeder
 
                 try {
 
-                    $new_setting = Setting::validateAndCreate($setting);
+                    Setting::validate($setting);
+                    $new_setting = new Setting($setting);
                     $new_group->settings()->save($new_setting);
 
                 } catch(\Illuminate\Validation\ValidationException $validationException) {

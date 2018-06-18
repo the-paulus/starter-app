@@ -42,7 +42,7 @@ class UsersTableSeeder extends DatabaseSeeder
     {
         DB::table('auth_types')->insert([
             [ 'name' => 'local' ],
-            [ 'name' => 'ldap' ]
+            [ 'name' => 'shibboleth' ]
         ]);
 
         foreach(self::$users as $key => $value) {
