@@ -72,6 +72,7 @@ class Permission extends BaseModel
      * @var array
      */
     protected $visible = [
+        'id',
         'name',
         'description',
     ];
