@@ -136,7 +136,7 @@ class AppValidationProvider extends ServiceProvider
      */
     private function validateDynamicUnique() {
 
-        validator::extend('dynamic_unique', function($attribute, $value, $parameters, $validator) {
+        Validator::extend('dynamic_unique', function($attribute, $value, $parameters, $validator) {
 
             if (isset($parameters[2]) ){
 
