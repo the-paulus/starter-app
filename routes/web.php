@@ -17,4 +17,24 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('authenticated', 'LoginController@authenticated');
+Route::get('unauthorized', 'LoginController@unauthorized');
+
+Route::middleware('auth')->get('token', function() {
+  return response()->json(['data' => ['token' => \Tymon\JWTAuth\Facades\JWTAuth::fromUser(\Illuminate\Support\Facades\Auth::user())]], 200);
+});
+
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::middleware(['auth'])->get('/admin/{route}', function($route) {
+
+    try {
+
+        return view('sections.admin');
+
+    } catch (InvalidArgumentException $invalidArgumentException) {
+
+        abort(404);
+
+    }
+});
