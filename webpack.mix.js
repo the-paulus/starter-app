@@ -12,11 +12,13 @@ let mix = require('laravel-mix');
  */
 
 
-mix.setResourceRoot('/starter-app');
+// Uncomment if app is in a sub-directory.
+// mix.setResourceRoot('/starter-app');
 
 mix.js('resources/assets/js/app.js', 'public/js').version()
    .sass('resources/assets/sass/app.scss', 'public/css').version()
-    .then(() => {
+// Uncomment if app is in a sub-directory.
+/*    .then(() => {
         var fs = require('fs');
         var manifest_file = path.resolve(__dirname) + '/' + mix.config.publicPath + '/mix-manifest.json';
         var entries = require(manifest_file);
@@ -26,4 +28,4 @@ mix.js('resources/assets/js/app.js', 'public/js').version()
         }
 
         fs.writeFile(manifest_file, JSON.stringify(entries));
-    });
+    });*/
