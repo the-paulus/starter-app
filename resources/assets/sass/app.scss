@@ -10,3 +10,61 @@
 
 // Font Awesome
 @import "node_modules/font-awesome/scss/font-awesome.scss";
+
+.v--modal-overlay {
+  z-index: 1000 !important;
+}
+
+.modal-body {
+  legend {
+    width: max-content;
+    padding: 0 10px;
+    border: none !important;
+  }
+
+  .error {
+    label, legend {
+      color: $error-text;
+    }
+
+    fieldset label {
+      color: $text-color;
+    }
+
+    fieldset, input[type='text'] {
+      border: $error-text 2px solid;
+    }
+  }
+
+  .error-message {
+    font-style: italic;
+    color: $alert-danger-bg;
+  }
+
+  .bg-danger {
+    input[type=text], textarea {
+      border: red 1px solid;
+    }
+
+    .list-group-item {
+      background-color: $alert-danger-bg !important;
+    }
+  }
+
+  .row {
+    padding: 5px 0 5px 0;
+  }
+
+  .error-container {
+    padding: 5px;
+    margin: 10px;
+  }
+
+  .list-group-item {
+    display: table-cell;
+    border: none;
+    float: left;
+    width: 33%;
+    vertical-align: middle;
+  }
+}
