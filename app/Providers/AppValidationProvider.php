@@ -145,9 +145,52 @@ class AppValidationProvider extends ServiceProvider
 
             }
 
-            return $validator->validateUnique($attribute, $value, $parameters);;
+            return $validator->validateUnique($attribute, $value, $parameters);
 
         }, ':attribute must be unique.');
     }
+
+    /**
+     * Creates a new validatoin rule called 'permission_required' that requires a value for the field being validated
+     * based on permissions or group membership. This takes two parameters, the first is the callback, which is either
+     * 'hasPermission' or 'memberOf'. The second parameter takes either a permission or group name, respectively.
+     */
+    private function validatePermissionRequired() {
+
+        Validator::extend('permission_required', function($attribute, $value, $parameters, $validator) {
+
+            $negate = trim($parameters[1]);
+
+            if(strcmp('true', $negate) === 0) {
+                return !Auth::user()->hasPermission($parameters[0]);
+            }
+
+            return Auth::user()->hasPermission($parameters[0]);
+
+        }, ':attribute permission is required.');
+    }
+
+    /**
+     * Creates a new validation rule called 'has_permission' that takes two parameters. The first is the callback
+     * defined in the model that is used to validate the second parameter. Two possible choices for the first parameter
+     * is 'hasPermission' or 'memberOf'. The second parameter is the permission or group name to verify the user has
+     * permission to do edit the field being validated.
+     */
+    private function validateHasPermission() {
+
+        Validator::extend('has_permission', function($attribute, $value, $parameters, $validator) {
+
+            if(!is_null(Auth::user()) && count($parameters)) {
+
+                return Auth::user()->{$parameters[0]}($parameters[1]);
+
+            }
+
+            return false;
+
+        });
+
+    }
+
 
 }
