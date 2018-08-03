@@ -3,17 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Arr;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Routing\Route;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class Controller extends BaseController
 {
@@ -86,6 +84,8 @@ class Controller extends BaseController
      *
      * @param $id   int     ID of the model to return.
      *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id) {
@@ -103,12 +103,15 @@ class Controller extends BaseController
      *
      * @param Request $request
      *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request) {
 
         $model_class = static::$model;
 
+        $this->authorize('create', $model_class);
         $this->authorize('create', $model_class);
 
         try {
@@ -122,7 +125,17 @@ class Controller extends BaseController
 
         } catch(ValidationException $validationException) {
 
-            return response()->json(['data' => [], 'errors' => $validationException->errors()], self::METHOD_FAILURE_CODE[__FUNCTION__]);
+            return response()->json([
+                'data' => [$model->freshRelationships()],
+                'errors' => ['validation' => $validationException->errors()],
+            ], self::METHOD_FAILURE_CODE[__FUNCTION__]);
+
+        } catch(AuthorizationException $authorizationException) {
+
+            return response()->json([
+                'data' => [],
+                'errors' => ['Permission to create model was denied'],
+            ], Response::HTTP_UNAUTHORIZED);
 
         }
 
@@ -153,7 +166,15 @@ class Controller extends BaseController
 
         } catch(ValidationException $validationException) {
 
-            return response()->json(['data' => [], 'errors' => $validationException->errors()], self::METHOD_FAILURE_CODE[__FUNCTION__]);
+            return response()->json(['data' => [$model->freshRelationships()], 'errors' => ['validation' => $validationException->errors()]], self::METHOD_FAILURE_CODE[__FUNCTION__]);
+
+        } catch(ModelNotFoundException $modelNotFoundException) {
+
+            return response()->json(['data' => [], 'errors' => ['Content was not found']], Response::HTTP_NOT_FOUND);
+
+        } catch(AuthorizationException $authorizationException) {
+
+            return \response()->json(['data' => [], 'errors' => ['Permission to update this was denied']], Response::HTTP_UNAUTHORIZED);
 
         }
 
@@ -181,6 +202,10 @@ class Controller extends BaseController
         } catch( ModelNotFoundException $modelNotFoundException ) {
 
             return response()->json(['data' => [], 'errors' => ['Model with ' . $id . ' was not found.']], self::METHOD_FAILURE_CODE[__FUNCTION__]);
+
+        } catch (AuthorizationException $authorizationException) {
+
+            return response()->json(['data' => [], 'errors' => ['Permission to delete this was denied']], Response::HTTP_UNAUTHORIZED);
 
         }
 
