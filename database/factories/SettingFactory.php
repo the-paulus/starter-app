@@ -5,15 +5,16 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Models\Setting::class, function (Faker $faker) {
 
-    $types = SettingsTableSeeder::$setting_types;
-    $type = $faker->randomElement($types);
+    $type = DB::table('setting_types')->inRandomOrder()->first();
     $value = null;
 
-    switch($type) {
+    switch($type->name) {
         case 'integer':
             $value = $faker->randomNumber($faker->randomNumber(1));
             break;
         case 'ip':
+            $value = $faker->ipv4();
+            break;
         case 'ip4':
             $value = $faker->ipv4();
             break;
@@ -30,17 +31,17 @@ $factory->define(App\Models\Setting::class, function (Faker $faker) {
             $value = $faker->randomHtml();
             break;
         case 'text':
+            $value = $faker->sentences();
+            break;
         case 'string':
             $value = $faker->text();
             break;
     }
 
-    $type = array_search($type, $types) + 1;
-
     return [
         'name' => substr($faker->unique()->word, 0, 12),
         'description' => $faker->sentence(12),
-        'setting_type' => $type,
+        'setting_type' => $type->id,
         'value' => $value,
         'weight' => $faker->randomNumber(1),
         'setting_group_id' => SettingGroup::all()->random()->first()->id
