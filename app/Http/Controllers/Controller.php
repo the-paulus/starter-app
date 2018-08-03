@@ -67,7 +67,33 @@ class Controller extends BaseController
     }
 
     /**
+     * Helper function that generates a paginated result.
+     *
+     * @param $operator string  Operator to use during comparison of the primary key.
+     * @param $value    mixed   What the primary key should be compared to.
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    private function paginateResponse($operator, $value) {
+
+        $per_page = request('perPage', static::$default_per_page);
+        $sort = request('sortBy', static::$default_sort);
+        $order = request('orderBy', static::$default_order);
+
+        return static::$model::where((new static::$model)->getKeyName(), $operator, $value)
+            ->orderBy($sort, $order)
+            ->paginate($per_page)
+            ->appends([
+                'orderBy' => $order,
+                'perPage' => $per_page,
+                'sortBy' => $sort
+            ]);
+    }
+
+    /**
      * Returns all models.
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -75,7 +101,10 @@ class Controller extends BaseController
 
         $this->authorize('view', static::$model::all()->first());
 
-        return response()->json(['data' => static::$model::all()], self::METHOD_SUCCESS_CODE[__FUNCTION__]);
+        return response()->json($this->paginateResponse(
+            '>',
+            1
+        ), self::METHOD_SUCCESS_CODE[__FUNCTION__]);
 
     }
 
