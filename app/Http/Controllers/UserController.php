@@ -13,9 +13,14 @@ class UserController extends Controller
 {
 
     /**
-     * @var string $model Model class that the controller is bound to.
+     * @var string Default sorting order. Either ASC or DESC.
      */
-    protected static $model = User::class;
+    protected static $default_order = 'ASC';
+
+    /**
+     * @var int Default number of items to list per page.
+     */
+    protected static $default_per_page = 15;
 
     /**
      * @var string $default_sort Name of the field to sort on by default.
@@ -23,8 +28,8 @@ class UserController extends Controller
     protected static $default_sort = 'last_name';
 
     /**
-     * @var string Default sorting order. Either ASC or DESC.
+     * @var string $model Model class that the controller is bound to.
      */
-    protected static $default_order = 'ASC';
+    protected static $model = User::class;
 
 }
