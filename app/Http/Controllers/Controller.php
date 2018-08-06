@@ -157,7 +157,7 @@ class Controller extends BaseController
             return response()->json([
                 'data' => [$model->freshRelationships()],
                 'errors' => ['validation' => $validationException->errors()],
-            ], self::METHOD_FAILURE_CODE[__FUNCTION__]);
+            ], Response::HTTP_NOT_ACCEPTABLE);
 
         } catch(AuthorizationException $authorizationException) {
 
