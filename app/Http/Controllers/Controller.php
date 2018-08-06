@@ -195,7 +195,7 @@ class Controller extends BaseController
 
         } catch(ValidationException $validationException) {
 
-            return response()->json(['data' => [$model->freshRelationships()], 'errors' => ['validation' => $validationException->errors()]], self::METHOD_FAILURE_CODE[__FUNCTION__]);
+            return response()->json(['data' => [$model->freshRelationships()], 'errors' => ['validation' => $validationException->errors()]], Response::HTTP_NOT_ACCEPTABLE);
 
         } catch(ModelNotFoundException $modelNotFoundException) {
 
