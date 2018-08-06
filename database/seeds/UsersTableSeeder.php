@@ -47,21 +47,14 @@ class UsersTableSeeder extends DatabaseSeeder
 
         foreach(self::$users as $key => $value) {
 
-            try {
-
-                $user = User::validateAndCreate($value);
+                $user = new User;
+                $user->fill($value);
+                $user->save();
                 $user_group = UserGroup::all()->where('name', '=', UserGroupsTableSeeder::$groups[$key]['name'])->first();
 
                 $user->groups()->attach($user_group);
 
                 $this->command->info('Created ' . $value['first_name'] . ' ' . $value['last_name'] . '; added to ' . UserGroupsTableSeeder::$groups[$key]['name'] . ' group.');
-
-            } catch(ValidationException $validationException) {
-
-                $this->command->error(print_r(implode("\n",Arr::flatten($validationException->errors())), TRUE));
-                $this->command->info('Data: ' . print_r($value, TRUE));
-
-            }
         }
     }
 }
