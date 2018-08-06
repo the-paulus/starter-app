@@ -103,7 +103,7 @@ class Controller extends BaseController
 
         return response()->json($this->paginateResponse(
             '>',
-            1
+            0
         ), self::METHOD_SUCCESS_CODE[__FUNCTION__]);
 
     }
