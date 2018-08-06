@@ -230,7 +230,7 @@ class Controller extends BaseController
 
         } catch( ModelNotFoundException $modelNotFoundException ) {
 
-            return response()->json(['data' => [], 'errors' => ['Model with ' . $id . ' was not found.']], self::METHOD_FAILURE_CODE[__FUNCTION__]);
+            return response()->json(['data' => [], 'errors' => ['Model with ' . $id . ' was not found.']], Response::HTTP_NOT_FOUND);
 
         } catch (AuthorizationException $authorizationException) {
 
