@@ -13,6 +13,18 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 
+/**
+ * Base controller class that all other controller inherit from. This class provides the most basics for the index,
+ * show, store, update, and delete methods. Depending on which method is called, a HTTP status code is returned. See
+ * the METHOD_SCCESS_CODE const for which method returns which success code.
+ *
+ * When an exception is raised, a different status code is returned for the exceptions.
+ * - ModelNotFoundException returns "Not Found" (404)
+ * - AuthorizationException returns "Unauthorized" (401)
+ * - ValidationException returns "Not Acceptable" (406)
+ *
+ * @package App\Http\Controllers
+ */
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -26,17 +38,6 @@ class Controller extends BaseController
         'store'     => Response::HTTP_CREATED,
         'update'    => Response::HTTP_SEE_OTHER,
         'destroy'   => Response::HTTP_GONE,
-    ];
-
-    /**
-     * Standard controller HTTP response codes that are used when associated operations have failed.
-     */
-    const METHOD_FAILURE_CODE = [
-        'index'     => Response::HTTP_NO_CONTENT,
-        'show'      => Response::HTTP_NOT_FOUND,
-        'store'     => Response::HTTP_NOT_ACCEPTABLE,
-        'update'    => Response::HTTP_NOT_MODIFIED,
-        'destroy'   => Response::HTTP_NOT_FOUND,
     ];
 
     protected static $model;
