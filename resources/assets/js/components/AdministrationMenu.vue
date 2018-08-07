@@ -3,6 +3,7 @@
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" v-pre>Administration</a>
         <ul class="dropdown-menu">
             <router-link to="/groups" tag="li"><a>Groups</a></router-link>
+            <router-link to="/users" tag="li"><a>Users</a></router-link>
         </ul>
     </li>
 </template>
