@@ -17,9 +17,13 @@ Route::post('login', 'ApiLoginController@login');
 Route::middleware('jwt.auth')->group(function() {
 
     Route::apiResource('/user', 'UserController');
+    Route::match(['get', 'post'], '/user/search', 'UserController@search');
     Route::apiResource('/usergroup', 'UserGroupController');
+    Route::match(['get', 'post'], '/usergroup/search', 'UserGroupController@search');
     Route::apiResource('/permission', 'PermissionController');
+    Route::match(['get', 'post'], '/permission/search', 'PermissionController@search');
     Route::apiResource('/setting', 'SettingController');
+    Route::match(['get', 'post'], '/setting/search', 'SettingController@search');
     Route::apiResource('/settinggroup', 'SettingGroupController');
 
 });

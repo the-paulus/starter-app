@@ -10,6 +10,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 
@@ -89,6 +90,21 @@ class Controller extends BaseController
                 'perPage' => $per_page,
                 'sortBy' => $sort
             ]);
+    }
+
+    private function paginateSearchResults($search_results) {
+
+        $per_page = request('perPage', static::$default_per_page);
+        $sort = request('sortBy', static::$default_sort);
+        $order = request('orderBy', static::$default_order);
+        $query = \request('q');
+
+        return static::$model::whereIn((new static::$model)->getKeyName(), $search_results)->orderBy($sort, $order)->paginate($per_page)->appends([
+            'orderBy' => $order,
+            'perPage' => $per_page,
+            'q' => $query,
+            'sortBy' => $sort
+        ]);
     }
 
     /**
@@ -239,6 +255,36 @@ class Controller extends BaseController
 
         }
 
+    }
+
+    public function search(Request $request) {
+
+        $model = new static::$model;
+
+        if( method_exists($model, 'shouldBeSearchable') && $model->shouldBeSearchable() ) {
+            $query = $request->get('q');
+            $per_page = request('perPage', static::$default_per_page);
+            $sort = request('sortBy', static::$default_sort);
+            $order = request('orderBy', static::$default_order);
+
+            /**
+             * The return statement should actually be:
+             * return response()->json([
+             *  static::$model::search($query)
+             *      ->orderBy($order, $sort)
+             *      ->paginate($per_page)
+             *      ->appends([
+             *          'orderBy' => $order,
+             *          'perPage' => $per_page,
+             *          'sortBy' => $sort
+             *      ]);
+             * But there is a bug in laravel-scout-tntsearch-driver: https://github.com/teamtnt/laravel-scout-tntsearch-driver/issues/171
+             */
+            return response()->json($this->paginateSearchResults(static::$model::search($query)->keys()), Response::HTTP_OK);
+            /*return static::$model::search($query)->orderBy($order, $sort)->paginate($per_page)->appends([
+
+            ]);*/
+        }
     }
 
 }
