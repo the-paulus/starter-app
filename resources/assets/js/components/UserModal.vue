@@ -53,7 +53,7 @@
             <div class="row">
                 <div class="col-sm-6 col-sm-offset-6 text-right">
                     <div class="btn-group">
-                        <button @click="$emit('close')" type="button" class="btn btn-default" :disabled="modalUser.isSaving">
+                        <button @click="$emit('close')" type="button" class="btn btn-default">
                             <i class="fa fa-fw fa-undo"></i>Go Back
                         </button>
                         <button @click="saveUser()" type="button" class="btn btn-default" :disabled="modalUser.isSaving">
@@ -136,14 +136,13 @@ export default {
                     case 404:
                         this.errors.push('Unable to retrieve user groups.')
                         break
-                    case 500:
-                        this.$modal.show(ErrorResponse, {
-                            message: 'An internal server error was detected',
-                            response: response
-                        }, this.modalOptions)
                 }
-            }).catch((reason) => {
-                // Maybe we'll do something about this, eventually.
+            }).catch((error) => {
+                this.$modal.show(ErrorResponse, {
+                    message: 'An error has occurred',
+                    response: resposne,
+                    error: error
+                }, this.modalOptions)
             })
         },
         hasValidationError: function (field, el) {
@@ -202,21 +201,13 @@ export default {
                         case 303:
                             this.successfulSave()
                             break
-                        case 304:
-                            console.log(response)
-                            this.errors.push(response.data.errors)
+                        case 406:
+                            this.errors = response.data.errors
                             break
-                        case 500:
-                            this.$modal.show(ErrorResponse, {
-                                message: 'An internal server error was detected',
-                                response: response
-                            }, this.modalOptions)
-                            break
-
                     }
 
-                }).catch((reason) => {
-                    // Maybe we'll do something about this, eventually.
+                }).catch( (error) => {
+                    this.$emit('showErrorModal', error)
                 })
             }
         },
