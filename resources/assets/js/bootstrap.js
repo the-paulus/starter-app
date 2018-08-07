@@ -23,7 +23,7 @@ window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.validateStatus = function (status) {
-    return true
+    return status != 401 || status != 403 || status != 500
 }
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
