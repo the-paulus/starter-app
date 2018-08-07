@@ -8,6 +8,21 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+window.VueRouter = require('vue-router')
+window.JWT = require('jsonwebtoken')
+
+import UserGroups from './components/UserGroups'
+import SettingGroups from './components/SettingGroups'
+import Users from './components/Users'
+import VueRouter from 'vue-router'
+import VModal from 'vue-js-modal'
+import vPage from 'v-page'
+import VueEsc from 'vue-esc'
+
+Vue.use(VueRouter)
+Vue.use(VModal, { dynamic: false, injectModalsContainer: true })
+Vue.use(vPage)
+Vue.use(VueEsc)
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -15,8 +30,95 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('example-component', require('./components/ExampleComponent.vue'))
+Vue.component('administration-menu', require('./components/AdministrationMenu.vue'))
+Vue.component('user-groups', require('./components/UserGroups.vue'))
+Vue.component('setting-groups', require('./components/SettingGroups.vue'))
+Vue.component('users', require('./components/Users.vue'))
+Vue.component('modals-container', require('vue-js-modal/src/ModalsContainer.vue'))
+Vue.component('search-bar', require('./components/SearchBar.vue'))
+
+const router = new VueRouter({
+    mode: 'history',
+    base: __dirname + 'admin'
+})
+
+Vue.filter('capitalize', function (value) {
+    if(!value) return ''
+    value = value.toString()
+    return value.charAt(0).toUpperCase() + value.slice(1)
+})
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    router,
+    props: {
+        modalOptions: {
+            type: Object,
+            required: false,
+            default: function () {
+                return {
+                    classes: ['v--modal'],
+                    adaptive: false,
+                    scrollable: true,
+                    height: 'auto',
+                    width: '80%'
+                }
+            }
+        },
+    },
+    data: function () {
+
+        return {
+
+            token: ''
+        }
+    },
+    watch: {
+        token: function (newValue, oldValue) {
+
+            window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.token
+
+        }
+    },
+    created: function () {
+
+        window.axios.get('/token').then( (response) => {
+
+            this.token = response.data.data.token
+
+        }).then(() => {
+            this.$router.addRoutes([
+                {
+                    component: UserGroups,
+                    name: 'Groups',
+                    path: '/groups',
+                    props: {
+                        modalOptions: this.modalOptions
+                    }
+                },
+                {
+                    component: Users,
+                    name: 'Users',
+                    path: '/users',
+                    props: {
+                        modalOptions: this.modalOptions
+                    }
+                }
+            ])
+        })
+
+    },
+    mounted: function () {
+        this.$on('showErrorModal', this.showErrorModal)
+    },
+    methods: {
+        showErrorModal: function (response, error) {
+            this.$modal.show(ErrorResponse, {
+                message: 'An error has occurred',
+                response: response,
+                error: error
+            }, this.modalOptions)
+        }
+    }
 });
