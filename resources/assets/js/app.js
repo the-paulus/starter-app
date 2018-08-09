@@ -12,17 +12,18 @@ window.VueRouter = require('vue-router')
 window.JWT = require('jsonwebtoken')
 
 import UserGroups from './components/UserGroups'
-import SettingGroups from './components/SettingGroups'
 import Users from './components/Users'
 import VueRouter from 'vue-router'
 import VModal from 'vue-js-modal'
 import vPage from 'v-page'
 import VueEsc from 'vue-esc'
+import BootstrapVue from 'bootstrap-vue'
 
 Vue.use(VueRouter)
 Vue.use(VModal, { dynamic: false, injectModalsContainer: true })
 Vue.use(vPage)
 Vue.use(VueEsc)
+Vue.use(BootstrapVue)
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
