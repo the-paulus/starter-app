@@ -120,7 +120,7 @@ class Setting extends BaseModel
      */
     public function getSettingTypeAttribute() {
 
-        return DB::table('setting_types')->where('id', '=', $this->attributes['setting_types'])->value('name');
+        return DB::table('setting_types')->where('id', '=', $this->attributes['setting_type'])->value('name');
 
     }
 }
