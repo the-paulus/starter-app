@@ -61,6 +61,8 @@ class SettingGroup extends BaseModel
      */
     protected $fillable = ['name', 'description'];
 
+    protected $appends = ['settings'];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -77,11 +79,23 @@ class SettingGroup extends BaseModel
         'id',
         'name',
         'description',
+        'settings',
     ];
 
     public function settings() {
 
         return $this->hasMany(Setting::class);
+
+    }
+
+    /**
+     * Accessor for settings attribute that returns the settings that belong to the SettingGroup.
+     *
+     * @return Collection
+     */
+    public function getSettingsAttribute() {
+
+        return $this->settings()->orderBy('weight')->get();
 
     }
 }
