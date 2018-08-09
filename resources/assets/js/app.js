@@ -30,10 +30,8 @@ Vue.use(VueEsc)
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'))
 Vue.component('administration-menu', require('./components/AdministrationMenu.vue'))
 Vue.component('user-groups', require('./components/UserGroups.vue'))
-Vue.component('setting-groups', require('./components/SettingGroups.vue'))
 Vue.component('users', require('./components/Users.vue'))
 Vue.component('modals-container', require('vue-js-modal/src/ModalsContainer.vue'))
 Vue.component('search-bar', require('./components/SearchBar.vue'))
