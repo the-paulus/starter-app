@@ -7,9 +7,10 @@
 
 // Bootstrap
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
+@import "~bootstrap-vue/dist/bootstrap-vue.css";
 
 // Font Awesome
-@import "node_modules/font-awesome/scss/font-awesome.scss";
+@import "~font-awesome/scss/font-awesome.scss";
 
 .v--modal-overlay {
   z-index: 1000 !important;
