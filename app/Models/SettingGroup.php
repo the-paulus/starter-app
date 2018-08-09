@@ -82,6 +82,11 @@ class SettingGroup extends BaseModel
         'settings',
     ];
 
+    /**
+     * Returns all settings a SettingGroup has as a HasMany Relationship object.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function settings() {
 
         return $this->hasMany(Setting::class);
