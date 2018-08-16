@@ -13,19 +13,18 @@ window.JWT = require('jsonwebtoken')
 
 import UserGroups from './components/UserGroups'
 import Users from './components/Users'
+import Settings from './components/Settings'
 import VueRouter from 'vue-router'
 import VModal from 'vue-js-modal'
 import vPage from 'v-page'
 import VueEsc from 'vue-esc'
 import BootstrapVue from 'bootstrap-vue'
-import {Tabs, Tab} from 'vue-tabs-component'
 
 Vue.use(VueRouter)
 Vue.use(VModal, { dynamic: false, injectModalsContainer: true })
 Vue.use(vPage)
 Vue.use(VueEsc)
 Vue.use(BootstrapVue)
-Vue.use(Tabs)
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -38,8 +37,7 @@ Vue.component('user-groups', require('./components/UserGroups.vue'))
 Vue.component('users', require('./components/Users.vue'))
 Vue.component('modals-container', require('vue-js-modal/src/ModalsContainer.vue'))
 Vue.component('search-bar', require('./components/SearchBar.vue'))
-Vue.component('tabs', Tabs)
-Vue.component('tab', Tab)
+Vue.component('settings', require('./components/Settings.vue'))
 
 const router = new VueRouter({
     mode: 'history',
@@ -92,6 +90,14 @@ const app = new Vue({
 
         }).then(() => {
             this.$router.addRoutes([
+                {
+                    component: Settings,
+                    name: 'Settings',
+                    path: '/settings',
+                    props: {
+                        modalOptions: this.modalOptions
+                    }
+                },
                 {
                     component: UserGroups,
                     name: 'Groups',
