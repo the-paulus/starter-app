@@ -28,7 +28,7 @@
 export default {
     name: 'SearchBar',
     props: {
-        searchConfig: {
+        axiosSearchRequestConfig: {
             type: Object,
             required: true
         },

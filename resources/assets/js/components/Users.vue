@@ -3,7 +3,7 @@
         <table class="table-responsive table-striped form-rows table table-bordered table-content">
             <thead>
                 <tr>
-                    <th :colspan="columns.length + 1"><search-bar :search-config="searchConfig" :clear-search-config="clearSearchConfig" v-model="searchResults"></search-bar></th>
+                    <th :colspan="columns.length + 1"><search-bar :axios-search-request-config="axiosSearchRequestConfig" v-model="searchResults"></search-bar></th>
                 </tr>
                 <tr>
                     <th v-for="column in columns">{{ column.label }}</th>
@@ -58,9 +58,37 @@ export default {
     components: {SearchBar,UserModal},
     data: function () {
         return {
-            clearSearchConfig: {
+            axiosDataRequestConfig: {
                 url: '/api/user',
-                method: 'get'
+                method: 'get',
+                headerColumns: [
+                    {
+                        name: 'last_name',
+                        label: 'Last Name',
+                        sortable: true
+                    },
+                    {
+                        name: 'first_name',
+                        label: 'first Name',
+                        sortable: true
+                    },
+                    {
+                        name: 'email',
+                        label: 'email',
+                        sortable: true
+                    },
+                    {
+                        name: 'user_group_ids',
+                        label: 'User Groups'
+                    }
+                ],
+            },
+            axiosSearchRequestConfig: {
+                url: '/api/user/search',
+                method: 'post',
+                params: {
+
+                }
             },
             columns: [
                 {
