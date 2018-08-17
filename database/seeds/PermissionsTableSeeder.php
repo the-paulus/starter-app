@@ -36,7 +36,7 @@ class PermissionsTableSeeder extends DatabaseSeeder
             ],
         ],
         [
-            'name' =>'view users',
+            'name' => 'view users',
             'description' => 'View user information.',
             'groups' => [
                 'Application Administrator',
@@ -45,7 +45,7 @@ class PermissionsTableSeeder extends DatabaseSeeder
             ],
         ],
         [
-            'name' =>'create user groups',
+            'name' => 'create user groups',
             'description' => 'Create user groups.',
             'groups' => [
                 'Application Administrator',
@@ -53,7 +53,7 @@ class PermissionsTableSeeder extends DatabaseSeeder
             ],
         ],
         [
-            'name' =>'update user groups',
+            'name' => 'update user groups',
             'description' => 'Update user group details and group members.',
             'groups' => [
                 'Application Administrator',
@@ -61,7 +61,7 @@ class PermissionsTableSeeder extends DatabaseSeeder
             ],
         ],
         [
-            'name' =>'delete user groups',
+            'name' => 'delete user groups',
             'description' => 'Delete user groups.',
             'groups' => [
                 'Application Administrator',
@@ -69,7 +69,7 @@ class PermissionsTableSeeder extends DatabaseSeeder
             ],
         ],
         [
-            'name' =>'view user groups',
+            'name' => 'view user groups',
             'description' => 'View user group details.',
             'groups' => [
                 'Application Administrator',
@@ -77,7 +77,7 @@ class PermissionsTableSeeder extends DatabaseSeeder
             ],
         ],
         [
-            'name' =>'create settings',
+            'name' => 'create settings',
             'description' => 'Create application settings.',
             'groups' => [
                 'Application Administrator',
@@ -85,7 +85,7 @@ class PermissionsTableSeeder extends DatabaseSeeder
             ],
         ],
         [
-            'name' =>'update settings',
+            'name' => 'update settings',
             'description' => 'Modify application settings.',
             'groups' => [
                 'Application Administrator',
@@ -93,7 +93,7 @@ class PermissionsTableSeeder extends DatabaseSeeder
             ],
         ],
         [
-            'name' =>'delete settings',
+            'name' => 'delete settings',
             'description' => 'Delete application settings.',
             'groups' => [
                 'Application Administrator',
@@ -101,7 +101,7 @@ class PermissionsTableSeeder extends DatabaseSeeder
             ],
         ],
         [
-            'name' =>'view settings',
+            'name' => 'view settings',
             'description' => 'View application settings.',
             'groups' => [
                 'Application Administrator',
@@ -117,7 +117,7 @@ class PermissionsTableSeeder extends DatabaseSeeder
             ],
         ],
         [
-            'name' =>'update permissions',
+            'name' => 'update permissions',
             'description' => 'Update permission details.',
             'groups' => [
                 'Application Administrator',
@@ -125,7 +125,7 @@ class PermissionsTableSeeder extends DatabaseSeeder
             ],
         ],
         [
-            'name' =>'delete permissions',
+            'name' => 'delete permissions',
             'description' => 'Delete permissions.',
             'groups' => [
                 'Application Administrator',
@@ -133,7 +133,7 @@ class PermissionsTableSeeder extends DatabaseSeeder
             ],
         ],
         [
-            'name' =>'view permissions',
+            'name' => 'view permissions',
             'description' => 'View permissions.',
             'groups' => [
                 'Application Administrator',
