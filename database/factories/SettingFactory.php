@@ -5,7 +5,7 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Models\Setting::class, function (Faker $faker) {
 
-    $type = DB::table('setting_types')->inRandomOrder()->first();
+    $type = \DB::table('setting_types')->inRandomOrder()->get()->first();
     $value = null;
 
     switch($type->name) {
