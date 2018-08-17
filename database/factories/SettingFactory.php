@@ -41,7 +41,7 @@ $factory->define(App\Models\Setting::class, function (Faker $faker) {
     return [
         'name' => substr($faker->unique()->word, 0, 12),
         'description' => $faker->sentence(12),
-        'setting_type' => $type->id,
+        'setting_type' => $type->name,
         'value' => $value,
         'weight' => $faker->randomNumber(1),
         'setting_group_id' => SettingGroup::all()->random()->first()->id
