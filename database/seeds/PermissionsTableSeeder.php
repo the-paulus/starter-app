@@ -109,7 +109,39 @@ class PermissionsTableSeeder extends DatabaseSeeder
             ],
         ],
         [
-            'name' =>'create permissions',
+            'name' => 'create setting groups',
+            'description' => 'Create application setting groups.',
+            'groups' => [
+                'Application Administrator',
+                'Administrator',
+            ],
+        ],
+        [
+            'name' => 'update setting groups',
+            'description' => 'Modify application setting groups.',
+            'groups' => [
+                'Application Administrator',
+                'Administrator',
+            ],
+        ],
+        [
+            'name' => 'delete setting groups',
+            'description' => 'Delete application setting groups.',
+            'groups' => [
+                'Application Administrator',
+                'Administrator',
+            ],
+        ],
+        [
+            'name' => 'view setting groups',
+            'description' => 'View application setting groups.',
+            'groups' => [
+                'Application Administrator',
+                'Administrator',
+            ],
+        ],
+        [
+            'name' => 'create permissions',
             'description' => 'Create new permissions.',
             'groups' => [
                 'Application Administrator',
