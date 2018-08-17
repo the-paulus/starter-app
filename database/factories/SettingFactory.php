@@ -31,7 +31,7 @@ $factory->define(App\Models\Setting::class, function (Faker $faker) {
             $value = $faker->randomHtml();
             break;
         case 'text':
-            $value = $faker->sentences();
+            $value = $faker->sentences(3, true);
             break;
         case 'string':
             $value = $faker->text();
