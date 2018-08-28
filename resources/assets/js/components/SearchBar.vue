@@ -6,7 +6,7 @@
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="Search..." v-model="searchQuery" @keypress.enter="search" v-esc="clearSearch"/>
                 <span class="input-group-btn">
-                    <a v-show="!didSearch" class="btn btn-default" @click="search"><i class="fa" :class="{ 'fa-search': !isSearching, 'fa-refresh fa-spin': isSearching }"></i> Search</a>
+                    <a class="btn btn-default" @click="search"><i class="fa" :class="{ 'fa-search': !isSearching, 'fa-refresh fa-spin': isSearching }"></i> Search</a>
                     <a v-show="didSearch" class="btn btn-default" @click="clearSearch"><i class="fa fa-search-minus"></i> Clear</a>
                 </span>
             </div>
@@ -61,11 +61,8 @@ export default {
             }
         },
         value: {
-            type: Object,
-            required: true,
-            default: function () {
-                return []
-            }
+            type: Object|Array,
+            required: true
         }
     },
     data: function () {
@@ -78,18 +75,20 @@ export default {
     },
     computed: {
         computedClasses: function () {
-            var classes = {}
+            let classes = {}
 
             try {
                 classes.search = this.searchClasses.join(' ')
             } catch (e) {
                 classes.search = ''
             }
+
             try {
                 classes.component = this.componentClasses.join(' ')
             } catch (e) {
                     classes.component = ''
             }
+
             try {
                 classes.filters = this.filterClasses.join(' ')
             } catch (e) {
@@ -101,19 +100,23 @@ export default {
     },
     methods: {
         clearSearch: function() {
-            window.axios.request(this.clearSearchConfig).then((response) => {
-                this.$emit('input', response.data)
-            }).finally(() => {
-                this.didSearch = false
-            })
+            this.$parent.$emit('clearSearch')
+            this.searchQuery = ''
+            this.didSearch = false
         },
         search: function () {
+
+            if(this.searchQuery == '') {
+                return this.clearSearch()
+            }
+
             this.isSearching = true
-            this.searchConfig.data = {
+
+            this.axiosSearchRequestConfig.data = {
                 q: this.searchQuery
             }
 
-            window.axios.request(this.searchConfig).then((response) => {
+            window.axios.request(this.axiosSearchRequestConfig).then((response) => {
                 this.$emit('input', response.data)
             }).finally(() => {
                 this.isSearching = false
