@@ -84,6 +84,7 @@ class Setting extends BaseModel
      * @var array
      */
     protected $visible = [
+        'id',
         'name',
         'description',
         'setting_type',
