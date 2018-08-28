@@ -18,10 +18,12 @@ import VueRouter from 'vue-router'
 import VModal from 'vue-js-modal'
 import vPage from 'v-page'
 import VueEsc from 'vue-esc'
+import Vuex from 'vuex'
 import BootstrapVue from 'bootstrap-vue'
 
+Vue.use(Vuex)
 Vue.use(VueRouter)
-Vue.use(VModal, { dynamic: false, injectModalsContainer: true })
+Vue.use(VModal, { dynamic: false, injectModalsContainer: true, dialog: true })
 Vue.use(vPage)
 Vue.use(VueEsc)
 Vue.use(BootstrapVue)
@@ -44,6 +46,66 @@ const router = new VueRouter({
     base: __dirname + 'admin'
 })
 
+const store = new Vuex.Store({
+    state: {
+        groups: [],
+        token: '',
+        users: []
+    },
+    mutations: {
+        updateGroups: function (state, payload) {
+            state.groups = payload
+        },
+        updateUsers: function (state, payload) {
+            state.users = payload
+        }
+    },
+    actions: {
+        updateGroups: function ({ commit, state }) {
+
+        },
+        searchUsers: function ({ commit, state }, params) {
+            return window.axios.request({
+                url: '/api/user/search',
+                method: 'post',
+                params: params,
+                transformResponse: [function (data) {
+                    data = JSON.parse(data)
+                    data.data.forEach(function (element, index, arr) {
+                        console.log(element)
+                        console.log('ponies')
+                        console.log(index)
+                        this.data[index].groups.forEach( function (element, index, arr) {
+                            arr[index] = element.name
+                        })
+                    }, data)
+                    return data
+                }]
+            }).then( (response) => {
+
+                commit('updateUsers', response.data)
+            })
+        },
+        updateUsers: function ({ commit }) {
+           return window.axios.request({
+                url: '/api/user',
+                method: 'get',
+                transformResponse: [function (data) {
+                    data = JSON.parse(data)
+                    data.data.forEach(function (element, index, arr) {
+                        this.data[index].groups.forEach( function (element, index, arr) {
+                            arr[index] = element.name
+                        })
+                    }, data)
+                    return data
+                }]
+            }).then( (response) => {
+                commit('updateUsers', response.data)
+            })
+        }
+    }
+})
+
 Vue.filter('capitalize', function (value) {
     if(!value) return ''
     value = value.toString()
@@ -53,6 +115,7 @@ Vue.filter('capitalize', function (value) {
 const app = new Vue({
     el: '#app',
     router,
+    store,
     props: {
         modalOptions: {
             type: Object,
