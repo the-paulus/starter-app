@@ -110,6 +110,7 @@ class User extends BaseModel implements Authenticatable, JWTSubject
         'last_name',
         'email',
         'user_group_ids',
+        'groups',
         'created_at',
         'updated_at',
         'deleted_at',
