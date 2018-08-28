@@ -14,28 +14,28 @@ class SettingsTableSeeder extends DatabaseSeeder
     public static $settings = [
         'General' => [
             [
-                'name' => 'notification_email',
+                'name' => 'Notification Email',
                 'description' => 'Email address to send application notifications to.',
                 'setting_type' => 'email',
                 'value' => 'admin@starterapp.local',
                 'weight' => 0,
             ],
             [
-                'name' => 'email_from',
+                'name' => 'Email From',
                 'description' => 'Email address to send from.',
                 'setting_type' => 'email',
                 'value' => 'admin@starterapp.local',
                 'weight' => 1,
             ],
             [
-                'name' => 'email_from_name',
+                'name' => 'Email from Name',
                 'description' => 'Name to use in the from field of emails sent out by the application.',
                 'setting_type' => 'string',
                 'value' => 'Starter App',
                 'weight' => 2,
             ],
             [
-                'name' => 'email_body',
+                'name' => 'Email Body',
                 'description' => 'Notification email body.',
                 'setting_type' => 'text',
                 'value' => '',
