@@ -22,7 +22,7 @@ class SettingGroup extends BaseModel
      * @var array
      */
     public static $rules = [
-        'name' => 'required|min:1|max:12|unique:setting_groups,name',
+        'name' => 'required|min:1|max:24|unique:setting_groups,name',
     ];
 
     /**
