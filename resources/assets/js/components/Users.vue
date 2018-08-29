@@ -1,6 +1,21 @@
 <template>
     <div class="component-container">
-        <vue-table id="userstable" v-model="data" :past-config="pastConfig" :axios-search-request-config="axiosSearchRequestConfig" @addRow="addUser" @deleteRow="confirmDeleteUser" @editRow="editUser" @sortData="sortData" @pageChanged="pageChanged"></vue-table>
+        <ul class="nav nav-tabs" role="tablist">
+            <li title="Users" class="nav-item active">
+                <a href="#users-tab" role="tab" data-toggle="tab">Users</a>
+            </li>
+            <li title="Users" class="nav-item">
+                <a href="#groups-tab" role="tab" data-toggle="tab">Groups</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div role="tab" class="tab-pane active" id="users-tab">
+                <vue-table id="userstable" v-model="data" :past-config="userPastConfig" :axios-search-request-config="axiosUserSearchConfig" @addRow="addUser" @deleteRow="confirmDeleteUser" @editRow="editUser" @sortData="sortData" @pageChanged="pageChanged"></vue-table>
+            </div>
+            <div role="tab" class="tab-pane" id="groups-tab">
+                <user-groups></user-groups>
+            </div>
+        </div>
         <modals-container></modals-container>
         <v-dialog/>
     </div>
@@ -8,13 +23,14 @@
 
 <script>
 import UserModal from './UserModal'
+import UserGroups from './UserGroups'
 
 export default {
     name: 'Users',
-    components: {UserModal},
+    components: {UserModal,UserGroups},
     data: function () {
         return {
-            axiosSearchRequestConfig: {
+            axiosUserSearchConfig: {
                 url: '/api/user/search',
                 method: 'post',
                 params: {
@@ -30,7 +46,7 @@ export default {
                     return data
                 }]
             },
-            pastConfig: {
+            userPastConfig: {
                 canAdd: true,
                 canDelete: true,
                 canEdit: true,
@@ -111,13 +127,8 @@ export default {
         }
     },
     computed: {
-
         data: function () {
-
-            let d = Vue.util.extend({}, this.$store.state.users)
-
-            return d
-
+            return Vue.util.extend({}, this.$store.state.users)
         }
     },
     watch: {
@@ -132,7 +143,7 @@ export default {
         // Create a new modalOptions objects to be used explicitly by this
         // component's modals. Any modifications to the this.$attrs.modalOptions
         // object will persist throughout the rest of the application, otherwise.
-        this.modalOptions = Vue.util.extend({}, this.$attrs.modalOptions)
+        this.modalOptions = Vue.util.extend({}, this.$store.state.modalOptions)
 
         // Override modalOptions here
         this.modalOptions.width = '40%'
@@ -204,8 +215,6 @@ export default {
             this.$store.dispatch('updateUsers', this.pagination)
         },
         sortData: function (args) {
-            console.log('sortData')
-            console.log(args)
             this.pagination.sortBy = args.sort
             this.pagination.orderBy = args.order
 
