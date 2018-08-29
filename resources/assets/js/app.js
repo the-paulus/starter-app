@@ -35,6 +35,7 @@ Vue.use(BootstrapVue)
  */
 
 Vue.component('administration-menu', require('./components/AdministrationMenu.vue'))
+Vue.component('vue-table', require('./components/VuePast'))
 Vue.component('user-groups', require('./components/UserGroups.vue'))
 Vue.component('users', require('./components/Users.vue'))
 Vue.component('modals-container', require('vue-js-modal/src/ModalsContainer.vue'))
@@ -64,31 +65,18 @@ const store = new Vuex.Store({
         updateGroups: function ({ commit, state }) {
 
         },
-        searchUsers: function ({ commit, state }, params) {
-            return window.axios.request({
-                url: '/api/user/search',
-                method: 'post',
-                params: params,
-                transformResponse: [function (data) {
-                    data = JSON.parse(data)
-                    data.data.forEach(function (element, index, arr) {
-                        console.log(element)
-                        console.log('ponies')
-                        console.log(index)
-                        this.data[index].groups.forEach( function (element, index, arr) {
-                            arr[index] = element.name
-                        })
-                    }, data)
-                    return data
-                }]
-            }).then( (response) => {
+        updateUsers: function ({ commit }, pagination) {
+            let url = '/api/user'
 
-                commit('updateUsers', response.data)
-            })
-        },
-        updateUsers: function ({ commit }) {
+            if (pagination != null) {
+                url += '?page=' + pagination.page
+                url += '&perPage=' + pagination.perPage
+                url += '&sortBy=' + pagination.sortBy
+                url += '&orderBy=' + pagination.orderBy
+            }
+
            return window.axios.request({
-                url: '/api/user',
+                url: url,
                 method: 'get',
                 transformResponse: [function (data) {
                     data = JSON.parse(data)
