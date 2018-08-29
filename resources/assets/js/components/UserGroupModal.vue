@@ -51,77 +51,76 @@
 </template>
 
 <script>
-    export default {
-        name: 'UserGroupModal',
-        data: function () {
+export default {
+    name: 'UserGroupModal',
+    props: {
+        initialGroup: {
+            type: Object,
+            required: true
+        },
+    },
+    data: function () {
 
-            return {
-                modalGroup: Vue.util.extend({}, this.initialGroup),
-                permissions: null,
-                title: 'Add New User Group',
-                users: null,
-                selectedPermissions: [],
-                selectedUsers: []
-            }
-        },
-        props: {
-            initialGroup: {
-                type: Object,
-                required: true
-            },
-        },
-        created: function () {
+        return {
+            modalGroup: Vue.util.extend({}, this.initialGroup),
+            title: 'Add New User Group',
+            users: null,
+            selectedPermissions: [],
+            selectedUsers: []
+        }
+    },
+    computed: {
+        permissions: function () {
+            return this.$store.state.permissions.data
+        }
+    },
+    created: function () {
+        try {
+            this.selectedPermissions = this.modalGroup.permission_ids
+        } catch (e) {
 
-            this.getPermissions()
-        },
-        methods: {
-            getPermissions: function () {
-                window.axios.get('/api/permission').then( (response) => {
-                    console.log(response.data.data)
-                    this.permissions = response.data.data
-                }).catch( function (reason) {
-                    console.log(reason)
+        }
+    },
+    mounted: function () {
+        this.$store.dispatch('updatePermissions')
+    },
+    methods: {
+        saveGroup: function() {
+            this.modalGroup.isSaving = true
+
+            if(this.modalGroup.id == null) {
+                window.axios.post('/api/usergroup', {
+                    description: this.modalGroup.description,
+                    name: this.modalGroup.name,
+                    permission_ids: this.selectedPermissions
+                }).then( (resposne) => {
+                    this.successfulSave()
+                }).catch( (error) => {
+                    this.$store.commit('updateErrors', error)
                 })
-            },
-            saveGroup: function() {
-
-                this.modalGroup.isSaving = true
-
-                if(this.modalGroup.id == null) {
-                    window.axios.post('api/usergroup', {
-                        description: this.modalGroup.description,
-                        name: this.modalGroup.name,
-                        permission_ids: this.selectedPermissions
-                    }).then( (resposne) => {
-                        this.successfulSave()
-                    }).catch( (reason) => {
-                       // TODO: Handle error
-                    })
-                } else {
-                    window.axios.put('api/usergroup/' + this.modalGroup.id, {
-                        description: this.modalGroup.description,
-                        name: this.modalGroup.name,
-                        permission_ids: this.selectedPermissions
-                    }).then( (response) => {
-                        console.log(response.data)
-                        this.successfulSave()
-                    }).catch( (reason) => {
-                        // TODO: Handle error
-                        console.log(reason)
-                    })
-                }
-            },
-            successfulSave: function() {
-                console.log(this)
-                this.modalGroup.name = ''
-                this.modalGroup.description = ''
-                this.selectedPermissions = []
-                this.modalGroup.isSaving = false
-                this.$parent.$parent.$parent.$emit('refreshUserGroups')
-                this.$emit('close')
+            } else {
+                window.axios.put('/api/usergroup/' + this.modalGroup.id, {
+                    description: this.modalGroup.description,
+                    name: this.modalGroup.name,
+                    permission_ids: this.selectedPermissions
+                }).then( (response) => {
+                    this.successfulSave()
+                }).catch( (error) => {
+                    this.$store.commit('updateErrors', error)
+                })
             }
+        },
+        successfulSave: function() {
+            console.log(this)
+            this.modalGroup.name = ''
+            this.modalGroup.description = ''
+            this.selectedPermissions = []
+            this.modalGroup.isSaving = false
+            this.$store.dispatch('updateGroups')
+            this.$emit('close')
         }
     }
+}
 </script>
 
 <style scoped>
