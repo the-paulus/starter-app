@@ -117,7 +117,9 @@ export default {
     mounted: function () {},
     methods: {
         hasValidationError: function (field) {
-            return this.errors['validation'].hasOwnProperty(field)
+            if(this.errors != undefined && this.errors.hasOwnProperty('validation')) {
+                return this.errors['validation'].hasOwnProperty(field)
+            }
         },
         saveUser: function() {
 
