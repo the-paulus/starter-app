@@ -34,11 +34,11 @@
             </div>
             <hr/>
             <div class="row">
-                <div class="col-lg-12" :class="{ 'error': hasValidationError('email', this) }">
+                <div class="col-lg-12" :class="{ 'error': hasValidationError('user_group_ids') }">
                     <fieldset class="col-lg-12">
                         <legend class="h4">User Groups</legend>
                         <div class="list-group scrollable">
-                            <div class="list-group-item" v-for="(group, index) in orderedUserGroups" :key="group.id">
+                            <div class="list-group-item" v-for="(group, index) in userGroups" :key="group.id">
                                 <label class="list-group-item-text" :for="'group_' + group.id" :title="group.description">
                                     <input type="checkbox" name="user_group_ids" data-vv-as="user group" :id="'group_' + group.id" :value="group.id" v-model="selectedUserGroups"> {{ group.name }}
                                 </label>
