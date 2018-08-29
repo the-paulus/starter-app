@@ -24,7 +24,6 @@
                 <div class="col-lg-12" :class="{ 'error': hasValidationError('last_name') }">
                     <label class="control-label col-sm-2">Last Name</label>
                     <input id="last_name" name="last_name" type="text" class="col-sm-10" v-model="modalUser.last_name" />
-
                 </div>
             </div>
             <div class="row">
@@ -217,7 +216,7 @@ export default {
             this.modalUser.email = ''
             this.selectedUserGroups = []
             this.modalUser.isSaving = false
-            this.$parent.$parent.$parent.$emit('refreshUsers')
+            this.$store.dispatch('updateUsers')
             this.$emit('close')
         },
         validateModal: function () {
