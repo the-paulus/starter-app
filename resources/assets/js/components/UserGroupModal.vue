@@ -41,7 +41,7 @@
                         </button>
                         <button @click="saveGroup" type="button" class="btn btn-default" :disabled="modalGroup.isSaving">
                             <i class="fa fa-fw" :class="{ 'fa-refresh fa-spin': modalGroup.isSaving, 'fa-save': !modalGroup.isSaving }"></i>
-                            <span v-show="!modalGroup.isSaving">Saving</span><span v-if="modalGroup.isSaving">Saving</span>
+                            <span v-show="!modalGroup.isSaving">Save</span><span v-if="modalGroup.isSaving">Saving</span>
                         </button>
                     </div>
                 </div>
