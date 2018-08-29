@@ -1,5 +1,5 @@
 <template>
-        <div v-on:refreshUserGroups="getData">
+    <div class="component-container">
             <table class="table-responsive table-striped form-rows table table-bordered table-content">
                 <thead>
                 <tr role="row">
@@ -40,34 +40,47 @@
 </template>
 
 <script>
-    import UserGroupModal from './UserGroupModal'
-    import ErrorResponse from './ErrorResponse'
+import UserGroupModal from './UserGroupModal'
+import ErrorResponse from './ErrorResponse'
 
-    export default {
-        name: "UserGroups",
-        components: {UserGroupModal, ErrorResponse},
-        created: function() {
-            if(this.token) {
-                this.getData()
-            }
-        },
-        mounted: function () {
-            console.log(this)
-            this.$on('refreshUserGroups', function (event) {
-                this.getData()
-            })
-        },
-        props: {
-            token: {
-                type: String,
-                required: true
-            }
-        },
-        data: function () {
-
-            return {
-                addingNewGroup: false,
-                group: {
+export default {
+    name: "UserGroups",
+    components: {UserGroupModal, ErrorResponse},
+    created: function() {},
+    mounted: function () {
+        this.$store.dispatch('updateGroups')
+    },
+    props: {
+        token: {
+            type: String,
+            required: false
+        }
+    },
+    data: function () {
+        return {
+            addingNewGroup: false,
+            group: {
+                created_at: '',
+                description: '',
+                id: null,
+                isDeleting: false,
+                isSaving: false,
+                permission_ids: [],
+                updated_at: '',
+                user_ids: []
+            },
+        }
+    },
+    computed: {
+        groups: function () {
+            return this.$store.state.groups.data
+        }
+    },
+    watch: {},
+    methods: {
+        addGroup: function() {
+            this.$modal.show(UserGroupModal, {
+                initialGroup: {
                     created_at: '',
                     description: '',
                     id: null,
@@ -76,92 +89,38 @@
                     permission_ids: [],
                     updated_at: '',
                     user_ids: []
-                },
-                groups: null,
-                modalOptions: {
-                    classes: ['v--modal', 'user-group-modal'],
-                    adaptive: false,
-                    scrollable: true,
-                    height: 'auto',
-                    width: '80%'
-                },
-                permissions: null,
-                users: null
-            }
+                }
+            }, this.$store.state.modalOptions)
         },
-        computed: {
-
+        deleteGroup: function(index) {
+            this.groups[index].isDeleting = true
+            window.axios.delete('/api/usergroup/' + this.groups[index].id).then( (response) => {
+                this.$store.dispatch('updateGroups')
+            }).catch( (error) => {
+                this.$store.commit('updateErrors', error)
+            })
         },
-        watch: {
-            /*
-             * We're watching the token property because this.token is not assigned in created() or mounted() hooks.
-             * Once we see the value has changed we call the getData() method.
-             */
-            token: function(newValue, oldValue) {
-
-                this.getData()
-
-            }
+        editGroup: function(index) {
+            this.groups[index].isSaving = true
+            window.axios.patch('/api/usergroup/' + this.groups[index].id, {
+                name: this.groups[index].name,
+                description: this.groups[index].description,
+                permission_ids: this.groups[index].permission_ids
+            }).then( (response) => {
+                this.$store.dispatch('updateGroups')
+            }).catch( (error) => {
+                this.$store.commit('updateErrors', error)
+            })
         },
-        methods: {
-            addGroup: function() {
-                this.$modal.show(UserGroupModal, { initialGroup: this.group }, this.modalOptions)
-            },
-            deleteGroup: function(index) {
-                this.groups[index].isDeleting = true
-                window.axios.delete('/api/usergroup/' + this.groups[index].id, {
-                    validateStatus: function (status) {
-                        return status == 410
-                    }
-                }).then( (response) => {
+        editPermissions: function(group) {
+            this.$modal.show(UserGroupModal, { initialGroup: group}, this.$store.state.modalOptions)
+        },
+        isDisabled: function(index) {
+            return this.groups[index].isSaving && this.groups[index].isDeleting
+        },
 
-                    this.getData()
-
-                }).catch( (error) => {
-                    // TODO: Handle Error
-                })
-            },
-            editGroup: function(index) {
-                this.groups[index].isSaving = true
-                window.axios.patch('/api/usergroup/' + this.groups[index].id, {
-                    name: this.groups[index].name,
-                    description: this.groups[index].description,
-                    permission_ids: this.groups[index].permission_ids
-                }).then( (response) => {
-
-                    this.getData()
-
-                }).catch( (error) => {
-                    console.log(error)
-                })
-            },
-            editPermissions: function(group) {
-
-                this.$modal.show(UserGroupModal, { initialGroup: group}, this.modalOptions)
-
-            },
-            getData: function () {
-
-                window.axios.get('/api/usergroup').then( (response) => {
-                    this.groups = response.data.data
-                }).catch(function (error) {
-                    console.log(error)
-                })
-            },
-
-            getUsers: function () {
-                window.axios.get('api/user').then( (response) => {
-                    this.users = response.data.data
-                }).catch( function (error) {
-                    console.log(error)
-                })
-            },
-            isDisabled: function(index) {
-                return this.groups[index].isSaving && this.groups[index].isDeleting
-            },
-
-        }
     }
+}
 </script>
 
 <style scoped>
