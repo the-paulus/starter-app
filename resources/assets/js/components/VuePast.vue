@@ -70,7 +70,7 @@
             </tbody>
             <!-- End Table Body -->
             <!-- Begin Table Footer -->
-            <tfoot>
+            <tfoot v-if="pastConfig.hasFooter">
             <!-- Begin Pager Row -->
             <tr>
                 <!-- Begin Pager Table Data -->
