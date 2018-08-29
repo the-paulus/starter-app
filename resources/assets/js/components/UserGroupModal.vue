@@ -4,22 +4,30 @@
         <h3>{{ title }}</h3>
     </div>
         <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-12 error-container bg-danger" v-for="(errorType, index) in errorResponseMessages" :key="index">
+                    <h4>{{ index | capitalize }} Error</h4>
+                    <ul class="error-list">
+                        <li class="error" v-for="message in errorResponseMessages[index]">{{ message }}</li>
+                    </ul>
+                </div>
+            </div>
             <div class="row form-inline form-group">
-                <div class="col-lg-12">
+                <div class="col-lg-12" :class="{ 'error': hasValidationError('name') }">
                     <label class="control-label col-sm-2">User Group Name</label>
                     <input type="text" class="col-sm-10" v-model="modalGroup.name" required />
                 </div>
             </div>
 
             <div class="row form-inline form-group">
-                <div class="col-lg-12">
+                <div class="col-lg-12" :class="{ 'error': hasValidationError('description') }">
                     <label class="control-label col-sm-2">Description</label>
                     <input type="text" class="col-sm-10" v-model="modalGroup.description" required />
                 </div>
             </div>
 
             <div class="row form-group-lg form-group">
-                <div class="col-lg-12">
+                <div class="col-lg-12" :class="{ 'error': hasValidationError('permission_ids') }">
                     <h3 class="list-group-item-heading">Permissions</h3>
                 </div>
                 <div class="list-group scrollable">
@@ -62,6 +70,7 @@ export default {
     data: function () {
 
         return {
+            errors: [],
             modalGroup: Vue.util.extend({}, this.initialGroup),
             title: 'Add New User Group',
             users: null,
@@ -70,12 +79,30 @@ export default {
         }
     },
     computed: {
+        errorResponseMessages: function () {
+            var errorTypes = {}
+            var fieldErrors = []
+            for(var type in this.errors) {
+                if(typeof this.errors[type] == 'object') {
+                    for(var field in this.errors[type]) {
+                        if(typeof this.errors[type][field] == 'object') {
+                            fieldErrors = fieldErrors.concat(this.errors[type][field])
+                        } else {
+                            fieldErrors.push(this.errors[type][field])
+                        }
+                        errorTypes[type] = fieldErrors
+                    }
+                }
+            }
+            return errorTypes
+        },
         permissions: function () {
             return this.$store.state.permissions.data
         }
     },
     created: function () {
         try {
+            console.log(this.modalGroup)
             this.selectedPermissions = this.modalGroup.permission_ids
         } catch (e) {
 
@@ -85,6 +112,12 @@ export default {
         this.$store.dispatch('updatePermissions')
     },
     methods: {
+        hasValidationError: function (field) {
+            if(this.errors != undefined && this.errors.hasOwnProperty('validation')) {
+                console.log(field)
+                return this.errors['validation'].hasOwnProperty(field)
+            }
+        },
         saveGroup: function() {
             this.modalGroup.isSaving = true
 
@@ -93,8 +126,12 @@ export default {
                     description: this.modalGroup.description,
                     name: this.modalGroup.name,
                     permission_ids: this.selectedPermissions
-                }).then( (resposne) => {
-                    this.successfulSave()
+                }).then( (response) => {
+                    if( response.status == 406 ) {
+                        this.errors = response.data.errors
+                    } else {
+                        this.successfulSave()
+                    }
                 }).catch( (error) => {
                     this.$store.commit('updateErrors', error)
                 })
@@ -104,14 +141,18 @@ export default {
                     name: this.modalGroup.name,
                     permission_ids: this.selectedPermissions
                 }).then( (response) => {
-                    this.successfulSave()
+                    if( response.status == 406 ) {
+                        this.errors = response.data.errors
+                    } else {
+                        this.successfulSave()
+                    }
                 }).catch( (error) => {
                     this.$store.commit('updateErrors', error)
                 })
             }
+            this.modalGroup.isSaving = false
         },
         successfulSave: function() {
-            console.log(this)
             this.modalGroup.name = ''
             this.modalGroup.description = ''
             this.selectedPermissions = []
