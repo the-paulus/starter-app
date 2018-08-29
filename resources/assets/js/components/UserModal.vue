@@ -75,7 +75,6 @@ export default {
 
         return {
             modalUser: Vue.util.extend({}, this.initialUser),
-            userGroups: [],
             selectedUserGroups: [],
             errors: []
         }
@@ -98,8 +97,8 @@ export default {
             }
             return errorTypes
         },
-        orderedUserGroups: function() {
-            return _.orderBy(this.userGroups, 'name')
+        userGroups: function() {
+            return _.orderBy(this.$store.state.groups.data, 'name')
         },
         title: function () {
             return (this.modalUser.id) ? 'Edit User':'Add New User'
@@ -112,44 +111,14 @@ export default {
         },
     },
     created: function () {
-
-        this.getUserGroups()
-
         try {
             this.selectedUserGroups = this.modalUser.user_group_ids
-        } catch (e) {
-
-        }
-
+        } catch (error) {}
     },
-    mounted: function () {
-
-    },
+    mounted: function () {},
     methods: {
-        getUserGroups: function () {
-            window.axios.get('/api/usergroup').then( (response) => {
-                switch(response.status) {
-                    case 200:
-                        this.userGroups = response.data.data
-                        break
-                    case 404:
-                        this.errors.push('Unable to retrieve user groups.')
-                        break
-                }
-            }).catch((error) => {
-                this.$modal.show(ErrorResponse, {
-                    message: 'An error has occurred',
-                    response: resposne,
-                    error: error
-                }, this.modalOptions)
-            })
-        },
-        hasValidationError: function (field, el) {
-            try {
-                return this.errors['validation'].hasOwnProperty(field)
-            }catch (e) {
-                
-            }
+        hasValidationError: function (field) {
+            return this.errors['validation'].hasOwnProperty(field)
         },
         saveUser: function() {
 
