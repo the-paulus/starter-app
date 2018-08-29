@@ -118,6 +118,7 @@ export default {
 
             window.axios.request(this.axiosSearchRequestConfig).then((response) => {
                 this.$emit('input', response.data)
+                this.$emit('search')
             }).finally(() => {
                 this.isSearching = false
                 this.didSearch = true
