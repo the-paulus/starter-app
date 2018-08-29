@@ -25,7 +25,7 @@
                 <div class="list-group scrollable">
                     <div class="list-group-item" v-for="permission in permissions" :key="permission.id">
                         <label class="list-group-item-text" :for="'permission_' + permission.id" :title="permission.description">
-                            <input type="checkbox" :id="'permission_' + permission.id" :value="permission.id" v-model="selectedPermissions"> {{ permission.name }}
+                            <input type="checkbox" name="permission_ids" :id="'permission_' + permission.id" :value="permission.id" v-model="selectedPermissions"> {{ permission.name }}
                         </label>
                     </div>
                 </div>
