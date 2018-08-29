@@ -10,10 +10,10 @@
         </ul>
         <div class="tab-content">
             <div role="tab" class="tab-pane active" id="users-tab">
-                <vue-table id="userstable" v-model="data" :past-config="userPastConfig" :axios-search-request-config="axiosUserSearchConfig" @addRow="addUser" @deleteRow="confirmDeleteUser" @editRow="editUser" @sortData="sortData" @pageChanged="pageChanged"></vue-table>
+                <vue-table id="userstable" v-model="this.$store.state.users" :past-config="userPastConfig" :axios-search-request-config="axiosUserSearchConfig" @addRow="addUser" @deleteRow="confirmDeleteUser" @editRow="editUser" @sortData="sortUsers" @pageChanged="pageChanged"></vue-table>
             </div>
             <div role="tab" class="tab-pane" id="groups-tab">
-                <user-groups></user-groups>
+                <vue-table id="groups-table" v-model="this.$store.state.groups" :past-config="groupPastConfig" @addRow="addGroup" @deleteRow="confirmDeleteGroup" @editRow="editGroup" @sortData="sortGroups"></vue-table>
             </div>
         </div>
         <modals-container></modals-container>
@@ -24,10 +24,11 @@
 <script>
 import UserModal from './UserModal'
 import UserGroups from './UserGroups'
+import UserGroupModal from './UserGroupModal'
 
 export default {
     name: 'Users',
-    components: {UserModal,UserGroups},
+    components: {UserModal,UserGroups,UserGroupModal},
     data: function () {
         return {
             axiosUserSearchConfig: {
@@ -45,6 +46,39 @@ export default {
                     }, data)
                     return data
                 }]
+            },
+            groupPastConfig: {
+                canAdd: true,
+                canDelete: true,
+                canEdit: true,
+                hasFooter: false,
+                hasHeader: true,
+                hasSearch: false,
+                headerColumns: [
+                    {
+                        name: 'name',
+                        label: 'Group Name',
+                        sortable: true
+                    }
+                ],
+                pagerSettings: {
+                    totalRow: 0,
+                    language: 'en',
+                    pageSizeMenu: [15, 25, 50, 100],
+                    info: true,
+                    align: 'center'
+                },
+                tableClasses: [
+                    'table-responsive',
+                    'table-striped',
+                    'form-rows',
+                    'table table-bordered',
+                    'table-content'
+                ],
+                tableDataClasses: [
+                    'table-data-max',
+                    'table-data'
+                ]
             },
             userPastConfig: {
                 canAdd: true,
@@ -102,7 +136,7 @@ export default {
                     data: null
                 }
             ],
-            modalOptions: {},
+            userModalOptions: {},
             pagination: {
                 page: 1,
                 perPage: 15,
@@ -127,34 +161,56 @@ export default {
         }
     },
     computed: {
-        data: function () {
-            return Vue.util.extend({}, this.$store.state.users)
+        users: function () {
+            return this.$store.state.users.data
+        },
+        usersPagination: function () {
+            let pagination = Vue.util.extend({}, this.$store.state.users)
+            delete pagination.data
+            return pagination
+        },
+        groups: function () {
+            return this.$store.state.groups.data
+        },
+        groupsPagination: function () {
+            let pagination = Vue.util.extend({}, this.$store.state.groups)
+            delete pagination.data
+            return pagination
         }
     },
-    watch: {
-        error: function (newValue, oldValue) {
-
-            this.$modal.show(ErrorResponse, {}, this.modalOptions)
-
-        }
-    },
+    watch: {},
     created: function () {
 
         // Create a new modalOptions objects to be used explicitly by this
         // component's modals. Any modifications to the this.$attrs.modalOptions
         // object will persist throughout the rest of the application, otherwise.
-        this.modalOptions = Vue.util.extend({}, this.$store.state.modalOptions)
+        this.userModalOptions = Vue.util.extend({}, this.$store.state.modalOptions)
 
         // Override modalOptions here
-        this.modalOptions.width = '40%'
+        this.userModalOptions.width = '40%'
 
     },
     mounted: function() {
 
+        this.$store.dispatch('updateGroups')
         this.$store.dispatch('updateUsers', this.pagination)
 
     },
     methods: {
+        addGroup: function() {
+            this.$modal.show(UserGroupModal, {
+                initialGroup: {
+                    created_at: '',
+                    description: '',
+                    id: null,
+                    isDeleting: false,
+                    isSaving: false,
+                    permission_ids: [],
+                    updated_at: '',
+                    user_ids: []
+                }
+            }, this.$store.state.modalOptions)
+        },
         addUser: function() {
             this.$modal.show(UserModal, { initialUser: {
                     id: null,
@@ -166,26 +222,53 @@ export default {
                     isEditing: false,
                     isDeleting: false
                 }
-            }, this.modalOptions)
+            }, this.userModalOptions)
 
         },
         confirmDeleteUser: function(index) {
 
             this.$modal.show('dialog', {
                 title: 'Confirm',
-                text: 'Are you sure you want to delete ' + this.$store.state.users.data[index].first_name + ' ' + this.$store.state.users.data[index].last_name + '?',
+                text: 'Are you sure you want to delete ' + this.users[index].first_name + ' ' + this.users[index].last_name + '?',
                 buttons: [
                     {
                         title: 'Yes',
                         handler: () => {
                             this.$modal.hide('dialog')
-                            this.deleteUser(this.$store.state.users.data[index].id)
+                            this.deleteUser(this.$store.state.users[index].id)
                         }
                     },
                     {
                         title: 'No'
                     }
                 ]
+            })
+        },
+        confirmDeleteGroup: function(index) {
+
+            this.$modal.show('dialog', {
+                title: 'Confirm',
+                text: 'Are you sure you want to delete ' + this.groups[index].name + '?',
+                buttons: [
+                    {
+                        title: 'Yes',
+                        handler: () => {
+                            this.$modal.hide('dialog')
+                            this.deleteGroup(this.groups[index].id)
+                        }
+                    },
+                    {
+                        title: 'No'
+                    }
+                ]
+            })
+        },
+        deleteGroup: function(id) {
+
+            window.axios.delete('/api/usergroup/' + id).then( (response) => {
+                this.$store.dispatch('updateGroups')
+            }).catch( (error) => {
+                this.$store.commit('updateErrors', error)
             })
         },
         deleteUser: function (id) {
@@ -198,15 +281,16 @@ export default {
                         }
                     ]
                 })
-
                 this.$store.dispatch('updateUsers')
-
             }).catch( (error) => {
-                this.$modal.show(ErrorResponse, {}, this.modalOptions)
+                this.$store.commit('updateErrors', error)
             })
         },
         editUser: function(index) {
-            this.$modal.show(UserModal, {initialUser: this.$store.state.users.data[index]}, this.modalOptions);
+            this.$modal.show(UserModal, {initialUser: this.$store.state.users.data[index]}, this.userModalOptions);
+        },
+        editGroup: function(index) {
+            this.$modal.show(UserGroupModal, {initialGroup: this.$store.state.groups.data[index]}, this.$store.state.modalOptions)
         },
         pageChanged: function (pageInfo) {
             this.pagination.page = pageInfo.pageNumber
@@ -214,7 +298,13 @@ export default {
 
             this.$store.dispatch('updateUsers', this.pagination)
         },
-        sortData: function (args) {
+        sortGroups: function(args) {
+            this.pagination.sortBy = args.sort
+            this.pagination.orderBy = args.order
+
+            this.$store.dispatch('updateGroups', this.pagination)
+        },
+        sortUsers: function (args) {
             this.pagination.sortBy = args.sort
             this.pagination.orderBy = args.order
 
@@ -225,13 +315,4 @@ export default {
 </script>
 
 <style scoped>
-    /*
-table thead, tbody {
-    display: block;
-}
-tbody {
-    height: 100px;
-    overflow-x: hidden;
-    overflow-y: auto;
-}*/
 </style>
