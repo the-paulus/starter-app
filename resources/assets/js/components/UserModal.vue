@@ -67,7 +67,6 @@
 </template>
 
 <script>
-import ErrorResponse from './ErrorResponse'
 
 export default {
     name: 'UserModal',
@@ -129,34 +128,18 @@ export default {
                     last_name: this.modalUser.last_name,
                     first_name: this.modalUser.first_name,
                     email: this.modalUser.email,
-                    user_group_ids: this.selectedUserGroups
+                    user_group_ids: this.selectedUserGroups,
+                    auth_type: 'local'
                 }).then( (response) => {
-                    console.log(response)
-                    switch(response.status) {
-                        case 201:
-                            this.successfulSave()
-                            break
-                        case 401:
-                            this.errors = response.data.errors
-                            break
-                        case 406:
-                            this.errors = response.data.errors
-                            break
-                        case 500:
-                            this.$modal.show(ErrorResponse, {
-                                message: 'An internal server error was detected',
-                                response: response
-                            }, this.modalOptions)
-                            break
-
+                    if( response.status == 406 ) {
+                        this.errors = response.data.errors
+                    } else {
+                        this.successfulSave()
                     }
-                }).catch((reason) => {
-                    // Maybe we'll do something about this, eventually.
-                }).finally(() => {
+                }).catch( (error) => {
+                    this.$store.commit('updateErrors', error)
+                }).finally( () => {
                     this.modalUser.isSaving = false
-                    console.log(this.errorResponseMessages)
-                    console.log('ponies')
-                    console.log(this.errors)
                 })
             } else {
                 window.axios.put('/api/user/' + this.modalUser.id, {
@@ -165,17 +148,15 @@ export default {
                     email: this.modalUser.email,
                     user_group_ids: this.selectedUserGroups
                 }).then( (response) => {
-                    switch(response.status) {
-                        case 303:
-                            this.successfulSave()
-                            break
-                        case 406:
-                            this.errors = response.data.errors
-                            break
+                    if( response.status == 406 ) {
+                        this.errors = response.data.errors
+                    } else {
+                        this.successfulSave()
                     }
-
                 }).catch( (error) => {
-                    this.$emit('showErrorModal', error)
+                    this.$store.commit('updateErrors', error)
+                }).finally( () => {
+                    this.modalUser.isSaving = false
                 })
             }
         },
@@ -187,10 +168,6 @@ export default {
             this.modalUser.isSaving = false
             this.$store.dispatch('updateUsers')
             this.$emit('close')
-        },
-        validateModal: function () {
-
-
         }
     }
 }
