@@ -257,6 +257,12 @@ class Controller extends BaseController
 
     }
 
+    /**
+     * Performs search and returns results.
+     *
+     * @param Request $request  Request containing the search query.
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function search(Request $request) {
 
         $model = new static::$model;
