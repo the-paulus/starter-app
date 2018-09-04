@@ -49,21 +49,67 @@ const router = new VueRouter({
 
 const store = new Vuex.Store({
     state: {
+        errors: [],
         groups: [],
+        modalOptions: {
+            classes: ['v--modal'],
+            adaptive: false,
+            scrollable: true,
+            height: 'auto',
+            width: '80%'
+        },
+        permissions: [],
         token: '',
         users: []
     },
     mutations: {
+        updateErrors: function (state, payload) {
+          state.errors = payload
+        },
         updateGroups: function (state, payload) {
             state.groups = payload
+        },
+        updatePermissions: function(state, payload) {
+            state.permissions = payload
         },
         updateUsers: function (state, payload) {
             state.users = payload
         }
     },
     actions: {
-        updateGroups: function ({ commit, state }) {
+        updateGroups: function ({ commit }, pagination) {
+            let url = '/api/usergroup'
 
+            if (pagination != null) {
+                url += '?page=' + pagination.page
+                url += '&perPage=' + pagination.perPage
+                url += '&sortBy=' + pagination.sortBy
+                url += '&orderBy=' + pagination.orderBy
+            }
+
+            return window.axios.request({
+                url: url,
+                method: 'get'
+            }).then( (response) => {
+                commit('updateGroups', response.data)
+            })
+        },
+        updatePermissions: function ({ commit }, pagination) {
+            let url = '/api/permission'
+
+            if (pagination != null) {
+                url += '?page=' + pagination.page
+                url += '&perPage=' + pagination.perPage
+                url += '&sortBy=' + pagination.sortBy
+                url += '&orderBy=' + pagination.orderBy
+            }
+
+            return window.axios.request({
+                url: url,
+                method: 'get'
+            }).then( (response) => {
+                commit('updatePermissions', response.data)
+            })
         },
         updateUsers: function ({ commit }, pagination) {
             let url = '/api/user'
@@ -104,29 +150,17 @@ const app = new Vue({
     el: '#app',
     router,
     store,
-    props: {
-        modalOptions: {
-            type: Object,
-            required: false,
-            default: function () {
-                return {
-                    classes: ['v--modal'],
-                    adaptive: false,
-                    scrollable: true,
-                    height: 'auto',
-                    width: '80%'
-                }
-            }
-        },
-    },
+    props: {},
     data: function () {
 
         return {
-
             token: ''
         }
     },
     watch: {
+        errors: function (newValue, oldValue) {
+            this.showErrorModal(newValue.response, newValue.error)
+        },
         token: function (newValue, oldValue) {
 
             window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.token
@@ -162,7 +196,6 @@ const app = new Vue({
 
     },
     mounted: function () {
-        this.$on('showErrorModal', this.showErrorModal)
     },
     methods: {
         showErrorModal: function (response, error) {
