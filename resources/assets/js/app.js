@@ -150,16 +150,8 @@ const app = new Vue({
                     }
                 },
                 {
-                    component: UserGroups,
-                    name: 'Groups',
-                    path: '/groups',
-                    props: {
-                        modalOptions: this.modalOptions
-                    }
-                },
-                {
                     component: Users,
-                    name: 'Users',
+                    name: 'User Management',
                     path: '/users',
                     props: {
                         modalOptions: this.modalOptions
