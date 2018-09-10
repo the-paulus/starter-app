@@ -118,7 +118,7 @@ class AppValidationProvider extends ServiceProvider
      */
     private function validateExistsIn() {
 
-        Validator::extend('exists_in', function($attribute, $value, $parameters, $validator) {
+        Validator::extendImplicit('exists_in', function($attribute, $value, $parameters, $validator) {
 
             $table = $parameters[0];
             $column = isset($parameters[1]) ? $parameters[1] : 'name';
