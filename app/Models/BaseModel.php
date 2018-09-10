@@ -41,7 +41,7 @@ class BaseModel extends Model
     protected static $model_permissions = [
         'manage',
         'create',
-        'modify',
+        'update',
         'delete',
         'access'
     ];
