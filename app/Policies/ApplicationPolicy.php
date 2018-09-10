@@ -23,7 +23,7 @@ class ApplicationPolicy
     public function view(User $user, Model $model)
     {
 
-        return $user->hasPermission(__FUNCTION__ . ' ' . camel_case_conversion(class_basename(static::$model)));
+        return $user->hasPermission(__FUNCTION__ . ' ' . str_plural(camel_case_conversion(class_basename(static::$model))));
 
     }
 
@@ -37,7 +37,7 @@ class ApplicationPolicy
     public function create(User $user)
     {
 
-        return $user->hasPermission(__FUNCTION__ . ' ' . camel_case_conversion(class_basename(static::$model)));
+        return $user->hasPermission(__FUNCTION__ . ' ' . str_plural(camel_case_conversion(class_basename(static::$model))));
 
     }
 
@@ -52,7 +52,7 @@ class ApplicationPolicy
     public function update(User $user, Model $model)
     {
 
-        return $user->hasPermission(__FUNCTION__ . ' ' . camel_case_conversion(class_basename(static::$model)));
+        return $user->hasPermission(__FUNCTION__ . ' ' . str_plural(camel_case_conversion(class_basename(static::$model))));
 
     }
 
@@ -67,7 +67,7 @@ class ApplicationPolicy
     public function delete(User $user, Model $model)
     {
 
-        return $user->hasPermission(__FUNCTION__ . ' ' . camel_case_conversion(class_basename(static::$model)));
+        return $user->hasPermission(__FUNCTION__ . ' ' . str_plural(camel_case_conversion(class_basename(static::$model))));
 
     }
 }
