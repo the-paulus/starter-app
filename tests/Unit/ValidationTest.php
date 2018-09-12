@@ -442,27 +442,162 @@ class ValidationTest extends TestCase
 
     }
 
-    public function testRequiredPasswordValidation() {
+    /**
+     * Tests unique_email validation rule.
+     *
+     * - User being validating with the same email should pass.
+     * - Different User with an email already in the database should fail.
+     *
+     * @group validation
+     * @group user_validation
+     */
+    public function testUniqueEmailValidation() {
 
-        $validator = Validator::make(['auth_type' => 'local', 'password' => ''], ['password' => 'required_password:auth_type,local']);
-        $this->assertTrue($validator->fails());
-
-        $validator = Validator::make(['auth_type' => 'local', 'password' => 'new pass'], ['password' => 'required_password:auth_type,local']);
-        $this->assertTrue($validator->passes());
-    }
-
-    public function testUniqueValidation() {
-
-        \DB::table('auth_types')->insert(['id' => 1, 'name' => 'local']);
-        factory(User::class)->create();
-
-        $user = User::firstOrFail();
+        $user = $this->getSeededUser(self::USER);
+        $user_attributes = $user->getAttributes();
 
         Auth::login($user);
 
-        $validator = Validator::make($user->getAttributes(), ['email' => 'required|dynamic_unique:users,email,{id}']);
+        $validator = Validator::make($user_attributes, ['email' => 'required|unique_email']);
         $this->assertTrue($validator->passes(), $validator->errors());
 
+        $user_attributes['email'] = $this->getSeededUser(self::APPLICATION_ADMIN)->email;
+
+        $validator = Validator::make($user_attributes, ['email' => 'required|unique_email']);
+
+        $this->assertTrue($validator->fails(), $validator->errors());
+
+    }
+
+    /**
+     * Tests required_with_permission validation rule.
+     *
+     * - Field is required if user has a specified permission and is empty should fail.
+     * - Field is required if a user has a specified permission and is not empty should pass.
+     * - Field is not required if a user doesn't have the specified permission and is empty should pass
+     * - Field is not required if a user doesn't have the specified permission and is not empty should pass.
+     *
+     * @group permissions
+     * @group validation
+     * @group user_validation
+     */
+    public function testRequiredWithPermissionValidation() {
+
+        $user = $this->getSeededUser(self::APPLICATION_ADMIN);
+
+        Auth::login($user);
+
+        $validator = Validator::make(['test_field' => ''], ['test_field' => 'required_with_permission:create users']);
+        $this->assertTrue($validator->fails());
+
+        $validator = Validator::make(['test_field' => 'not empty'], ['test_field' => 'required_with_permission:create users']);
+        $this->assertTrue($validator->passes());
+
+        $validator = Validator::make(['test_field' => ''], ['test_field' => 'required_with_permission:non-existent permission']);
+        $this->assertTrue($validator->passes());
+
+        $validator = Validator::make(['test_field' => 'not empty'], ['test_field' => 'required_with_permission:non-existent permission']);
+        $this->assertTrue($validator->passes());
+
+    }
+
+    /**
+     * Tests required_without_permission validation rule.
+     *
+     * - Field is required if user does not have the specified permission and is empty should fail.
+     * - Field is required if a user does not have the specified permission and is not empty should pass.
+     * - Field is not required if a user has the specified permission and is empty should pass
+     * - Field is not required if a user has the specified permission and is not empty should pass.
+     *
+     * @group permissions
+     * @group validation
+     * @group user_validation
+     */
+    public function testRequiredWithoutPermissionValidation() {
+
+        $user = $this->getSeededUser(self::APPLICATION_ADMIN);
+
+        Auth::login($user);
+
+        $validator = Validator::make(['test_field' => ''], ['test_field' => 'required_without_permission:non-existent permission']);
+        $this->assertTrue($validator->fails());
+
+        $validator = Validator::make(['test_field' => 'not empty'], ['test_field' => 'required_without_permission:non-existent permission']);
+        $this->assertTrue($validator->passes());
+
+        $validator = Validator::make(['test_field' => ''], ['test_field' => 'required_without_permission:create users']);
+        $this->assertTrue($validator->passes());
+
+        $validator = Validator::make(['test_field' => 'not empty'], ['test_field' => 'required_with_permission:create users']);
+        $this->assertTrue($validator->passes());
+
+    }
+
+    /**
+     * Tests required_with_membership validation rule.
+     *
+     * - Field is required if user is in a specified group and is empty should fail.
+     * - Field is required if a user is in a specified group and is not empty should pass.
+     * - Field is not required if a user isn't in the specified group and is empty should pass
+     * - Field is not required if a user isn't in the specified group and is not empty should pass.
+     *
+     * @group groups
+     * @group validation
+     * @group user_validation
+     */
+    public function testRequiredWithMembershipValidation() {
+
+        $user = $this->getSeededUser(self::APPLICATION_ADMIN);
+
+        Auth::login($user);
+
+        $validator = Validator::make(['test_field' => ''], ['test_field' => 'required_with_membership:Application Administrator']);
+        $this->assertTrue($validator->fails());
+
+        $validator = Validator::make(['test_field' => 'not empty'], ['test_field' => 'required_with_membership:Administrator']);
+        $this->assertTrue($validator->passes());
+
+        $validator = Validator::make(['test_field' => ''], ['test_field' => 'required_with_membership:user']);
+        $this->assertTrue($validator->passes());
+
+        $validator = Validator::make(['test_field' => 'not empty'], ['test_field' => 'required_with_permission:user']);
+        $this->assertTrue($validator->passes());
+
+    }
+
+    /**
+     * Tests required_without_membership validation rule.
+     *
+     * - Field is required if user is not in a specified group and is empty should fail.
+     * - Field is required if a user is not in a specified group and is not empty should pass.
+     * - Field is not required if a user is in the specified group and is empty should pass
+     * - Field is not required if a user is in the specified group and is not empty should pass.
+     *
+     * @group groups
+     * @group validation
+     * @group user_validation
+     */
+    public function testRequiredWithoutMembershipValidation() {
+
+        $user = $this->getSeededUser(self::APPLICATION_ADMIN);
+
+        Auth::login($user);
+
+        $validator = Validator::make(['test_field' => ''], ['test_field' => 'required_without_membership:Application Administrator']);
+        $this->assertTrue($validator->passes());
+
+        $validator = Validator::make(['test_field' => 'not empty'], ['test_field' => 'required_without_membership:user']);
+        $this->assertTrue($validator->passes());
+
+        $validator = Validator::make(['test_field' => ''], ['test_field' => 'required_without_membership:administrator']);
+        $this->assertTrue($validator->fails());
+
+        $validator = Validator::make(['test_field' => 'not empty'], ['test_field' => 'required_without_permission:administrator']);
+        $this->assertTrue($validator->passes());
+
+    }
+
+    public function testHasPermissionValidation() {
 
     }
 

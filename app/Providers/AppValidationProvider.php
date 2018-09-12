@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use http\Exception\InvalidArgumentException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\File\File;
 use DB;
 use Illuminate\Support\Facades\Validator;
@@ -142,44 +144,119 @@ class AppValidationProvider extends ServiceProvider
     }
 
     /**
-     * The dynamic_unique works exactly like the unique rule but allows the developer to pass a place holder for the
-     * ID that gets replaced by the value returned from Auth::id(). This rule is intended for use with attributes such as
-     * email addresses, so users can update their own account without validation failing because their email address isn't
-     * unique.
+     * The unique_email works exactly like the unique rule but is explicitly used for email fields that are defined as
+     * unique in the database. This rule takes the parameters of table,column,uniqueColumn. By default the parameters
+     * are users,email,id.
      */
-    private function validateDynamicUnique() {
+    private function validateUniqueEmail() {
 
-        Validator::extend('dynamic_unique', function($attribute, $value, $parameters, $validator) {
+        Validator::extend('unique_email', function($attribute, $value, $parameters, $validator) {
 
-            if (isset($parameters[2]) ){
+            $data = $validator->getData();
+            $id = (isset($data['id'])) ? $data['id'] : Auth::id();
+            $parameters[0] = empty($parameters[0]) ? 'users' : $parameters[0];
+            $parameters[1] = empty($parameters[1]) ? 'email' : $parameters[1];
+            $parameters[2] = $id;
+            $parameters[3] = isset($parameters[2]) ? 'id' : $parameters[3];
 
-                $parameters[2] = str_replace('{id}', Auth::id(), $parameters[2]);
-
-            }
-
-            return $validator->validateUnique($attribute, $value, $parameters);
+            return $validator->validateEmail($attribute, $value) && $validator->validateUnique($attribute, $value, $parameters);
 
         }, ':attribute must be unique.');
     }
 
     /**
-     * Creates a new validatoin rule called 'permission_required' that requires a value for the field being validated
-     * based on permissions or group membership. This takes two parameters, the first is the callback, which is either
-     * 'hasPermission' or 'memberOf'. The second parameter takes either a permission or group name, respectively.
+     * Creates a new validation rule called 'required_with_permission' that requires a value for the field being validated
+     * based on permissions. This takes one parameter, the string array of permissions a user has that would
+     * require the field to be required. If a user has one of the listed permissions then the rule returns true.
      */
-    private function validatePermissionRequired() {
+    private function validateRequiredWithPermission() {
 
-        Validator::extend('permission_required', function($attribute, $value, $parameters, $validator) {
+        Validator::extendImplicit('required_with_permission', function($attribute, $value, $parameters, $validator) {
 
-            $negate = trim($parameters[1]);
+            foreach($parameters as $parameter) {
 
-            if(strcmp('true', $negate) === 0) {
-                return !Auth::user()->hasPermission($parameters[0]);
+                if(Auth::user()->hasPermission($parameter)) {
+
+                    return $validator->validateRequired($attribute, $value) && !empty($value);
+
+                };
+
             }
 
-            return Auth::user()->hasPermission($parameters[0]);
+            return true;
 
-        }, ':attribute permission is required.');
+        }, ':attribute is required.');
+    }
+
+    /**
+     * Creates a new validation rule called 'required_without_permission' that requires a value for the field being validated
+     * based on the absence of a permission. This takes one parameter, the string array of permissions a that a
+     * user doesn't have that would require the field to be required. If a user has one of the permissions the rule
+     * returns true.
+     */
+    private function validateRequiredWithoutPermission() {
+
+        Validator::extendImplicit('required_without_permission', function($attribute, $value, $parameters, $validator) {
+
+            foreach($parameters as $parameter) {
+
+                if(Auth::user()->hasPermission($parameter)) {
+
+                    return true;
+
+                }
+            }
+
+            return $validator->validateRequired($attribute, $value) && !empty($value);
+
+        }, ':attribute is required. (without permission)');
+    }
+
+    /**
+     * Creates a new validation rule called 'required_with_membership' that requires a value for the field being validated
+     * based on group. This takes one parameter, the string array of groups a user could be in that would
+     * require the field to be required.
+     */
+    private function validateRequiredWithMembership() {
+
+        Validator::extendImplicit('required_with_membership', function($attribute, $value, $parameters, $validator) {
+
+            foreach($parameters as $parameter) {
+
+                if(Auth::user()->memberOf($parameter)) {
+
+                    return $validator->validateRequired($attribute, $value);
+
+                };
+
+            }
+
+            return true;
+
+        }, ':attribute is required.');
+    }
+
+    /**
+     * Creates a new validation rule called 'required_without_membership' that requires a value for the field being validated
+     * based on group. This takes one parameter, the string array representation of groups a user that is not in that would
+     * require the field to be required.
+     */
+    private function validateRequiredWithoutMembership() {
+
+        Validator::extendImplicit('required_without_membership', function($attribute, $value, $parameters, $validator) {
+
+            foreach($parameters as $parameter) {
+
+                if(Auth::user()->memberOf($parameter)) {
+
+                    return true;
+
+                }
+            }
+
+            return $validator->validateRequired($attribute, $value) && !empty($value);
+
+        }, ':attribute is required.');
     }
 
     /**
@@ -192,9 +269,13 @@ class AppValidationProvider extends ServiceProvider
 
         Validator::extend('has_permission', function($attribute, $value, $parameters, $validator) {
 
-            if(!is_null(Auth::user()) && count($parameters)) {
+            foreach($parameters as $parameter) {
 
-                return Auth::user()->{$parameters[0]}($parameters[1]);
+                if(Auth::user()->hasPermission($parameter)) {
+
+                    return true;
+
+                }
 
             }
 
