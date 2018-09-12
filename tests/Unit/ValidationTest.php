@@ -420,9 +420,14 @@ class ValidationTest extends TestCase
     }
 
     /**
-     * A basic test example.
+     * Tests exists_in validation rule.
      *
-     * @return void
+     * - auth_type local should pass.
+     * - auth_type oauth should pass.
+     * - auth_type ldap should fail.
+     *
+     * @group validation
+     * @group user_validation
      */
     public function testExistsInValidation() {
 
