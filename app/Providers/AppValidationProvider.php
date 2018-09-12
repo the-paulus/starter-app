@@ -67,16 +67,28 @@ class AppValidationProvider extends ServiceProvider
 
         Validator::extendImplicit('required_or_empty_array', function($attribute, $value, $parameters, $validator) {
 
-            if( $value instanceof File  && !empty($value->getPath()) ) {
+            if($validator->validateRequired($attribute, $value) && $validator->validateArray($attribute, $value)) {
 
-                return false;
+                return true;
 
             }
 
-            return !(is_null($value)) &&
-                ( ( is_array($value) && count($value) == 0 ) || !( is_string($value) && empty($value) ) );
+            if( $validator->validateFile($attribute, $value) && $validator->validateArray($attribute, $value) ) {
 
-        }, ":attribute is required.");
+                return true;
+
+            }
+
+            if( $validator->validateArray($attribute, $value) ){
+
+                return true;
+
+            }
+
+            return false;
+
+        }, ":attribute is required to be a populated array or empty array.");
+
     }
 
 
