@@ -59,6 +59,33 @@ class ValidationTest extends TestCase
     }
 
     /**
+     * Tests the required_password validation rule.
+     *
+     * - No password should fail.
+     * - No password with auth_type of local should fail.
+     * - No password with auth_type of ldap should pass.
+     * - Password with auth_type of local should pass.
+     *
+     * @group password
+     * @group validation
+     */
+    public function testRequiredPasswordValidation() {
+
+        //$validator = Validator::make(['password' => ''], ['password' => 'required_password']);
+        //$this->assertTrue($validator->passes());
+
+        $validator = Validator::make(['auth_type' => 'local', 'password' => ''], ['password' => 'required_password']);
+        $this->assertTrue($validator->fails());
+
+        $validator = Validator::make(['auth_type' => 'shibboleth', 'password' => ''], ['password' => 'required_password']);
+        $this->assertTrue($validator->passes());
+
+        $validator = Validator::make(['auth_type' => 'local', 'password' => 'new pass'], ['password' => 'required_password']);
+        $this->assertTrue($validator->passes());
+
+    }
+
+    /**
      * A basic test example.
      *
      * @return void

@@ -100,25 +100,25 @@ class AppValidationProvider extends ServiceProvider
 
         Validator::extendImplicit('required_password', function($attribute, $value, $parameters, $validator) {
 
-            if( count($parameters) != 2 ) {
+            $data = $validator->getData();
+            $auth_type = false;
 
-                throw new InvalidParameterException('Rule requires two parameters; attribute and value.');
-            }
+            if(isset($data['auth_type']) && !empty($data['auth_type'])) {
 
-            // We do not tolerate exceptions!
-            try {
+                $column = intval($data['auth_type']) ? 'id' : 'name';
+                $auth_type = DB::table('auth_types')->select()->where($column, $data['auth_type'])->first();
 
-                $data = $validator->getData();
-
-                list($dependency, $requirement) = $parameters;
-
-                return $data[$dependency] == $requirement && !empty($value);
-
-            } catch(\Exception $exception) {
-
-                return false;
+                if(is_null($auth_type)) return false;
 
             }
+
+            if(is_object($auth_type) && $auth_type->name == 'local') {
+
+                return !empty($value) && is_string($value);
+
+            }
+
+            return ($auth_type && empty($value)) || (!$auth_type && empty($value));
 
         }, ":attribute is required.");
 
