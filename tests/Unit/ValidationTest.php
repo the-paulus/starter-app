@@ -431,11 +431,6 @@ class ValidationTest extends TestCase
      */
     public function testExistsInValidation() {
 
-        \DB::table('auth_types')->insert([
-            ['name'=>'local'],
-            ['name'=>'oauth']
-        ]);
-
         $validator = Validator::make(['auth_type' => 'local'], ['auth_type' => 'exists_in:auth_types,name']);
         $this->assertTrue($validator->passes());
 
