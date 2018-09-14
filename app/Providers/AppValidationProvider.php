@@ -151,7 +151,7 @@ class AppValidationProvider extends ServiceProvider
             $parameters[0] = empty($parameters[0]) ? 'users' : $parameters[0];
             $parameters[1] = empty($parameters[1]) ? 'email' : $parameters[1];
             $parameters[2] = $id;
-            $parameters[3] = isset($parameters[2]) ? 'id' : $parameters[3];
+            $parameters[3] = !(isset($parameters[3])) ? 'id' : $parameters[3];
 
             return $validator->validateEmail($attribute, $value) && $validator->validateUnique($attribute, $value, $parameters);
 
