@@ -351,6 +351,7 @@ class User extends BaseModel implements Authenticatable, JWTSubject
         $array = $this->toArray();
 
         unset($array['user_group_ids']);
+        unset($array['groups']);
         unset($array['auth_type']);
         unset($array['password']);
 
