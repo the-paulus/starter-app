@@ -247,7 +247,7 @@ class AppValidationProvider extends ServiceProvider
 
             foreach($parameters as $parameter) {
 
-                if(Auth::user()->memberOf($parameter)) {
+                if((Auth::user()) && Auth::user()->memberOf($parameter)) {
 
                     return true;
 
