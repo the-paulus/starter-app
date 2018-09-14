@@ -21,7 +21,7 @@ class PermissionsTableSeeder extends DatabaseSeeder
         ],
         [
             'name' => 'update users',
-            'description' => 'Update user account information.',
+            'description' => 'Update other user account information. Users will be able to update their own account information without having this permission.',
             'groups' => [
                 'Application Administrator',
                 'Administrator',
@@ -37,7 +37,7 @@ class PermissionsTableSeeder extends DatabaseSeeder
         ],
         [
             'name' => 'view users',
-            'description' => 'View user information.',
+            'description' => 'View other user information. Users will still be able to view their own account information without having this permission.',
             'groups' => [
                 'Application Administrator',
                 'Administrator',
