@@ -21,10 +21,10 @@ class UserPolicy extends ApplicationPolicy
     static protected $model = User::class;
 
     /**
-     * Determine whether the user can delete the model.
+     * Determine whether the user can delete the model. This prevents a user from deleting them self.
      *
      * @param  User   $user     User object to perform check on.
-     * @param  Model  $model    The model they are performing the task on.
+     * @param  Model  $model    The model having the action performed on.
      *
      * @return bool
      */
