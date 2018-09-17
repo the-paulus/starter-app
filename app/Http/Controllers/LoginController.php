@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Grpc\Server;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -9,6 +11,8 @@ use Tymon\JWTAuth\JWTAuth;
 
 class LoginController extends Controller
 {
+    use AuthenticatesUsers;
+
     private $user;
     private $token;
 
@@ -16,7 +20,7 @@ class LoginController extends Controller
     {
     }
 
-    public function authed(Request $request) {
+    public function authenticated(Request $request) {
 
         JWTAuth::parseToken();
 
@@ -24,11 +28,11 @@ class LoginController extends Controller
             throw new AccessDeniedHttpException('Received uninstantiated user error.');
         }
 
-        return redirect(config('app.frontend_url') . '/token/' . JWTAuth::getToken());
+        return redirect(config('app.frontend_url', $request->server->all()) . '/token/' . JWTAuth::getToken());
 
     }
 
-    public function noauth()  {
+    public function unauthorized()  {
 
         throw new AccessDeniedHttpException('You do not have access to this application');
 
