@@ -96,7 +96,7 @@ class UserFeatureTest extends TestCase
             $new_user['user_group_ids'][] = UserGroup::all()->firstWhere('name', '=', 'User')->id;
             $data = $this->performJWTActionAs($user, 'post', 'api/user', $new_user)
                 ->assertStatus(Controller::METHOD_SUCCESS_CODE['store'])
-                ->json()['data'];
+                ->json();
 
             foreach($new_user as $key => $value) {
 
@@ -104,12 +104,12 @@ class UserFeatureTest extends TestCase
 
                     if($key == 'user_group_ids') {
 
-                        $this->assertEquals($value[0], $data[0][$key][0]);
+                        $this->assertEquals($value[0], $data['data'][0][$key][0]);
 
                     } else {
 
-                        $this->assertArrayHasKey($key, $data[0]);
-                        $this->assertEquals($value, $data[0][$key]);
+                        $this->assertArrayHasKey($key, $data['data'][0]);
+                        $this->assertEquals($value, $data['data'][0][$key]);
 
                     }
 
@@ -124,17 +124,17 @@ class UserFeatureTest extends TestCase
         $new_user = factory(User::class)->raw();
         $new_user['user_group_ids'][] = UserGroup::all()->firstWhere('name', '=', 'User')->id;
 
-        $this->performJWTActionAs($user, 'post', 'api/user', $new_user)->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->performJWTActionAs($user, 'post', 'api/user', $new_user)->assertStatus(Response::HTTP_UNAUTHORIZED);
 
 
         // Test data violations
         $user = $this->getSeededUser(self::ADMIN_USER);
-
-        unset($new_user['password']);
-        unset($new_user['email']);
+        $new_user['email'] = $user->email;
 
         $this->performJWTActionAs($user, 'post', 'api/user', $new_user)
-            ->assertStatus(Controller::METHOD_FAILURE_CODE['store']);
+            ->assertStatus(Response::HTTP_NOT_ACCEPTABLE);
+
+    }
 
     /**
      * Tests to ensure that admin users can access information about other users.
