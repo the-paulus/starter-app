@@ -157,10 +157,9 @@ class Controller extends BaseController
 
         $model_class = static::$model;
         $model = (new $model_class);
-        $this->authorize('create', $model_class);
 
         try {
-
+            $this->authorize('create', $model_class);
             $model = static::$model::validateAndCreate($request->all());
             $data = $request->all();
 
