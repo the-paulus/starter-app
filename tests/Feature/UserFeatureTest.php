@@ -136,6 +136,52 @@ class UserFeatureTest extends TestCase
         $this->performJWTActionAs($user, 'post', 'api/user', $new_user)
             ->assertStatus(Controller::METHOD_FAILURE_CODE['store']);
 
+    /**
+     * Tests to ensure that admin users can access information about other users.
+     *
+     * @group application
+     * @group user
+     * @group authentication
+     * @group localauth
+     */
+    public function testAdminUpdateUser() {
+        $user = $this->getSeededUser(self::APPLICATION_ADMIN);
+        $user_to_update = $this->getSeededUser(self::USER);
+
+        $user_info = array(
+            'first_name' => 'Updated First Name',
+            'last_name' => 'Updated Last Name',
+        );
+
+        $this->performJWTActionAs($user, 'put', 'api/user/' . $user_to_update->id, $user_info)
+            ->assertStatus(Controller::METHOD_SUCCESS_CODE['update'])
+            ->json();
+
+        $this->performJWTActionAs($user_to_update, 'put', 'api/user/' . $user->id, $user_info)
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * Tests to ensure that users can update information about other users and them self.
+     *
+     * @group application
+     * @group user
+     * @group authentication
+     * @group localauth
+     */
+    public function testUserUpdate() {
+
+        $user = $this->getSeededUser(self::USER);
+        $user_attributes = $user->getAttributes(['first_name', 'last_name']);
+        $user_attributes['auth_type'] = 'local';
+        $this->performJWTActionAs($user, 'put', 'api/user/' . $user->id, $user_attributes)
+            ->assertStatus(Controller::METHOD_SUCCESS_CODE['update'])
+            ->json();
+
+        $this->performJWTActionAs($user, 'put', 'api/user/' . User::all()->last()->id+1, $user_attributes)
+            ->assertStatus(Response::HTTP_NOT_FOUND);
+
+        $this->call('put', 'api/user/1', factory(User::class)->raw())->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
     /**
