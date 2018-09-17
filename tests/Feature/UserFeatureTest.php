@@ -223,7 +223,7 @@ class UserFeatureTest extends TestCase
         $del_user = $this->getSeededUser(self::ADMIN_USER);
 
         $this->performJWTActionAs($user, 'delete', 'api/user/' . $del_user->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
     /**
