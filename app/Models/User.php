@@ -77,9 +77,9 @@ class User extends BaseModel implements Authenticatable, JWTSubject
     public static $rules = [
         'first_name' => 'required|string|max:255',
         'last_name' => 'required|string|max:255',
-        'email' => 'required|dynamic_unique:users,email,{id}|email',
-        'auth_type' => 'required|exists:auth_types,name',
-        'password' => 'required_password:auth_type,local',
+        'email' => 'required|unique_email',
+        'auth_type' => 'exists:auth_types,name',
+        'password' => 'required_password:auth_type,local|required_without_membership:Administrator,Application Administrator',
     ];
 
     /**
