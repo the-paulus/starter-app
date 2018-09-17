@@ -147,10 +147,10 @@ class AppValidationProvider extends ServiceProvider
         Validator::extend('unique_email', function($attribute, $value, $parameters, $validator) {
 
             $data = $validator->getData();
-            $id = (isset($data['id'])) ? $data['id'] : Auth::id();
+
             $parameters[0] = empty($parameters[0]) ? 'users' : $parameters[0];
             $parameters[1] = empty($parameters[1]) ? 'email' : $parameters[1];
-            $parameters[2] = $id;
+            $parameters[2] = (Auth::user()->hasPermission('update users') && isset($data['id'])) ? $data['id'] : Auth::id();
             $parameters[3] = !(isset($parameters[3])) ? 'id' : $parameters[3];
 
             return $validator->validateEmail($attribute, $value) && $validator->validateUnique($attribute, $value, $parameters);
