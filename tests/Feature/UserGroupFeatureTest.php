@@ -121,7 +121,7 @@ class UserGroupFeatureTest extends TestCase
 
       unset($updated_group['name']);
 
-      $this->performJWTActionAs($user, 'put', 'api/usergroup/' . $group_id, $updated_group, Controller::METHOD_FAILURE_CODE['update']);
+      $this->performJWTActionAs($user, 'put', 'api/usergroup/' . $group_id, $updated_group, Response::HTTP_NOT_ACCEPTABLE);
 
   }
 
