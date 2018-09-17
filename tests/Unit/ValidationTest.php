@@ -464,8 +464,13 @@ class ValidationTest extends TestCase
         $user_attributes['email'] = $this->getSeededUser(self::APPLICATION_ADMIN)->email;
 
         $validator = Validator::make($user_attributes, ['email' => 'required|unique_email']);
+        $this->assertTrue($validator->fails());
 
-        $this->assertTrue($validator->fails(), $validator->errors());
+        $user_attributes['email'] = 'me@home.com';
+
+        $validator = Validator::make($user_attributes, ['email' => 'required|unique_email']);
+
+        $this->assertTrue($validator->passes(), $validator->errors());
 
     }
 
