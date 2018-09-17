@@ -28,7 +28,7 @@ class BaseModelTest extends TestCase
         $model_permissions = [
             'manage',
             'create',
-            'modify',
+            'update',
             'delete',
             'access'
         ];
