@@ -247,16 +247,13 @@ class UserFeatureTest extends TestCase
         $this->performJWTActionAs($user, 'delete', 'api/user/' . $del_user_id)
             ->assertStatus(Controller::METHOD_SUCCESS_CODE['destroy']);
 
-        $this->performJWTActionAs($user, 'get', 'api/user/' . $del_user_id, array(), Controller::METHOD_FAILURE_CODE['show']);
+        $this->performJWTActionAs($user, 'get', 'api/user/' . $del_user_id, array(), Response::HTTP_NOT_FOUND);
 
-        $id = User::all()->last()->id;
-        $id++;
-
-        $this->performJWTActionAs($user, 'delete', 'api/user/' . $id, array(), Controller::METHOD_FAILURE_CODE['destroy']);
+        $this->performJWTActionAs($user, 'delete', 'api/user/' . User::all()->last()->id+1, array(), Response::HTTP_NOT_FOUND);
     }
 
     /**
-     * Tests to ensure that users cannot delete other users.
+     * Tests to ensure that users cannot delete other users when they don't don't have permission to.
      *
      * @group application
      * @group user
