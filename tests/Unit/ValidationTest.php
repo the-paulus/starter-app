@@ -434,7 +434,7 @@ class ValidationTest extends TestCase
         $validator = Validator::make(['auth_type' => 'local'], ['auth_type' => 'exists_in:auth_types,name']);
         $this->assertTrue($validator->passes());
 
-        $validator = Validator::make(['auth_type' => 'oauth'], ['auth_type' => 'exists_in:auth_types,name']);
+        $validator = Validator::make(['auth_type' => 'shibboleth'], ['auth_type' => 'exists_in:auth_types,name']);
         $this->assertTrue($validator->passes());
 
         $validator = Validator::make(['auth_type' => 'ldap'], ['auth_type' => 'exists_in:auth_types,name']);
