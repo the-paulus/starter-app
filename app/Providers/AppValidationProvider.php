@@ -43,13 +43,13 @@ class AppValidationProvider extends ServiceProvider
 
                 $this->$value();
 
-
+            // @codeCoverageIgnoreStart
             } catch(\BadMethodCallException $badMethodCallException) {
 
                 Log::error($value . ' was not found.');
 
             }
-
+            // @codeCoverageIgnoreEnd
         }
 
     }
