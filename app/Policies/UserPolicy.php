@@ -40,4 +40,25 @@ class UserPolicy extends ApplicationPolicy
         return parent::delete($user, $model);
     }
 
+    /**
+     * Determine whether or not a user can update the model. This allows a user to update their own information.
+     *
+     * @param User  $user       User object to perform check on.
+     * @param Model $model      The model having the action performed on.
+     *
+     * @return bool
+     */
+    public function update(User $user, Model $model)
+    {
+
+        if( static::$model == get_class($model) && $user->id == $model->id) {
+
+            return true;
+
+        }
+
+        return parent::update($user, $model);
+
+    }
+
 }
