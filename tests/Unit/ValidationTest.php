@@ -599,6 +599,17 @@ class ValidationTest extends TestCase
 
     public function testHasPermissionValidation() {
 
+        $user = $this->getSeededUser(self::APPLICATION_ADMIN);
+
+        Auth::login($user);
+
+        $validator = Validator::make(['test_field' => 'test'], ['test_field' => 'has_permission:create users']);
+        $this->assertTrue($validator->passes());
+
+        $validator = Validator::make(['test_field' => 'test'], ['test_field' => 'has_permission:no permission']);
+
+        $this->assertTrue($validator->fails());
+
     }
 
 }
