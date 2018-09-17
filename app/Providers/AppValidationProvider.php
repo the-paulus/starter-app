@@ -69,7 +69,7 @@ class AppValidationProvider extends ServiceProvider
 
         Validator::extendImplicit('required_or_empty_array', function($attribute, $value, $parameters, $validator) {
 
-            if($validator->validateRequired($attribute, $value) && ($validator->validateArray($attribute, $value) && $validator->validateFile($attribute, $value)) ) {
+            if($validator->validateRequired($attribute, $value) && ($validator->validateArray($attribute, $value) && $validator->validateFile($attribute, current($value))) ) {
 
                 return true;
 
