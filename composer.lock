@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9c0f1149b7c4ccd64dc06a56385ec231",
+    "content-hash": "c83f6fe53dd25db970145881d43a85ff",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1198,22 +1198,22 @@
         },
         {
             "name": "owen-it/laravel-auditing",
-            "version": "v7.0.1",
+            "version": "v8.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/owen-it/laravel-auditing.git",
-                "reference": "0cecd26ef06d838ce347ec972f75989ab9e2195f"
+                "reference": "81becc5ec606fc33581b21ac03ccc7132a49354d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/owen-it/laravel-auditing/zipball/0cecd26ef06d838ce347ec972f75989ab9e2195f",
-                "reference": "0cecd26ef06d838ce347ec972f75989ab9e2195f",
+                "url": "https://api.github.com/repos/owen-it/laravel-auditing/zipball/81becc5ec606fc33581b21ac03ccc7132a49354d",
+                "reference": "81becc5ec606fc33581b21ac03ccc7132a49354d",
                 "shasum": ""
             },
             "require": {
-                "illuminate/console": "5.2.* || 5.3.* || 5.4.* || 5.5.* || 5.6.*",
-                "illuminate/database": "5.2.* || 5.3.* || 5.4.* || 5.5.* || 5.6.*",
-                "illuminate/filesystem": "5.2.* || 5.3.* || 5.4.* || 5.5.* || 5.6.*",
+                "illuminate/console": "5.2.* || 5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.*",
+                "illuminate/database": "5.2.* || 5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.*",
+                "illuminate/filesystem": "5.2.* || 5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.*",
                 "php": ">=7.0.13"
             },
             "require-dev": {
@@ -1228,7 +1228,7 @@
             "type": "package",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "7.0-dev"
+                    "dev-master": "8.0-dev"
                 },
                 "laravel": {
                     "providers": [
@@ -1277,7 +1277,7 @@
                 "revision",
                 "tracking"
             ],
-            "time": "2018-06-29T09:45:57+00:00"
+            "time": "2018-08-28T10:57:05+00:00"
         },
         {
             "name": "paragonie/random_compat",
