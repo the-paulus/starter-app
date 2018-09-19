@@ -279,5 +279,38 @@ class AppValidationProvider extends ServiceProvider
 
     }
 
+    /**
+     * Creates a new validation rule called 'unique_exclude_current' that works almost exactly as the 'unique' rule
+     * with the exception that the third parameter is substituted for the current model's id.
+     */
+    private function validateUniqueExcludeCurrent() {
+
+        Validator::extend('unique_exclude_current', function($attribute, $value, $parameters, $validator) {
+
+            $rules = $validator->getRules();
+            $data = $validator->getData();
+            $id_column = isset($parameters[3]) ? $parameters[3] : 'id';
+
+            if(isset($data[$id_column])) {
+
+                $parameters[2] = $data[$id_column];
+
+            }
+
+            foreach($rules[$attribute] as $index => $attribute_rule) {
+
+                if(strpos($attribute_rule, 'unique_exclude_current') !== FALSE) {
+
+                    return $validator->validateUnique($attribute, $value, $parameters);
+
+                }
+
+            }
+
+            return false;
+
+        });
+        
+    }
 
 }
