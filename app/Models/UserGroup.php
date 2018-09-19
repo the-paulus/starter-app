@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
-class UserGroup extends BaseModel
-{
+use Laravel\Scout\Searchable;
+
+class UserGroup extends BaseModel {
+
+    use Searchable;
 
     /**
      * The name of the create column name in the database.
@@ -54,6 +57,11 @@ class UserGroup extends BaseModel
         'updated_at',
         'deleted_at',
     ];
+
+    /**
+     * @var bool Instructs Scout that searches should be performed as the user types.
+     */
+    public $asYouType = true;
 
     /**
      * The attributes that are mass assignable.
@@ -184,4 +192,27 @@ class UserGroup extends BaseModel
         $this->permissions()->sync($ids);
 
     }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray() {
+
+        return $this->toArray();
+
+    }
+
+    /**
+     * Sets whether or not a particular module should be added to the index and searchable.
+     *
+     * @return bool Indicates whether or not model should be searchable.
+     */
+    public function shouldBeSearchable() {
+
+        return true;
+
+    }
+
 }
