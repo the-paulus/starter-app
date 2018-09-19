@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class UserController handles CRUD requests.
@@ -31,5 +34,19 @@ class UserController extends Controller
      * @var string $model Model class that the controller is bound to.
      */
     protected static $model = User::class;
+
+    public function authentication_types() {
+
+        if(Auth::id()) {
+
+            return response()->json(['data' => DB::table('auth_types')->get()], Response::HTTP_OK);
+
+        } else {
+
+            return response()->json(['data' => [], 'errors' => ['Not authorized']], Response::HTTP_UNAUTHORIZED);
+
+        }
+
+    }
 
 }

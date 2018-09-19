@@ -16,6 +16,7 @@ Route::post('login', 'ApiLoginController@login');
 
 Route::middleware('jwt.auth')->group(function() {
 
+    Route::get('/user/auth_types', 'UserController@authentication_types');
     Route::apiResource('/user', 'UserController');
     Route::match(['get', 'post'], '/user/search', 'UserController@search');
     Route::apiResource('/usergroup', 'UserGroupController');

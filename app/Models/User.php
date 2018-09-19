@@ -105,6 +105,7 @@ class User extends BaseModel implements Authenticatable, JWTSubject
      * @var array The attributes that should be visible for array.
      */
     protected $visible = [
+        'auth_type',
         'id',
         'first_name',
         'last_name',
@@ -120,7 +121,6 @@ class User extends BaseModel implements Authenticatable, JWTSubject
      * @var array The attributes that should be hidden.
      */
     protected $hidden = [
-        'auth_type',
         'password',
         'remember_token',
     ];

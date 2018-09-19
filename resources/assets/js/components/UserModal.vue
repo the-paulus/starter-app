@@ -32,6 +32,14 @@
                     <input id="email" name="email" type="text" class="col-sm-10" v-model="modalUser.email" />
                 </div>
             </div>
+            <div class="row">
+                <div class="col-lg-12" :class="{ 'error': hasValidationError('auth_type') }">
+                    <label class="control-label col-sm-2">Auth Type</label>
+                    <select id="auth_type" name="auth_type" class="col-sm-10" v-model="modalUser.auth_type">
+                        <option v-for="type in auth_types" :key="type.id" :value="type.name">{{ type.name }}</option>
+                    </select>
+                </div>
+            </div>
             <hr/>
             <div class="row">
                 <div class="col-lg-12" :class="{ 'error': hasValidationError('user_group_ids') }">
@@ -73,9 +81,10 @@ export default {
     data: function () {
 
         return {
+            auth_types: [],
+            errors: [],
             modalUser: Vue.util.extend({}, this.initialUser),
-            selectedUserGroups: [],
-            errors: []
+            selectedUserGroups: []
         }
     },
     computed: {
@@ -114,7 +123,14 @@ export default {
             this.selectedUserGroups = this.modalUser.user_group_ids
         } catch (error) {}
     },
-    mounted: function () {},
+    mounted: function () {
+        window.axios.get('/api/user/auth_types').then( (response) => {
+            let avail_auth_types = [{id: 0, name: '- Select -'}]
+            this.auth_types = avail_auth_types.concat(response.data.data)
+        }).catch( (error) => {
+            console.log(error);
+        })
+    },
     methods: {
         hasValidationError: function (field) {
             if(this.errors != undefined && this.errors.hasOwnProperty('validation')) {
@@ -124,15 +140,16 @@ export default {
         saveUser: function() {
 
             this.modalUser.isSaving = true
+            let values = {
+                last_name: this.modalUser.last_name,
+                first_name: this.modalUser.first_name,
+                email: this.modalUser.email,
+                user_group_ids: this.selectedUserGroups,
+                auth_type: this.modalUser.auth_type
+            }
 
             if(this.modalUser.id == null) {
-                window.axios.post('/api/user', {
-                    last_name: this.modalUser.last_name,
-                    first_name: this.modalUser.first_name,
-                    email: this.modalUser.email,
-                    user_group_ids: this.selectedUserGroups,
-                    auth_type: 'local'
-                }).then( (response) => {
+                window.axios.post('/api/user', values).then( (response) => {
                     if( response.status == 406 ) {
                         this.errors = response.data.errors
                     } else {

@@ -214,6 +214,7 @@ export default {
         addUser: function() {
             this.$modal.show(UserModal, { initialUser: {
                     id: null,
+                    auth_type: 0,
                     last_name: '',
                     first_name: '',
                     email: '',
