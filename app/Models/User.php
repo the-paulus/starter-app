@@ -126,6 +126,11 @@ class User extends BaseModel implements Authenticatable, JWTSubject
     ];
 
     /**
+     * @var array Attributes to exclude from the audit log.
+     */
+    protected $auditExclude = ['password', 'remember_token'];
+
+    /**
      * Returns all groups a user belongs to as a BelongsToMany object.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
