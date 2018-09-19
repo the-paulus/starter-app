@@ -21,7 +21,8 @@ class UserGroup extends BaseModel
      * @var array
      */
     public static $rules = [
-        'name' => 'required|unique:user_groups,name',
+        'name' => 'required|unique_exclude_current:user_groups,name',
+        'description' => 'required',
     ];
 
     /**
@@ -31,6 +32,7 @@ class UserGroup extends BaseModel
      */
     public static $messages = [
         'name' => 'Group name is required and must be unique.',
+        'description' => 'Description is required.',
     ];
 
     /**
