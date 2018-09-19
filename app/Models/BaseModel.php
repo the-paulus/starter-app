@@ -5,9 +5,14 @@ namespace App\Models;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Auditable as AuditableTrait;
 
-class BaseModel extends Model
+class BaseModel extends Model implements Auditable
 {
+
+    use AuditableTrait;
+
     /**
      * @var array Key value array where the key is the name of the field and the value is the rule.
      */
