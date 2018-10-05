@@ -156,6 +156,14 @@ class PermissionsTableSeeder extends DatabaseSeeder
                 'Administrator',
             ],
         ],
+        [
+            'name' => 'emulate user',
+            'description' => 'Allows one user to assume the identity of another.',
+            'groups' => [
+                'Application Administrator',
+                'Administrator',
+            ],
+        ],
     ];
 
     // TODO: Is this really needed?
