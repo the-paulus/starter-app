@@ -90,21 +90,40 @@ class AppValidationProvider extends ServiceProvider
 
     /**
      * Creates a custom validation rule called 'required_password' that requires a value for the specified attribute
-     * based on another attributes value.
+     * based on another attributes value. If a third parameter is provided, either hasPermission or memberOf all
+     * subsequent parameters will be looked at for the specified method. If a user has any of the parameters after the
+     * third then the rule will return true.
      */
     private function validateRequiredPassword() {
 
-        Validator::extendImplicit('required_password', function($attribute, $value, $parameters, $validator) {
+        Validator::extend('required_password', function($attribute, $value, $parameters, $validator) {
 
             $data = $validator->getData();
             $auth_type = false;
+
+            if(count($parameters) > 3) {
+
+                if($parameters[2] === 'memberOf' || $parameters[2] === 'hasPermission') {
+
+                    $method = $parameters[2];
+                    $exceptions = array_slice($parameters, 3);
+
+                    foreach($exceptions as $exception) {
+
+                        if(Auth::user()->$method($exception)) return true;
+
+                    }
+
+                }
+
+            }
 
             if(isset($data['auth_type']) && !empty($data['auth_type'])) {
 
                 $column = intval($data['auth_type']) ? 'id' : 'name';
                 $auth_type = DB::table('auth_types')->select()->where($column, $data['auth_type'])->first();
 
-                if(is_null($auth_type)) return false;
+                if(is_null($auth_type)) return $validator->validateRequired($attribute, $value);
 
             }
 
