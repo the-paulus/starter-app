@@ -201,7 +201,12 @@ class UserGroup extends BaseModel {
      */
     public function toSearchableArray() {
 
-        return $this->toArray();
+        $arr = $this->toArray();
+
+        unset($arr['user_ids']);
+        unset($arr['permission_ids']);
+
+        return $arr;
 
     }
 
