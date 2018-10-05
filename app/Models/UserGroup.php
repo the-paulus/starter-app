@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 
 class UserGroup extends BaseModel {
 
-    use Searchable;
+    use Searchable, SoftDeletes;
 
     /**
      * The name of the create column name in the database.
