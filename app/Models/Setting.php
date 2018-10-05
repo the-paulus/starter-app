@@ -22,7 +22,7 @@ class Setting extends BaseModel
      * @var array
      */
     public static $rules = [
-        'name' => 'required|unique:settings,name',
+        'name' => 'required|unique_exclude_current:settings,name',
         'setting_type' => 'required|exists:setting_types,name',
         'weight' => 'integer',
     ];
