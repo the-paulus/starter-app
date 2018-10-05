@@ -77,24 +77,8 @@ class PermissionsTableSeeder extends DatabaseSeeder
             ],
         ],
         [
-            'name' => 'create settings',
-            'description' => 'Create application settings.',
-            'groups' => [
-                'Application Administrator',
-                'Administrator',
-            ],
-        ],
-        [
             'name' => 'update settings',
             'description' => 'Modify application settings.',
-            'groups' => [
-                'Application Administrator',
-                'Administrator',
-            ],
-        ],
-        [
-            'name' => 'delete settings',
-            'description' => 'Delete application settings.',
             'groups' => [
                 'Application Administrator',
                 'Administrator',
