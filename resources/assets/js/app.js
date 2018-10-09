@@ -59,6 +59,8 @@ const store = new Vuex.Store({
             width: '80%'
         },
         permissions: [],
+        settings: [],
+        settingGroups: [],
         token: '',
         users: []
     },
@@ -71,6 +73,12 @@ const store = new Vuex.Store({
         },
         updatePermissions: function(state, payload) {
             state.permissions = payload
+        },
+        updateSettings: function (state, payload) {
+            state.settings = payload
+        },
+        updateSettingGroups: function(state, payload) {
+            state.settingGroups = payload
         },
         updateUsers: function (state, payload) {
             state.users = payload
@@ -109,6 +117,28 @@ const store = new Vuex.Store({
                 method: 'get'
             }).then( (response) => {
                 commit('updatePermissions', response.data)
+            })
+        },
+        updateSettings: function({commit}) {
+            let url = '/api/setting'
+
+            return window.axios.request({
+                url: url,
+                method: 'get'
+            }).then( (response) => {
+                commit('updateSettings', response.data)
+            }).catch((e) => {
+                console.log(e)
+            })
+        },
+        updateSettingGroups: function({commit}) {
+            let url = '/api/settinggroup'
+
+            return window.axios.request({
+                url: url,
+                method: 'get'
+            }).then( (response) => {
+                commit('updateSettingGroups', response.data)
             })
         },
         updateUsers: function ({ commit }, pagination) {

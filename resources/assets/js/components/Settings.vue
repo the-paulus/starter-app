@@ -59,13 +59,13 @@ export default {
     name: 'Settings',
     data: function () {
         return {
+            activeTab: 0,
             group: {
                 description: '',
                 id: null,
                 name: '',
                 settings: []
             },
-            groups: [],
             setting: {
                 description: '',
                 id: null,
@@ -73,64 +73,32 @@ export default {
                 name: '',
                 setting_type: null
             },
-            settings: [],
         }
     },
-    computed: {},
-    watch: {
-        groups: function (newValue, oldValue) {
-            if (oldValue.length === 0) {
-                this.groups.forEach(function (value, index, array) {
-                    if (index === 0) {
-                        value['isActive'] = true
-                    } else {
-                        value['isActive'] = false
-                    }
-                    this.$set(this.groups, index, value)
-                }, this)
-            }
-            console.log(this.groups)
-        },
-        settings: function(newValue, oldValue) {
-            this.settings.forEach(function (value, index, array) {
-                if (!value.hasOwnProperty('isSaving')) {
-                    value['isSaving'] = false
-                    this.$set(this.settings, index, value)
-                }
-            }, this)
-        },
-        token: function (newValue, oldValue) {
-            this.getData()
-        }
-    },
-    created: function () {
-        console.log(this.groups)
-        this.getData()
+    computed: {
+        groups: function() {
 
+            return this.$store.state.settingGroups.data
+        },
+        settings: function() {
+            return  this.groups.settings
+        }
     },
+    watch: { },
+    created: function () { },
     mounted: function () {
-        this.$on('refresh', this.getData)
+        this.$store.dispatch('updateSettingGroups')
+        this.$store.dispatch('updateSettings')
     },
     methods: {
-        getData: function () {
-            window.axios.get('/api/settinggroup').then( (response) => {
-                console.log(response)
-                this.groups = response.data.data
-            }).catch((error) => {
-                console.log(error)
-            }).finally(() => {
-                // Do something...
-            })
-            window.axios.get('/api/setting').then( (response) => {
-                console.log(response)
-                this.settings = response.data.data
-            })
-        },
         nameToId: function (group) {
             return group.name.toLowerCase().replace(' ', '-')
         },
-        setActive: function (group) {
+        saveSetting: function (gidx, sidx) {
+            window.axios.put('/api/setting/' + this.groups[gidx].settings[sidx].id,
+                { value: this.groups[gidx].settings[sidx].value }).then( (response) => {
 
+            })
         }
     }
 }
