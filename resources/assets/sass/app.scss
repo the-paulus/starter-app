@@ -12,6 +12,43 @@
 // Font Awesome
 @import "~font-awesome/scss/font-awesome.scss";
 
+div.tab-pane:first-child {
+  margin-top: 10px;
+}
+
+.form-group-textfield {
+
+  margin: 5px 0px 5px 15px;
+
+  label.control-label {
+    width: 10%;
+    float: left;
+    margin-top: 10px;
+  }
+
+  input[type=text],
+  input[type=email],
+  input[type=date],
+  input[type=number]
+  {
+    float: left;
+    width: 82%;
+  }
+
+  button {
+    float: left;
+  }
+
+}
+
+textarea.form-control {
+  margin-left: 15px;
+  width: 100%;
+  width: -webkit-fill-available;
+  width: -moz-available;
+  width: fill-available;
+}
+
 .v--modal-overlay {
   z-index: 1000 !important;
 }
