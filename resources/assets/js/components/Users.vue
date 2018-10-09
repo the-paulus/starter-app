@@ -23,12 +23,11 @@
 
 <script>
 import UserModal from './UserModal'
-import UserGroups from './UserGroups'
 import UserGroupModal from './UserGroupModal'
 
 export default {
     name: 'Users',
-    components: {UserModal,UserGroups,UserGroupModal},
+    components: {UserModal,UserGroupModal},
     data: function () {
         return {
             axiosUserSearchConfig: {

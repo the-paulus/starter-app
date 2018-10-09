@@ -11,7 +11,6 @@ window.Vue = require('vue');
 window.VueRouter = require('vue-router')
 window.JWT = require('jsonwebtoken')
 
-import UserGroups from './components/UserGroups'
 import Users from './components/Users'
 import Settings from './components/Settings'
 import VueRouter from 'vue-router'
@@ -38,10 +37,8 @@ Vue.use(wysiwyg, {});
 
 Vue.component('administration-menu', require('./components/AdministrationMenu.vue'))
 Vue.component('vue-table', require('./components/VuePast'))
-Vue.component('user-groups', require('./components/UserGroups.vue'))
 Vue.component('users', require('./components/Users.vue'))
 Vue.component('modals-container', require('vue-js-modal/src/ModalsContainer.vue'))
-Vue.component('search-bar', require('./components/SearchBar.vue'))
 Vue.component('settings', require('./components/Settings.vue'))
 
 const router = new VueRouter({
