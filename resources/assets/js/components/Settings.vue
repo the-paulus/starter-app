@@ -18,7 +18,7 @@
                     </div>
                     <div v-else-if="setting.setting_type === 'html'" class="col-lg-12">
                         <label class="control-label col-lg-12">{{ setting.name }}</label>
-                        <textarea :name="'setting_' + setting.id" v-model="setting.value" class="form-control"></textarea>
+                        <wysiwyg :name="'setting_' + setting.id" v-model="setting.value" style="clear:both;"></wysiwyg>
                         <button @click="saveSetting(gidx, sidx)" type="button" class="btn btn-default form pull-right" :disabled="setting.isSaving">
                             <i class="fa fa-fw" :class="{ 'fa-refresh fa-spin': setting.isSaving, 'fa-save': !setting.isSaving }"></i>
                             <span v-show="!setting.isSaving">Save</span><span v-if="setting.isSaving">Saving</span>

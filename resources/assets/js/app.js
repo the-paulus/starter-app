@@ -20,6 +20,7 @@ import vPage from 'v-page'
 import VueEsc from 'vue-esc'
 import Vuex from 'vuex'
 import BootstrapVue from 'bootstrap-vue'
+import wysiwyg from "vue-wysiwyg"
 
 Vue.use(Vuex)
 Vue.use(VueRouter)
@@ -27,6 +28,7 @@ Vue.use(VModal, { dynamic: false, injectModalsContainer: true, dialog: true })
 Vue.use(vPage)
 Vue.use(VueEsc)
 Vue.use(BootstrapVue)
+Vue.use(wysiwyg, {});
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
