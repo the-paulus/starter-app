@@ -44,9 +44,9 @@ class BaseModel extends Model implements Auditable
     public static $permissions = [];
 
     /**
-     * @var array Default model permissions.
+     * @var array Standard model permissions.
      */
-    protected static $model_permissions = [
+    private static $model_permissions = [
         'manage',
         'create',
         'update',
@@ -72,17 +72,7 @@ class BaseModel extends Model implements Auditable
      */
     public static function getModelPermissions() {
 
-        $all_permissions = array();
-
-        for($i = 0; $i < count(self::$model_permissions); $i++) {
-
-            $all_permissions[] = self::getModelPermission(self::$model_permissions[$i]);
-
-        }
-
-        //$all_permissions = array_merge(self::$permissions, self::$model_permissions);
-
-        return $all_permissions;
+        return array_merge(self::$permissions, self::$model_permissions);
 
     }
 
@@ -192,4 +182,5 @@ class BaseModel extends Model implements Auditable
         return $this->fresh($this->with);
 
     }
+
 }
