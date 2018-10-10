@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 
+/**
+ * BaseModel provides the basic most functionality for all other models in the application.
+ *
+ * @package App\Models
+ */
 class BaseModel extends Model implements Auditable
 {
 
@@ -32,8 +37,6 @@ class BaseModel extends Model implements Auditable
      * @var array Messages to use when a relationship rule fails.
      */
     public static $relationshipMessages = [];
-
-    private $validators = [];
 
     /**
      * @var array Additional model permissions.
@@ -86,7 +89,6 @@ class BaseModel extends Model implements Auditable
     /**
      * Returns the model specific permission for managing, creating, modifying, deleting, or accessing data.
      *
-     *
      * @param string $permission A string that is either manage, create, modify, delete, or access.
      *
      * @return string The value passed in with the name of the class appended or an empty string if the value of $permission is not valid.
@@ -123,8 +125,6 @@ class BaseModel extends Model implements Auditable
 
             }
         }
-
-        // TODO: Handle situations in which the trait is applied to classes other than models.
 
     }
 
