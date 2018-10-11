@@ -4,6 +4,11 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Setting class contains data that is used by the application.
+ *
+ * @package App\Models
+ */
 class Setting extends BaseModel
 {
     /**
@@ -59,19 +64,6 @@ class Setting extends BaseModel
     ];
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name',
-        'description',
-        'setting_type',
-        'value',
-        'weight'
-    ];
-
-    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
@@ -124,4 +116,5 @@ class Setting extends BaseModel
         return DB::table('setting_types')->where('id', '=', $this->attributes['setting_type'])->value('name');
 
     }
+    
 }
