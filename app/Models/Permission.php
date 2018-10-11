@@ -1,7 +1,11 @@
 <?php
 
 namespace App\Models;
-
+/**
+ * The Permission class only provides the ability to easily use permissions.
+ *
+ * @package App\Models
+ */
 class Permission extends BaseModel
 {
     /**
