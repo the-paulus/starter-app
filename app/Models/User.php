@@ -11,6 +11,12 @@ use Laravel\Scout\Searchable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use DB;
 
+/**
+ * User class provides the functionality for different people to use the system is ways that are dependent on
+ * the permissions of the groups they are in.
+ *
+ * @package App\Models
+ */
 class User extends BaseModel implements Authenticatable, JWTSubject
 {
     use Notifiable, SoftDeletes, Searchable;
@@ -92,14 +98,6 @@ class User extends BaseModel implements Authenticatable, JWTSubject
         'auth_type' => 'Select the type of authentication.',
         'password' => 'A password is required.'
     ];
-
-/*    public static $relationshipRules = [
-        'user_group_ids' => 'required_or_empty_array|array|exists:user_groups,id',
-    ];
-
-    public static $relationshipMessages = [
-        'user_group_ids' => 'List of groups is required.'
-    ];*/
 
     /**
      * @var array The attributes that should be visible for array.
