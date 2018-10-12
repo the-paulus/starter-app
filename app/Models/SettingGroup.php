@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+/**
+ * SettingGroup class contains information about setting groups and all settings within the group.
+ *
+ * @package App\Models
+ */
 class SettingGroup extends BaseModel
 {
-    protected $table = 'setting_groups';
-
     /**
      * The name of the create column name in the database.
      */
@@ -55,12 +58,8 @@ class SettingGroup extends BaseModel
     ];
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
+     * @var array An array of strings representing the name of a "virtual" column in the database.
      */
-    protected $fillable = ['name', 'description'];
-
     protected $appends = ['settings'];
 
     /**
