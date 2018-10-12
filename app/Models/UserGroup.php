@@ -5,6 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 
+/**
+ * UserGroup class contains information about user groups and has the ids for permissions and users associated with it.
+ *
+ * @package App\Models
+ */
 class UserGroup extends BaseModel {
 
     use Searchable, SoftDeletes;
@@ -71,6 +76,9 @@ class UserGroup extends BaseModel {
      */
     protected $fillable = ['name', 'description'];
 
+    /**
+     * @var array An array of strings representing the name of a "virtual" column in the database.
+     */
     protected $appends = [
         'user_ids',
         'permission_ids'
