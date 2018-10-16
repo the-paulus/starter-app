@@ -15,14 +15,10 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 
 /**
- * Base controller class that all other controller inherit from. This class provides the most basics for the index,
- * show, store, update, and delete methods. Depending on which method is called, a HTTP status code is returned. See
- * the METHOD_SCCESS_CODE const for which method returns which success code.
- *
- * When an exception is raised, a different status code is returned for the exceptions.
- * - ModelNotFoundException returns "Not Found" (404)
- * - AuthorizationException returns "Unauthorized" (401)
- * - ValidationException returns "Not Acceptable" (406)
+ * BaseController is the class that all other controller inherit from. This class provides the basics for the index,
+ * show, store, update, and delete methods. Depending on which method is called and whether it failed or not, a
+ * different HTTP status code is returned. See the METHOD_SCCESS_CODE and METHOD_FAILURE constants for which method
+ * returns which success code.
  *
  * @package App\Http\Controllers
  */
