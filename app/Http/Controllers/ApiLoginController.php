@@ -9,23 +9,33 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
 
+/**
+ * LoginController class provides the logic to handle requests for user to log in using the API.
+ *
+ * @package App\Http\Controllers\Auth
+ */
 class ApiLoginController extends Controller
 {
 
+    /** @var User $user The user attempting to log in. */
     private $user;
 
-    public function __construct()
-    {
+    public function __construct() {
 
         $this->user = new User;
 
     }
 
+    /**
+     * Attempts to log in a user that has made the request.
+     *
+     * @param Request $request  User request containing the email and password to be authenticated.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request) {
 
         $credentials = $request->only(['email', 'password']);
-
-        //$credentials['password'] = Hash::make($credentials['password']);
 
         try {
 
@@ -45,6 +55,13 @@ class ApiLoginController extends Controller
 
     }
 
+    /**
+     * Returns the User object of the currently logged in.
+     *
+     * @param Request $request The request containing the token to use when retrieving user information.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAuthUser(Request $request) {
 
         $user = JWTAuth::toUser($request->token);
