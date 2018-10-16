@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Setting;
 
+/**
+ * Class SettingController handles CRUD requests.
+ * @package App\Http\Controllers
+ */
 class SettingController extends Controller
 {
     /**
