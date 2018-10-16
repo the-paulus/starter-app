@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 Use App\Models\Permission;
 
+/**
+ * Class PermissionController handles CRUD requests.
+ *
+ * @package App\Http\Controllers
+ */
 class PermissionController extends Controller
 {
     /**
