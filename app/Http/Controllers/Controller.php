@@ -37,6 +37,18 @@ class Controller extends BaseController
         'destroy'   => Response::HTTP_GONE,
     ];
 
+    /**
+     * Standard Controller HTTP response codes that are returned when an operation failed.
+     */
+    const METHOD_FAILURE_CODE = [
+        'AuthorizationException'    => Response::HTTP_UNAUTHORIZED,
+        'ModelNotFoundException'    => Response::HTTP_NOT_FOUND,
+        'ValidationException'       => Response::HTTP_NOT_ACCEPTABLE,
+    ];
+
+    /**
+     * @var string $model   Class name of the model the control is handling.
+     */
     protected static $model;
 
     /**
