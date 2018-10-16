@@ -35,6 +35,11 @@ class UserController extends Controller
      */
     protected static $model = User::class;
 
+    /**
+     * Returns a JSON object containing the different types of allowed authentication methods.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function authentication_types() {
 
         if(Auth::id()) {
