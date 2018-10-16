@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
+/**
+ * LoginController class provides the logic to handle requests for user to log in.
+ *
+ * @package App\Http\Controllers\Auth
+ */
 class LoginController extends Controller
 {
     /*
@@ -41,19 +44,25 @@ class LoginController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param User $user
+     * User has been authenticated and needs to be returned to the home page and provided with a token.
+     *
+     * @param Request $request The user login request.
+     * @param User $user The user that made the request.
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     protected function authenticated(Request $request, User $user)
     {
 
-        Log::info("User " . $user->email . " authenticated.");
-
         return redirect(config('app.frontend_url') . '/home?token=' . JWTAuth::fromUser($user));
 
     }
 
+    /**
+     * When a user is not authorized to use the application throw AccessDeniedHttpException.
+     *
+     * @throws AccessDeniedHttpException
+     */
     public function unauthorized()  {
 
         throw new AccessDeniedHttpException('You do not have access to this application');
@@ -63,12 +72,12 @@ class LoginController extends Controller
     /**
      * Log the user out of the application.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $request   Logout HTTP request.
+     *
      * @return \Illuminate\Http\Response
      */
     public function logout(Request $request)
     {
-        Log::info("Invalidating token and logging out " . Auth::user()->email);
 
         $this->guard()->logout();
 
@@ -77,6 +86,15 @@ class LoginController extends Controller
         return redirect('/');
     }
 
+    /**
+     * Allow a user to become other user if they have permission to.
+     *
+     * @param integer $id  The id of the user to emulate.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function emulateUser($id) {
 
         $this->user = User::findOrFail($id);
