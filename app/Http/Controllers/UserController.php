@@ -37,7 +37,7 @@ class UserController extends Controller
 
     /**
      * Returns a JSON object containing the different types of allowed authentication methods.
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function authentication_types() {
