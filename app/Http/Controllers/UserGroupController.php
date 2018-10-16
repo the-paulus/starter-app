@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Class UserGroupController
+ * Class UserGroupController handles CRUD requests.
  *
  * @package App\Http\Controllers
  */
