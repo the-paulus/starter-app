@@ -5,12 +5,16 @@ namespace App\Policies;
 use App\Models\Permission;
 
 /**
- * Class PermissionPolicy
+ * PermissionPolicy class defines what actions can and cannot be performed on permissions.
+ *
  * @package App\Policies
  */
 class PermissionPolicy extends ApplicationPolicy
 {
 
+    /**
+     * @var string Class of the model the policy is for.
+     */
     protected static $model = Permission::class;
 
     /**
@@ -20,8 +24,7 @@ class PermissionPolicy extends ApplicationPolicy
      *
      * @return bool Will always return false because we don't want users creating permissions on the fly.
      */
-    public function create(User $user)
-    {
+    public function create(User $user)  {
 
         return FALSE;
 
@@ -35,8 +38,7 @@ class PermissionPolicy extends ApplicationPolicy
      *
      * @return bool Will always return false because we don't want users updating permissions on the fly.
      */
-    public function update(User $user, Model $model)
-    {
+    public function update(User $user, Model $model)  {
 
         return FALSE;
 
@@ -50,8 +52,7 @@ class PermissionPolicy extends ApplicationPolicy
      *
      * @return bool Will always return false because we don't want users updating permissions on the fly.
      */
-    public function delete(User $user, Model $model)
-    {
+    public function delete(User $user, Model $model)  {
 
         return FALSE;
 
