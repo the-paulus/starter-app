@@ -8,9 +8,16 @@ use App\Models\UserGroup;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class UserGroupPolicy extends ApplicationPolicy
-{
+/**
+ * UserGroupPolicy class defines what actions can and cannot be performed on user groups.
+ *
+ * @package App\Policies
+ */
+class UserGroupPolicy extends ApplicationPolicy {
 
+    /**
+     * @var string Class of the model the policy is for.
+     */
     protected static $model = UserGroup::class;
 
     /**
@@ -21,8 +28,7 @@ class UserGroupPolicy extends ApplicationPolicy
      *
      * @return bool
      */
-    public function delete(User $user, Model $model)
-    {
+    public function delete(User $user, Model $model) {
 
         if( $model->users()->count() ) {
 
@@ -33,4 +39,5 @@ class UserGroupPolicy extends ApplicationPolicy
         return parent::delete($user, $model);
 
     }
+
 }
