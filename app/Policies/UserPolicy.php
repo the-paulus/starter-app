@@ -28,8 +28,7 @@ class UserPolicy extends ApplicationPolicy
      *
      * @return bool
      */
-    public function delete(User $user, Model $model)
-    {
+    public function delete(User $user, Model $model) {
 
         if($user->id == $model->id) {
 
@@ -38,6 +37,7 @@ class UserPolicy extends ApplicationPolicy
         }
 
         return parent::delete($user, $model);
+
     }
 
     /**
@@ -48,8 +48,7 @@ class UserPolicy extends ApplicationPolicy
      *
      * @return bool
      */
-    public function update(User $user, Model $model)
-    {
+    public function update(User $user, Model $model) {
 
         if( static::$model == get_class($model) && $user->id == $model->id) {
 
