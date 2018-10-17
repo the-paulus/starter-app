@@ -6,10 +6,18 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * ApplicationPolicy class is the base class that all other application policies inherit from.
+ *
+ * @package App\Policies
+ */
 class ApplicationPolicy
 {
     use HandlesAuthorization;
 
+    /**
+     * @var string Class of the model the policy is for.
+     */
     protected static $model = Model::class;
 
     /**
@@ -20,8 +28,7 @@ class ApplicationPolicy
      *
      * @return bool
      */
-    public function view(User $user, Model $model)
-    {
+    public function view(User $user, Model $model)  {
 
         return $user->hasPermission(__FUNCTION__ . ' ' . str_plural(camel_case_conversion(class_basename(static::$model))));
 
@@ -34,8 +41,7 @@ class ApplicationPolicy
      *
      * @return bool
      */
-    public function create(User $user)
-    {
+    public function create(User $user)  {
 
         return $user->hasPermission(__FUNCTION__ . ' ' . str_plural(camel_case_conversion(class_basename(static::$model))));
 
@@ -49,8 +55,7 @@ class ApplicationPolicy
      *
      * @return bool
      */
-    public function update(User $user, Model $model)
-    {
+    public function update(User $user, Model $model)  {
 
         return $user->hasPermission(__FUNCTION__ . ' ' . str_plural(camel_case_conversion(class_basename(static::$model))));
 
@@ -64,10 +69,10 @@ class ApplicationPolicy
      *
      * @return bool
      */
-    public function delete(User $user, Model $model)
-    {
+    public function delete(User $user, Model $model)  {
 
         return $user->hasPermission(__FUNCTION__ . ' ' . str_plural(camel_case_conversion(class_basename(static::$model))));
 
     }
+
 }
