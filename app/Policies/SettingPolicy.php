@@ -2,7 +2,9 @@
 
 namespace App\Policies;
 
+use App\Models\User;
 use App\Models\Setting;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
