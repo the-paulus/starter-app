@@ -70,6 +70,11 @@ class UserGroup extends BaseModel {
     public $asYouType = true;
 
     /**
+     * @var array The relationships that should be touched on save.
+     */
+    protected $touches = [];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

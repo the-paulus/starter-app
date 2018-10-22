@@ -77,6 +77,11 @@ class User extends BaseModel implements Authenticatable, JWTSubject
     protected $with = ['groups'];
 
     /**
+     * @var array The relationships that should be touched on save.
+     */
+    protected $touches = [];
+
+    /**
      * @var array How the data within the model should be. When a rule fails, the message with the same key as the rule will be
      * returned.
      */
