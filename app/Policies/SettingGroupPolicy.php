@@ -3,6 +3,8 @@
 namespace App\Policies;
 
 use App\Models\SettingGroup;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * SettingGroupPolicy class defines what actions can and cannot be performed on setting groups.
