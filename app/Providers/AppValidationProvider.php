@@ -140,17 +140,22 @@ class AppValidationProvider extends ServiceProvider
     }
 
     /**
-     * TODO: Remove or convert to exists_enum to verify that the value in question is enumerated in the specified tabled
-     * or column.
+     * The exists_enum works like the exists rule but instead of looking at the values in the specified table's field
+     * we look at the table definition to get the acceptable values. This should only be used when the application
+     * is using a MySQL database as the method to obtain the enumerates is MySQL specific.
      */
-    private function validateExistsIn() {
+    private function validateExistsEnum() {
 
-        Validator::extendImplicit('exists_in', function($attribute, $value, $parameters, $validator) {
+        Validator::extendImplicit('exists_enum', function($attribute, $value, $parameters, $validator) {
 
             $table = $parameters[0];
             $column = isset($parameters[1]) ? $parameters[1] : 'name';
+            $enums = DB::select( raw("SHOW COLUMNS FROM :table WHERE Field = :column"), [':table' => $table, ':column' => $column]);
 
-            return DB::table($table)->select()->where($column, $value)->exists();
+            preg_match("/^enum\(\'(.*)\'\)$/", $enums, $matches);
+
+            $enums = explode("','", $matches[1]);
+            return in_array($value, $enums);
 
         }, ':value is not valid for :attribute');
 
