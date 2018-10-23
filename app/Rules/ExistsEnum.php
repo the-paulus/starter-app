@@ -3,6 +3,7 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
+
 /**
  * ExistsEnum class defines the validation rule that checks an attribute's value to ensure that it contains a
  * value defined in an enum column.
