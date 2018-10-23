@@ -80,5 +80,5 @@ class HasPermission implements Rule {
         return 'The user doesn\'t have permission.';
 
     }
-    
+
 }
