@@ -32,7 +32,7 @@ class RequiredOrEmptyArray implements ImplicitRule {
      */
     public function passes($attribute, $value) {
 
-        return ( $this->validateRequired($attribute, $value) ) || ( ( is_array($value) || $value instanceof \Countable) && count($value) < 1 );
+        return ( $this->validateRequired($attribute, $value) && is_array($value) ) || ( ( is_array($value) || $value instanceof \Countable) && count($value) < 1 );
 
     }
 
