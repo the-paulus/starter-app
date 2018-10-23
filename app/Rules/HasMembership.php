@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Auth;
  *
  * @package App\Rules
  */
-class HasMembership implements Rule
-{
+class HasMembership implements Rule {
 
     /**
      * @var array Array of group names.
@@ -77,8 +76,9 @@ class HasMembership implements Rule
      *
      * @return string
      */
-    public function message()
-    {
+    public function message() {
+
         return 'The user is not a member of one of the specified groups.';
+
     }
 }
