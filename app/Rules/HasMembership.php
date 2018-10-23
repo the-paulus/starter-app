@@ -68,6 +68,8 @@ class HasMembership implements Rule
 
         }
 
+        return FALSE;
+
     }
 
     /**
