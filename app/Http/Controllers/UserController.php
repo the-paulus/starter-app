@@ -54,4 +54,15 @@ class UserController extends Controller
 
     }
 
+    /**
+     * Returns the current user information.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function userInfo() {
+
+        return response()->json([ 'data' => [ 'user' => Auth::user() ] ]);
+
+    }
+
 }

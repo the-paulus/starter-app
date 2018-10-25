@@ -19,6 +19,7 @@ Route::middleware('jwt.auth')->group(function() {
     Route::get('/user/auth_types', 'UserController@authentication_types');
     Route::apiResource('/user', 'UserController');
     Route::match(['get', 'post'], '/user/search', 'UserController@search');
+    Route::get('/user/me', 'UserController@userInfo');
     Route::apiResource('/usergroup', 'UserGroupController');
     Route::match(['get', 'post'], '/usergroup/search', 'UserGroupController@search');
     Route::apiResource('/permission', 'PermissionController');
