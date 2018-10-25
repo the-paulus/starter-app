@@ -69,7 +69,11 @@ class User extends BaseModel implements Authenticatable, JWTSubject
     /**
      * @var array Additional attributes assigned to the model.
      */
-    protected $appends = ['user_group_ids'];
+    protected $appends = [
+        'user_groups',
+        'user_permissions',
+        'user_group_ids'
+    ];
 
     /**
      * @var array Relations that are eager-loaded when the model is retrieved from the database.
@@ -113,8 +117,10 @@ class User extends BaseModel implements Authenticatable, JWTSubject
         'first_name',
         'last_name',
         'email',
-        'user_group_ids',
         'groups',
+        'user_group_ids',
+        'user_permissions',
+        'user_groups',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -260,6 +266,44 @@ class User extends BaseModel implements Authenticatable, JWTSubject
     public function getUserGroupIdsAttribute() {
 
         return $this->groups()->allRelatedIds();
+
+    }
+
+    /**
+     * Accessor for user_group_ids attribute that returns the IDs of the groups the user belongs to.
+     *
+     * @return Collection
+     */
+    public function getUserGroupsAttribute() {
+
+        $groups = new Collection();
+
+        foreach($this->groups()->get()->all() as $group) {
+
+            $groups->put($group->id, $group->name);
+
+        }
+
+        return $groups->toArray();
+
+    }
+
+    /**
+     * Accessor for user_group_ids attribute that returns the IDs of the groups the user belongs to.
+     *
+     * @return Collection
+     */
+    public function getUserPermissionsAttribute() {
+
+        $permissions = new Collection();
+
+        foreach($this->permissions() as $permission) {
+
+            $permissions->put($permission->id, $permission->name);
+
+        }
+
+        return $permissions->toArray();
 
     }
 
