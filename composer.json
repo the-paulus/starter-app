@@ -12,7 +12,8 @@
         "owen-it/laravel-auditing": "^8.0",
         "teamtnt/laravel-scout-tntsearch-driver": "^3.0",
         "the-paulus/laravel-shibboleth": "1.2.*",
-        "tymon/jwt-auth": "1.0.0-rc.2"
+        "tymon/jwt-auth": "1.0.0-rc.2",
+        "wyox/laravel-gitlab-reporter": "^0.0.5"
     },
     "require-dev": {
         "doctrine/dbal": "^2.5",
