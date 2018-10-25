@@ -90,6 +90,11 @@ class UserGroup extends BaseModel {
     ];
 
     /**
+     * @var array Relations that are eager-loaded when the model is retrieved from the database.
+     */
+    protected $with = ['permissions'];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
@@ -107,9 +112,6 @@ class UserGroup extends BaseModel {
         'description',
         'user_ids',
         'permission_ids',
-        'created_at',
-        'updated_at',
-        'deleted_at',
     ];
 
     /**
