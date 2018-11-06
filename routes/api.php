@@ -20,6 +20,7 @@ Route::middleware('jwt.auth')->group(function() {
     Route::apiResource('/user', 'UserController');
     Route::match(['get', 'post'], '/user/search', 'UserController@search');
     Route::get('/user/me', 'UserController@userInfo');
+    Route::get('/user/emulate/{id}', 'LoginController@emulateUser');
     Route::apiResource('/usergroup', 'UserGroupController');
     Route::match(['get', 'post'], '/usergroup/search', 'UserGroupController@search');
     Route::apiResource('/permission', 'PermissionController');
