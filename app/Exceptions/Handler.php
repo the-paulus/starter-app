@@ -5,15 +5,14 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
-class Handler extends ExceptionHandler
-{
+class Handler extends ExceptionHandler {
     /**
      * A list of the exception types that are not reported.
      *
      * @var array
      */
     protected $dontReport = [
-        //
+        'Symfony\Component\HttpKernel\Exception\HttpException',
     ];
 
     /**
@@ -34,9 +33,28 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return void
      */
-    public function report(Exception $exception)
-    {
+    public function report(Exception $exception) {
+
+        // Ignore Gitlab Report in code coverage
+        // @codeCoverageIgnoreStart
+        if(env('APP_ENV') == 'production' && $this->shouldReport($exception)) {
+
+            app('gitlab.report')->report($exception);
+
+        } else if(env('APP_ENV') == 'production' && $this->shouldntReport($exception)) {
+
+            // Log these exceptions elsewhere? Failed login attempts?
+            if(method_exists($this, 'report' . get_class($exception))) {
+
+                //$this->
+
+            }
+
+        }
+        // @codeCoverageIgnoreEnd
+
         parent::report($exception);
+
     }
 
     /**
