@@ -48,6 +48,7 @@ const router = new VueRouter({
 
 const store = new Vuex.Store({
     state: {
+        current_user: {},
         errors: [],
         groups: [],
         modalOptions: {
@@ -64,6 +65,9 @@ const store = new Vuex.Store({
         users: []
     },
     mutations: {
+        setCurrentUser: function(state, payload) {
+            state.current_user = payload
+        },
         updateErrors: function (state, payload) {
           state.errors = payload
         },
@@ -200,7 +204,16 @@ const app = new Vue({
 
         window.axios.get('/token').then( (response) => {
 
-            this.token = response.data.data.token
+            try {
+
+                this.token = response.data.data.token
+                this.current_user = response.data.data.user
+                
+            }catch (e) {
+
+            }
+
+        }).catch(function (reason) {
 
         }).then(() => {
             this.$router.addRoutes([
@@ -221,6 +234,8 @@ const app = new Vue({
                     }
                 }
             ])
+        }).catch(function (e) {
+
         })
 
     },
