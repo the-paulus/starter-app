@@ -59,8 +59,16 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function userInfo() {
+    public function userInfo($detail = null) {
 
+        switch($detail) {
+            case 'permissions':
+                return response()->json( [ 'data' => [ 'user' => Auth::user()->permissions() ] ]);
+                break;
+            case 'groups':
+                return response()->json( [ 'data' => [ 'user' => Auth::user()->groups() ] ] );
+                break;
+        }
         return response()->json([ 'data' => [ 'user' => Auth::user() ] ]);
 
     }
