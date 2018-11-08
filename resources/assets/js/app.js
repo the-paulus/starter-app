@@ -83,6 +83,9 @@ const store = new Vuex.Store({
         updateSettingGroups: function(state, payload) {
             state.settingGroups = payload
         },
+        updateToken: function(state, payload) {
+            state.token = payload
+        },
         updateUsers: function (state, payload) {
             state.users = payload
         }
@@ -207,8 +210,10 @@ const app = new Vue({
             try {
 
                 this.token = response.data.data.token
+                this.$store.commit('updateToken', response.data.data.token)
                 this.current_user = response.data.data.user
-                
+                this.$store.commit('setCurrentUser', response.data.data.user)
+                console.log(this.$store.state.current_user)
             }catch (e) {
 
             }
