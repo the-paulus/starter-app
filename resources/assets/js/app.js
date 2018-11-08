@@ -92,7 +92,7 @@ const store = new Vuex.Store({
     },
     actions: {
         updateGroups: function ({ commit }, pagination) {
-            let url = '/api/usergroup'
+            let url = process.env.MIX_BACKEND_URL + '/usergroup'
 
             if (pagination != null) {
                 url += '?page=' + pagination.page
@@ -109,7 +109,7 @@ const store = new Vuex.Store({
             })
         },
         updatePermissions: function ({ commit }, pagination) {
-            let url = '/api/permission'
+            let url = process.env.MIX_BACKEND_URL + '/permission'
 
             if (pagination != null) {
                 url += '?page=' + pagination.page
@@ -126,7 +126,7 @@ const store = new Vuex.Store({
             })
         },
         updateSettings: function({commit}) {
-            let url = '/api/setting'
+            let url = process.env.MIX_BACKEND_URL + '/setting'
 
             return window.axios.request({
                 url: url,
@@ -138,7 +138,7 @@ const store = new Vuex.Store({
             })
         },
         updateSettingGroups: function({commit}) {
-            let url = '/api/settinggroup'
+            let url = process.env.MIX_BACKEND_URL + '/settinggroup'
 
             return window.axios.request({
                 url: url,
@@ -148,7 +148,7 @@ const store = new Vuex.Store({
             })
         },
         updateUsers: function ({ commit }, pagination) {
-            let url = '/api/user'
+            let url = process.env.MIX_BACKEND_URL + '/user'
 
             if (pagination != null) {
                 url += '?page=' + pagination.page
@@ -214,6 +214,7 @@ const app = new Vue({
                 this.current_user = response.data.data.user
                 this.$store.commit('setCurrentUser', response.data.data.user)
                 console.log(this.$store.state.current_user)
+                console.log(process.env)
             }catch (e) {
 
             }

@@ -31,7 +31,7 @@ export default {
     data: function () {
         return {
             axiosUserSearchConfig: {
-                url: '/api/user/search',
+                url: process.env.MIX_BACKEND_URL + '/user/search',
                 method: 'post',
                 params: {
 
@@ -143,7 +143,7 @@ export default {
                 sortBy: 'last_name'
             },
             searchConfig: {
-                url: '/api/user/search',
+                url: process.env.MIX_BACKEND_URL + '/user/search',
                 method: 'post'
             },
             searchResults: {},
@@ -265,14 +265,14 @@ export default {
         },
         deleteGroup: function(id) {
 
-            window.axios.delete('/api/usergroup/' + id).then( (response) => {
+            window.axios.delete(process.env.MIX_BACKEND_URL + '/usergroup/' + id).then( (response) => {
                 this.$store.dispatch('updateGroups')
             }).catch( (error) => {
                 this.$store.commit('updateErrors', error)
             })
         },
         deleteUser: function (id) {
-            window.axios.delete('/api/user/' + id).then( (response) => {
+            window.axios.delete(process.env.MIX_BACKEND_URL + '/user/' + id).then( (response) => {
                 this.$modal.show('dialog', {
                     text: 'Deleted successfully.',
                     buttons: [

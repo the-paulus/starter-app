@@ -122,7 +122,7 @@ export default {
             this.modalGroup.isSaving = true
 
             if(this.modalGroup.id == null) {
-                window.axios.post('/api/usergroup', {
+                window.axios.post(process.env.MIX_BACKEND_URL + '/usergroup', {
                     description: this.modalGroup.description,
                     name: this.modalGroup.name,
                     permission_ids: this.selectedPermissions
@@ -136,7 +136,7 @@ export default {
                     this.$store.commit('updateErrors', error)
                 })
             } else {
-                window.axios.put('/api/usergroup/' + this.modalGroup.id, {
+                window.axios.put(process.env.MIX_BACKEND_URL + '/usergroup/' + this.modalGroup.id, {
                     description: this.modalGroup.description,
                     name: this.modalGroup.name,
                     permission_ids: this.selectedPermissions
