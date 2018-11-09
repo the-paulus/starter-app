@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -15,8 +16,8 @@ use Tymon\JWTAuth\Facades\JWTAuth;
  *
  * @package App\Http\Controllers\Auth
  */
-class LoginController extends Controller
-{
+class LoginController extends Controller {
+
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -38,9 +39,10 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct() {
+
         $this->middleware('guest')->except('logout');
+
     }
 
     /**
@@ -51,8 +53,7 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    protected function authenticated(Request $request, User $user)
-    {
+    protected function authenticated(Request $request, User $user) {
 
         return redirect(config('app.frontend_url') . '/home?token=' . JWTAuth::fromUser($user));
 
@@ -70,6 +71,35 @@ class LoginController extends Controller
     }
 
     /**
+     * Attempts to log in a user that has made the request.
+     *
+     * @param Request $request  User request containing the email and password to be authenticated.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function ApiLogin(Request $request) {
+
+        $credentials = $request->only(['email', 'password']);
+
+        try {
+
+            if( !$token = JWTAuth::attempt($credentials) ) {
+
+                return response()->json(['data' => [], 'errors' => ['Invalid Credentials']], Response::HTTP_UNAUTHORIZED);
+
+            }
+
+        } catch( JWTException $JWTException ) {
+
+            return response()->json(['data' => [], 'errors' => [$JWTException->getMessage()]], Response::HTTP_BAD_REQUEST);
+
+        }
+
+        return response()->json(compact('token'));
+
+    }
+
+    /**
      * Log the user out of the application.
      *
      * @param  \Illuminate\Http\Request  $request   Logout HTTP request.
@@ -83,7 +113,7 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
 
-        return redirect('/');
+        return redirect(config('app.frontend_url', '/'));
     }
 
     /**
@@ -105,4 +135,20 @@ class LoginController extends Controller
 
         return response()->json(['token' => $this->token, 'forceTokenReload' => TRUE], Response::HTTP_OK)->header('Authorization', ('Bearer '.$this->token));
     }
+
+    /**
+     * Returns the User object of the currently logged in.
+     *
+     * @param Request $request The request containing the token to use when retrieving user information.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAuthUser(Request $request) {
+
+        $user = JWTAuth::toUser($request->token);
+
+        return response()->json(['data' => ['user' => $user]]);
+
+    }
+
 }
