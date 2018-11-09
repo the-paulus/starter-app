@@ -114,8 +114,9 @@ export default {
     methods: {
         hasValidationError: function (field) {
             if(this.errors != undefined && this.errors.hasOwnProperty('validation')) {
-                console.log(field)
+
                 return this.errors['validation'].hasOwnProperty(field)
+
             }
         },
         saveGroup: function() {
