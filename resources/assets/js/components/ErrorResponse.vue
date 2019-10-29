@@ -4,7 +4,8 @@
             <h3 class="modal-title">An Error has Occurred</h3>
         </div>
         <div class="modal-body">
-            {{ message }}
+            <div class="col-lg-12">The application encountered a problem while processing your request and an error report has been submitted.</div>
+            <!-- {{ message }}
             <div class="row form-group">
                 <div class="col-lg-12">
                     <label>
@@ -12,18 +13,20 @@
                         <textarea v-model="feedback"></textarea>
                     </label>
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="modal-footer">
             <div class="row">
                 <div class="col-sm-6 col-sm-offset-6 text-right">
                     <div class="btn-group">
                         <button @click="$emit('close')" type="button" class="btn btn-default">
-                            <i class="fa fa-fw fa-undo"></i>Go Back
+                            <i class="fa fa-fw fa-frown-o"></i>OK
                         </button>
+                        <!--
                         <button @click="sendFeedback()" type="button" class="btn btn-default">
                             <i class="fa fa-fw" :class="{ 'fa-refresh fa-spin': isSending, 'fa-envelope': !isSending }"></i>
                         </button>
+                        -->
                     </div>
                 </div>
             </div>

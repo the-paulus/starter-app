@@ -124,7 +124,7 @@ export default {
         } catch (error) {}
     },
     mounted: function () {
-        window.axios.get('/api/user/auth_types').then( (response) => {
+        window.axios.get(process.env.MIX_BACKEND_URL + '/user/auth_types').then( (response) => {
             let avail_auth_types = [{id: 0, name: '- Select -'}]
             this.auth_types = avail_auth_types.concat(response.data.data)
         }).catch( (error) => {
@@ -149,7 +149,7 @@ export default {
             }
 
             if(this.modalUser.id == null) {
-                window.axios.post('/api/user', values).then( (response) => {
+                window.axios.post(process.env.MIX_BACKEND_URL + '/user', values).then( (response) => {
                     if( response.status == 406 ) {
                         this.errors = response.data.errors
                     } else {
@@ -161,7 +161,7 @@ export default {
                     this.modalUser.isSaving = false
                 })
             } else {
-                window.axios.put('/api/user/' + this.modalUser.id, {
+                window.axios.put(process.env.MIX_BACKEND_URL + '/user/' + this.modalUser.id, {
                     last_name: this.modalUser.last_name,
                     first_name: this.modalUser.first_name,
                     email: this.modalUser.email,

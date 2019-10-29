@@ -114,15 +114,16 @@ export default {
     methods: {
         hasValidationError: function (field) {
             if(this.errors != undefined && this.errors.hasOwnProperty('validation')) {
-                console.log(field)
+
                 return this.errors['validation'].hasOwnProperty(field)
+
             }
         },
         saveGroup: function() {
             this.modalGroup.isSaving = true
 
             if(this.modalGroup.id == null) {
-                window.axios.post('/api/usergroup', {
+                window.axios.post(process.env.MIX_BACKEND_URL + '/usergroup', {
                     description: this.modalGroup.description,
                     name: this.modalGroup.name,
                     permission_ids: this.selectedPermissions
@@ -136,7 +137,7 @@ export default {
                     this.$store.commit('updateErrors', error)
                 })
             } else {
-                window.axios.put('/api/usergroup/' + this.modalGroup.id, {
+                window.axios.put(process.env.MIX_BACKEND_URL + '/usergroup/' + this.modalGroup.id, {
                     description: this.modalGroup.description,
                     name: this.modalGroup.name,
                     permission_ids: this.selectedPermissions

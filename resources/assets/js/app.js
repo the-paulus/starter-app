@@ -13,6 +13,7 @@ window.JWT = require('jsonwebtoken')
 
 import Users from './components/Users'
 import Settings from './components/Settings'
+import ErrorResponse from './components/ErrorResponse'
 import VueRouter from 'vue-router'
 import VModal from 'vue-js-modal'
 import vPage from 'v-page'
@@ -23,7 +24,7 @@ import wysiwyg from "vue-wysiwyg"
 
 Vue.use(Vuex)
 Vue.use(VueRouter)
-Vue.use(VModal, { dynamic: false, injectModalsContainer: true, dialog: true })
+Vue.use(VModal, { dynamic: true, injectModalsContainer: true, dialog: true })
 Vue.use(vPage)
 Vue.use(VueEsc)
 Vue.use(BootstrapVue)
@@ -40,6 +41,7 @@ Vue.component('vue-table', require('./components/VuePast'))
 Vue.component('users', require('./components/Users.vue'))
 Vue.component('modals-container', require('vue-js-modal/src/ModalsContainer.vue'))
 Vue.component('settings', require('./components/Settings.vue'))
+Vue.component('error-component', require('./components/ErrorResponse'))
 
 const router = new VueRouter({
     mode: 'history',
@@ -92,7 +94,7 @@ const store = new Vuex.Store({
     },
     actions: {
         updateGroups: function ({ commit }, pagination) {
-            let url = '/api/usergroup'
+            let url = process.env.MIX_BACKEND_URL + '/usergroup'
 
             if (pagination != null) {
                 url += '?page=' + pagination.page
@@ -105,11 +107,18 @@ const store = new Vuex.Store({
                 url: url,
                 method: 'get'
             }).then( (response) => {
+
                 commit('updateGroups', response.data)
+
+            }).catch(function(reason) {
+
+                commit('updateErrors', reason)
+
             })
         },
         updatePermissions: function ({ commit }, pagination) {
-            let url = '/api/permission'
+
+            let url = process.env.MIX_BACKEND_URL + '/permission'
 
             if (pagination != null) {
                 url += '?page=' + pagination.page
@@ -122,33 +131,51 @@ const store = new Vuex.Store({
                 url: url,
                 method: 'get'
             }).then( (response) => {
+
                 commit('updatePermissions', response.data)
+
+            }).catch( (reason) => {
+
+                commit('updateErrors', reason)
+
             })
         },
         updateSettings: function({commit}) {
-            let url = '/api/setting'
+
+            let url = process.env.MIX_BACKEND_URL + '/setting'
 
             return window.axios.request({
                 url: url,
                 method: 'get'
             }).then( (response) => {
+
                 commit('updateSettings', response.data)
-            }).catch((e) => {
-                console.log(e)
+
+            }).catch( (reason) => {
+
+                commit('updateErrors', reason)
+
             })
         },
         updateSettingGroups: function({commit}) {
-            let url = '/api/settinggroup'
+            let url = process.env.MIX_BACKEND_URL + '/settinggroup'
 
             return window.axios.request({
                 url: url,
                 method: 'get'
             }).then( (response) => {
+
                 commit('updateSettingGroups', response.data)
+
+            }).catch(function(reason){
+
+                commit('updateErrors', reason)
+
             })
         },
         updateUsers: function ({ commit }, pagination) {
-            let url = '/api/user'
+
+            let url = process.env.MIX_BACKEND_URL + '/user'
 
             if (pagination != null) {
                 url += '?page=' + pagination.page
@@ -170,8 +197,14 @@ const store = new Vuex.Store({
                     return data
                 }]
             }).then( (response) => {
+
                 commit('updateUsers', response.data)
-            })
+
+            }).catch(function (reason) {
+
+               commit('updateErrors', reason)
+
+           })
         }
     }
 })
@@ -187,15 +220,23 @@ const app = new Vue({
     router,
     store,
     props: {},
+    Components: {ErrorResponse},
     data: function () {
 
         return {
             token: ''
         }
     },
+    computed: {
+        errors: function () {
+            return this.$store.state.errors
+        }
+    },
     watch: {
         errors: function (newValue, oldValue) {
-            this.showErrorModal(newValue.response, newValue.error)
+            if( newValue != null ) {
+                this.showErrorModal(newValue.response, newValue.error)
+            }
         },
         token: function (newValue, oldValue) {
 
@@ -213,12 +254,14 @@ const app = new Vue({
                 this.$store.commit('updateToken', response.data.data.token)
                 this.current_user = response.data.data.user
                 this.$store.commit('setCurrentUser', response.data.data.user)
-                console.log(this.$store.state.current_user)
+
             }catch (e) {
 
             }
 
         }).catch(function (reason) {
+
+            this.$state.commit('updateError', reason);
 
         }).then(() => {
             this.$router.addRoutes([
@@ -252,7 +295,7 @@ const app = new Vue({
                 message: 'An error has occurred',
                 response: response,
                 error: error
-            }, this.modalOptions)
+            })
         }
     }
 });

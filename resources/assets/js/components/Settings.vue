@@ -95,8 +95,12 @@ export default {
             return group.name.toLowerCase().replace(' ', '-')
         },
         saveSetting: function (gidx, sidx) {
-            window.axios.put('/api/setting/' + this.groups[gidx].settings[sidx].id,
+            window.axios.put(process.env.MIX_BACKEND_URL + '/setting/' + this.groups[gidx].settings[sidx].id,
                 { value: this.groups[gidx].settings[sidx].value }).then( (response) => {
+
+            }).catch( (reason) => {
+
+                this.$store.commit('updateErrors',reason);
 
             })
         }

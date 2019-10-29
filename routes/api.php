@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('login', 'ApiLoginController@login');
+Route::post('login', 'Auth\\LoginController@ApiLogin');
 
 Route::middleware('jwt.auth')->group(function() {
 
@@ -20,7 +20,7 @@ Route::middleware('jwt.auth')->group(function() {
     Route::apiResource('/user', 'UserController');
     Route::match(['get', 'post'], '/user/search', 'UserController@search');
     Route::get('/user/me/{detail?}', 'UserController@userInfo');
-    Route::get('/user/emulate/{id}', 'LoginController@emulateUser');
+    Route::get('/user/emulate/{id}', 'Auth\\LoginController@emulateUser');
     Route::apiResource('/usergroup', 'UserGroupController');
     Route::match(['get', 'post'], '/usergroup/search', 'UserGroupController@search');
     Route::apiResource('/permission', 'PermissionController');
