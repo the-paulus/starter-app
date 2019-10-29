@@ -1,3 +1,0 @@
-[submodule "laradock-starter-app"]
-	path = laradock-starter-app
-	url = git@github.com:the-paulus/laradock.git
