@@ -1,24 +1,7 @@
-# Include only the specified 'hidden' directories and files.
-.*
-!.env.*
-!.exclude
-!.git*
-!.htaccess
-
-
-# Ignored directories
-node_modules
-public/css/*
-public/fonts/*
-public/js/*
-public/hot
-public/storage
-storage/*.key
-vendor
-
-# Ignored Files
-*.log
-Homestead.json
-Homestead.yaml
-mix-manifest.json
-storage/*.index
+/node_modules
+/vendor
+composer.phar
+composer.lock
+.DS_Store
+.phpintel
+.idea
